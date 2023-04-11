@@ -5,15 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+        <script src="https://unpkg.com/ionicons@latest/dist/ionicons.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <link rel="stylesheet" href="style.css">
       
-        <title>Presensi Guru</title>
+        <title>Presensi Guru berbasis Web</title>
         <meta name="description" content="Presensi Guru berbasis Web">
         <meta name="keywords" content="Presensi Guru berbasis Web">
     </head>
   <body>
-    <!--===== HEADER =====-->
     <header class="l-header">
         <nav class="nav bd-grid">
             <div>
@@ -23,8 +23,9 @@
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list">
                     <li class="nav__item"><a href="#Beranda" class="nav__link active">Beranda</a></li>
-                    <li class="nav__item"><a href="#Tentang" class="nav__link">Tentang</a></li>
-                    <li class="nav__item"><a href="#Album" class="nav__link">Album</a></li>
+                    <!--<li class="nav__item"><a href="#Tentang" class="nav__link">Tentang</a></li>-->
+                    <li class="nav__item"><a href="#Camera" class="nav__link">Camera</a></li>
+                    <!--<li class="nav__item"><a href="#Album" class="nav__link">Album</a></li>-->
                     <!--<li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
                     <li class="nav__item"><a href="#contact" class="nav__link">Hubungi</a></li>-->
                 </ul>
@@ -52,7 +53,7 @@
                             <a class="button ln" onClick="tombolMasuk();">Daftar</a>
                         </div>
                         <div class="flexIn baseline">
-                            <div><a class="extL" href="#Tentang">Selengkapnya</a></div>
+                            <div><a class="extL" href="#Camera">Selengkapnya</a></div>
                         </div>
                     </div>
                 </div>
@@ -66,47 +67,13 @@
             </div>
         </section>
 
-        <section class="mainL" style="display: none;">
-            <div class="maxC flex wrap center">
-                <div class="landingL land flex column">
-                    <div class="slogan">
-                        <h1 class="t">Fastest and modern</h1>
-                        <p>Blogger theme inspired with Dashboard UI concept, fully responsive and customizable.</p>
-                    </div>
-                    <div class="action flex column">
-                        <div class="link flex">
-                            <a class="button ver" href="#demo">Demo</a>
-                            <a class="button ln" href="#features">
-                                <svg class="line" viewBox="0 0 24 24"><path d="M21.6601 10.44L20.6801 14.62C19.8401 18.23 18.1801 19.69 15.0601 19.39C14.5601 19.35 14.0201 19.26 13.4401 19.12L11.7601 18.72C7.59006 17.73 6.30006 15.67 7.28006 11.49L8.26006 7.30001C8.46006 6.45001 8.70006 5.71001 9.00006 5.10001C10.1701 2.68001 12.1601 2.03001 15.5001 2.82001L17.1701 3.21001C21.3601 4.19001 22.6401 6.26001 21.6601 10.44Z"></path><path d="M15.06 19.39C14.44 19.81 13.66 20.16 12.71 20.47L11.13 20.99C7.15998 22.27 5.06997 21.2 3.77997 17.23L2.49997 13.28C1.21997 9.30998 2.27997 7.20998 6.24997 5.92998L7.82997 5.40998C8.23997 5.27998 8.62997 5.16998 8.99997 5.09998C8.69997 5.70998 8.45997 6.44998 8.25997 7.29998L7.27997 11.49C6.29997 15.67 7.58998 17.73 11.76 18.72L13.44 19.12C14.02 19.26 14.56 19.35 15.06 19.39Z"></path><path d="M12.64 8.53003L17.49 9.76003"></path><path d="M11.66 12.4L14.56 13.14"></path></svg>
-                                <span>Features</span>
-                            </a>
-                        </div>
-                        <div class="linkMini flexIn baseline fontM cInherit u">
-                            <div><label for="forChangelog">Changelog</label></div>
-                            <div><a class="extL" href="https://docs.jagodesain.com">Docs</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="landingR flex center">
-                    <img alt="Median UI" class="lazy loaded" data-src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnPJiQZ1GnXJcxLLfuQ0xTZDfQSC1WIIplB4gV-W4my-37OhEVr3ajafZL4PmbtQqqbF0IApZbchYw7KPBbC2fo1iXr3bkYKEkmfKFr4GBoMgQqmUJnGhoaT1OxHVmyIe6hksPLE9WYS6r3AovawLOVaHkZp8OJlcanNaJATi2wPB6gB8tUWnuI49uZg/s1600/median-menu.png" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnPJiQZ1GnXJcxLLfuQ0xTZDfQSC1WIIplB4gV-W4my-37OhEVr3ajafZL4PmbtQqqbF0IApZbchYw7KPBbC2fo1iXr3bkYKEkmfKFr4GBoMgQqmUJnGhoaT1OxHVmyIe6hksPLE9WYS6r3AovawLOVaHkZp8OJlcanNaJATi2wPB6gB8tUWnuI49uZg/s1600/median-menu.png" lazied="">
-                    <img alt="Median UI" class="lazy loaded" data-src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjkknWcw2rQ6k4E_qV7OUvAaWVnakndSwPGJiiXIEmSjQjYKcJApNfi14cTq4hIx2iA7Hlkv-xyrQ_JZTzxLiGkTosNIzpdc8WZjG61zankDH8Y9ySbAgZFcupGR-aKDGt8Fxu7woJJVE2E0TfWt9W5_4ytKUs2d2fni9pYCtu56msjV0PZeFuobF8hwA/s1600/median-post.png" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjkknWcw2rQ6k4E_qV7OUvAaWVnakndSwPGJiiXIEmSjQjYKcJApNfi14cTq4hIx2iA7Hlkv-xyrQ_JZTzxLiGkTosNIzpdc8WZjG61zankDH8Y9ySbAgZFcupGR-aKDGt8Fxu7woJJVE2E0TfWt9W5_4ytKUs2d2fni9pYCtu56msjV0PZeFuobF8hwA/s1600/median-post.png" lazied="">
-                    <img alt="Median UI" class="lazy loaded" data-src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiEQU9MF86RU-9hM_zJcnF6JXNcdFn_56LZzIaIcb2e8gPR1LvOCfhxlH_Y3G8oA6rGuOLkUX1oc5jJUFqStx_QvnwUIfzN8sTFxVbRI4cJi-W6TROhS0Ozbc4PG5xZBMKt5KdAbtP9ifY4B-nnr9RFJmE1MtvPNkx78nTkEsHmqoquUp1w9tGlCfJgVQ/s1600/median-pop.png" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiEQU9MF86RU-9hM_zJcnF6JXNcdFn_56LZzIaIcb2e8gPR1LvOCfhxlH_Y3G8oA6rGuOLkUX1oc5jJUFqStx_QvnwUIfzN8sTFxVbRI4cJi-W6TROhS0Ozbc4PG5xZBMKt5KdAbtP9ifY4B-nnr9RFJmE1MtvPNkx78nTkEsHmqoquUp1w9tGlCfJgVQ/s1600/median-pop.png" lazied="">
-                    <noscript>
-                        <img alt='Median UI' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnPJiQZ1GnXJcxLLfuQ0xTZDfQSC1WIIplB4gV-W4my-37OhEVr3ajafZL4PmbtQqqbF0IApZbchYw7KPBbC2fo1iXr3bkYKEkmfKFr4GBoMgQqmUJnGhoaT1OxHVmyIe6hksPLE9WYS6r3AovawLOVaHkZp8OJlcanNaJATi2wPB6gB8tUWnuI49uZg/s1600/median-menu.png'/>
-                        <img alt='Median UI' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjkknWcw2rQ6k4E_qV7OUvAaWVnakndSwPGJiiXIEmSjQjYKcJApNfi14cTq4hIx2iA7Hlkv-xyrQ_JZTzxLiGkTosNIzpdc8WZjG61zankDH8Y9ySbAgZFcupGR-aKDGt8Fxu7woJJVE2E0TfWt9W5_4ytKUs2d2fni9pYCtu56msjV0PZeFuobF8hwA/s1600/median-post.png'/>
-                        <img alt='Median UI' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiEQU9MF86RU-9hM_zJcnF6JXNcdFn_56LZzIaIcb2e8gPR1LvOCfhxlH_Y3G8oA6rGuOLkUX1oc5jJUFqStx_QvnwUIfzN8sTFxVbRI4cJi-W6TROhS0Ozbc4PG5xZBMKt5KdAbtP9ifY4B-nnr9RFJmE1MtvPNkx78nTkEsHmqoquUp1w9tGlCfJgVQ/s1600/median-pop.png'/>
-                    </noscript>
-                </div>
-            </div>
-        </section>
-
         <!--===== ABOUT =====-->
-        <section class="about section " id="Tentang">
+        <section class="about section " id="Tentang" style="display: none;">
             <h2 class="section-title">Tentang</h2>
 
             <div class="about__container bd-grid">
                 <div class="about__img">
-                    <img src="img/mkgr.jpg" alt="">
+                    <img src="https://rayyarr.github.io/presensi/img/mkgr1.jpg" alt="">
                 </div>
                 
                 <div>
@@ -116,8 +83,57 @@
             </div>
         </section>
 
+        <section class="camera section" id="Camera">
+            <h2 class="section-title">Camera</h2>
+            
+  <div align="center">
+    
+  </div>
+  <div class="about__container bd-grid">
+    <div class="text-center" id="my_camera"></div>
+    <div class="about__text">
+        <p style="text-align:justify;margin-bottom: 10px;">Kami menghadirkan terobosan inovasi terbaru mengenai pengembangan teknologi sistem presensi untuk sekolah <b>SMP SMA MKGR KERTASEMAYA</b> dengan mewajibkan pengguna berswafoto (selfie) sebagai tanda bukti yang membuat data absensi semakin akurat dan meminimalisir kecurangan.</p>           
+        <a class="button ln" onClick="take_snapshot();"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g transform='translate(2.500000, 3.042105)'><path d='M12.9381053,9.456 C12.9381053,7.71915789 11.5296842,6.31073684 9.79284211,6.31073684 C8.056,6.31073684 6.64757895,7.71915789 6.64757895,9.456 C6.64757895,11.1928421 8.056,12.6012632 9.79284211,12.6012632 C11.5296842,12.6012632 12.9381053,11.1928421 12.9381053,9.456 Z'></path><path d='M9.79252632,17.158 C17.8377895,17.158 18.7956842,14.7474737 18.7956842,9.52431579 C18.7956842,5.86326316 18.3114737,3.90431579 15.262,3.06221053 C14.982,2.97378947 14.6714737,2.80536842 14.4198947,2.52852632 C14.0135789,2.08326316 13.7167368,0.715894737 12.7356842,0.302210526 C11.7546316,-0.110421053 7.81463158,-0.0914736842 6.84936842,0.302210526 C5.88515789,0.696947368 5.57147368,2.08326316 5.16515789,2.52852632 C4.91357895,2.80536842 4.60410526,2.97378947 4.32305263,3.06221053 C1.27357895,3.90431579 0.789368421,5.86326316 0.789368421,9.52431579 C0.789368421,14.7474737 1.74726316,17.158 9.79252632,17.158 Z'></path><line x1='14.7045' y1='5.957895' x2='14.7135' y2='5.957895'></line></g></svg>Ambil Foto</a>
+    </div>                                   
+</div>
+  <!-- webcamjs lewat CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.js"></script>
+
+  <!-- webcamjs lewat LOKAL -->
+  <script src="http://rayyarr.github.io/presensi/js/webcam.js"></script>
+
+  <!-- Configure a few settings and attach camera -->
+  <script language="JavaScript">
+    Webcam.set({
+      width: 320,
+      height: 240,
+      image_format: 'jpeg',
+      jpeg_quality: 100
+    });
+    Webcam.attach('#my_camera');
+
+
+    function take_snapshot() {
+
+      // take snapshot and get image data
+      Webcam.snap(function (data_uri) {
+        // menampilkan hasil
+        Swal.fire({
+            title: 'Taraa!',
+            text: 'Ini adalah hasil swafoto Anda.',
+            imageUrl: '' + data_uri,
+            imageWidth: 320,
+            imageHeight: 240,
+            imageAlt: 'Swafoto',
+        })
+      });
+      
+    }
+  </script>
+</section>
+
         <!--===== WORK =====-->
-        <section class="work section" id="Album">
+        <section class="work section" id="Album" style="display: none;">
             <h2 class="section-title">Album</h2>
           
             <div class="work__container bd-grid">
@@ -244,7 +260,7 @@
     </style>
     <script>
         function tombolMasuk(){
-            Swal.fire({
+            /*Swal.fire({
   title: 'Ingin Masuk Sebagai Guru Apa?',
   showDenyButton: true,
   showCancelButton: false,
@@ -256,7 +272,9 @@
   } else if (result.isDenied) {
     Swal.fire('OK', '', 'success')
   }
-})
+})*/
+
+window.location.href = "login";
         }
     </script>
 </body>
