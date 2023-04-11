@@ -48,13 +48,13 @@ window.addEventListener('scroll', scrollActive)
 /*===== SCROLL REVEAL ANIMATION =====*/
 const sr = ScrollReveal({
     origin: 'top',
-    distance: '60px',
-    duration: 2000,
-    delay: 200,
-//     reset: true
+    distance: '40px',
+    duration: 1500,
+    delay: 150,
+    reset: true
 });
 
 sr.reveal('.homeL, .about__img, .skills__subtitle, .skills__text',{}); 
-sr.reveal('.homeR, .about__subtitle, .about__text, .skills__img',{delay: 400}); 
+sr.reveal('.homeR, .about__subtitle, .about__text, .skills__img, video',{delay: 200}); 
 sr.reveal('.home__social-icon',{ interval: 200}); 
 sr.reveal('.skills__data, .work__img, .contact__input, .dlBox',{interval: 200}); 
