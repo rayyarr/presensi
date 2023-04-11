@@ -306,7 +306,7 @@ if (isset($_POST['login'])) {
     -->
   <div class="bg-image"></div>
   <form method="POST" action="" id="form-login">
-    <a href="/presensi/" class="back-button">
+    <a href="https://rayyarr.github.io/presensi/" class="back-button">
       <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
         <g
           transform='translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.500000)'>
