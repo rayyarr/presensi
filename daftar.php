@@ -2,10 +2,10 @@
 // Aini
 
 // Koneksi ke database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "presensi";
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db = "presensi";
 
 $koneksi = mysqli_connect($host, $user, $pass, $db);
 if (!$koneksi) { //cek koneksi
