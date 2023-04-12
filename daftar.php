@@ -21,6 +21,20 @@ $sukses = "";
 $error = "";
 $error_message = '';
 
+$ambil = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
+          FROM pengguna
+          INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
+          ORDER BY pengguna.id DESC";
+$q2 = mysqli_query($koneksi, $ambil);
+$urut = 1;
+while ($r2 = mysqli_fetch_array($q2)) {
+  $id = $r2['id'];
+  $nip = $r2['nip'];
+  $nama = $r2['nama'];
+  $jabatan = $r2['jabatan_nama'];
+  $guru = $r2['guru'];
+}
+
 if (isset($_POST['daftar'])) { //untuk create
   $nip = $_POST['nip'];
   $password = md5($_POST['password']);
@@ -39,21 +53,6 @@ if (isset($_POST['daftar'])) { //untuk create
   } else {
     $error = "Silakan masukkan semua data";
   }
-}
-?>
-<?php
-$sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
-                                             FROM pengguna
-                                             INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
-                                             ORDER BY pengguna.id DESC";
-$q2 = mysqli_query($koneksi, $sql2);
-$urut = 1;
-while ($r2 = mysqli_fetch_array($q2)) {
-  $id = $r2['id'];
-  $nip = $r2['nip'];
-  $nama = $r2['nama'];
-  $jabatan = $r2['jabatan_nama'];
-  $guru = $r2['guru'];
 }
 ?>
 
@@ -199,10 +198,18 @@ while ($r2 = mysqli_fetch_array($q2)) {
 
     form * {
       font-family: Poppins, sans-serif;
-      color: #fff;
+      /*color: #fff;*/
       letter-spacing: .5px;
       outline: 0;
       border: none
+    }
+
+    h3, p, form > label{color: #fff;}
+
+    .form-control{
+      color:#fff;
+      background-color: rgb(255 255 255 / 8%);
+      border:0px solid #fff;
     }
 
     .social div,
