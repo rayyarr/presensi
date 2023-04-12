@@ -64,7 +64,7 @@ if (isset($_POST['daftar'])) { //untuk create
                                         $nama = $r2['nama'];
                                         $jabatan = $r2['jabatan_nama'];
                                         $guru = $r2['guru'];
-
+                                    }
                                         ?>
 
 <!DOCTYPE html>
