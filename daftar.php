@@ -1,49 +1,71 @@
 <?php
 // Aini
 
-session_start(); // Mulai session
-
-// Jika user sudah login, alihkan ke halaman dashboard
-if (isset($_SESSION['nip'])) {
-  header("Location: beranda");
-  exit();
-}
-
 // Koneksi ke database
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "presensi";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Cek koneksi
-if ($conn->connect_error) {
-  die("Koneksi gagal: " . $conn->connect_error);
+$koneksi = mysqli_connect($host, $user, $pass, $db);
+if (!$koneksi) { //cek koneksi
+    die("Tidak bisa terkoneksi ke database");
 }
 
+$nip = "";
+$password = "";
+$nama = "";
+$jabatan = "";
+$guru = "";
+$sukses = "";
+$error = "";
 $error_message = '';
 
-// Jika tombol login ditekan
-if (isset($_POST['login'])) {
+if (isset($_POST['daftar'])) { //untuk create
   $nip = $_POST['nip'];
-  $password = $_POST['password'];
-  $password_hash = md5($password);
+  $password = md5($_POST['password']);
+  $nama = $_POST['nama'];
+  $jabatan = $_POST['jabatan_id'];
+  $guru = $_POST['guru'];
 
-  // Validasi login
-  $sql = "SELECT nip FROM pengguna WHERE nip = '$nip' AND password = '$password_hash'";
-  $result = $conn->query($sql);
-
-  if ($result->num_rows == 1) {
-    $row = $result->fetch_assoc();
-    $_SESSION['nip'] = $row['nip'];
-    header("Location: beranda"); // Alihkan ke halaman dashboard setelah login berhasil
-    exit();
+  if ($nip && $password && $nama && $jabatan && $guru) {
+      if ($op == 'edit') { //untuk update
+          $sql1 = "update pengguna set nip = '$nip',password='$password',nama='$nama',jabatan_id = '$jabatan',guru='$guru' where id = '$id'";
+          $q1 = mysqli_query($koneksi, $sql1);
+          if ($q1) {
+              $sukses = "Data berhasil diupdate";
+          } else {
+              $error = "Data gagal diupdate";
+          }
+      } else { //untuk insert
+          $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
+          $q1 = mysqli_query($koneksi, $sql1);
+          if ($q1) {
+              $sukses = "Berhasil memasukkan data baru";
+          } else {
+              $error = "Gagal memasukkan data";
+          }
+      }
   } else {
-    $error_message = 'NIP atau password salah!';
+      $error = "Silakan masukkan semua data";
   }
 }
 ?>
+<?php
+                                    $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
+                                             FROM pengguna
+                                             INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
+                                             ORDER BY pengguna.id DESC";
+                                    $q2 = mysqli_query($koneksi, $sql2);
+                                    $urut = 1;
+                                    while ($r2 = mysqli_fetch_array($q2)) {
+                                        $id = $r2['id'];
+                                        $nip = $r2['nip'];
+                                        $nama = $r2['nama'];
+                                        $jabatan = $r2['jabatan_nama'];
+                                        $guru = $r2['guru'];
+
+                                        ?>
 
 <!DOCTYPE html>
 <html>
@@ -314,8 +336,8 @@ if (isset($_POST['login'])) {
         </g>
       </svg>
     </a>
-    <h3>Login</h3>
-    <p>Silakan masuk</p>
+    <h3>Daftar</h3>
+    <p>Masukkan Data Anda</p>
     <?php if ($error_message): ?>
       <div class="alert alert-danger text-center" role="alert">
         <?php echo $error_message; ?>
@@ -366,9 +388,7 @@ if (isset($_POST['login'])) {
                             </div>
                         </div>
 
-    <button type="submit" name="login">Masuk</button>
-
-    <a href="forgot" style="margin-top:15px;color:#fff">Lupa Password?</a>
+    <button type="submit" name="daftar">Daftar</button>
 
     <!--<div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
