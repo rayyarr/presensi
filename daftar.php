@@ -373,7 +373,7 @@ if (isset($_POST['daftar'])) { //untuk create
                                         echo "checked" ?>>
                                     <label class="form-check-label" for="jabatan_pdh">PDH</label>
                                 </div>
-                                <label class="label" for="select4">Jabatan</label>
+                                <!--<label class="label" for="select4">Jabatan</label>
                                 <select class="form-control custom-select" name="position_id">';
                                       $query="SELECT * from position order by position_name ASC";
                                       $result = $connection->query($query);
@@ -384,10 +384,22 @@ if (isset($_POST['daftar'])) { //untuk create
                                         echo'<option value="'.$rowa['position_id'].'">'.$rowa['position_name'].'</option>';
                                       }
                                       }echo'
-                                </select>
+                                </select>-->
                             </div>
                         </div>
-                        <label for="guru" class="col-sm-2 col-form-label">Guru</label>
+                        <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="jabatan" id="jabatan">
+                                    <option value="">- Pilih Jabatan -</option>
+                                    <option value="1" <?php if ($jabatan == "1")
+                                        echo "selected" ?>>Guru</option>
+                                    <option value="2" <?php if ($jabatan== "2")
+                                        echo "selected" ?>>Tata Usaha</option>
+                                    <option value="3" <?php if ($jabatan == "3")
+                                        echo "selected" ?>>BPH</option>
+                                </select>
+                            </div>
+                            <label for="guru" class="col-sm-2 col-form-label">Guru</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="guru" id="guru">
                                     <option value="">- Pilih guru -</option>
@@ -399,7 +411,6 @@ if (isset($_POST['daftar'])) { //untuk create
                                         echo "selected" ?>>SMP SMA</option>
                                 </select>
                             </div>
-
     <button type="submit" name="daftar">Daftar</button>
 
     <!--<div class="social">
