@@ -353,42 +353,9 @@ if (isset($_POST['daftar'])) { //untuk create
     <label for="nama">Nama</label>
     <input type="text" placeholder="Nama Lengkap" id="nama" name="nama">
 
-    <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
-                        <div class="col-sm-10">
-                                <div class="form-check">
-                                <input class="form-check-input" type="radio" name="jabatan_id" value="1" id="jabatan_guru"
-                                    <?php if ($jabatan == "1")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_guru">Guru</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="jabatan_id" value="2"
-                                        id="jabatan_tu" <?php if ($jabatan == "2")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_tu">Tata Usaha</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="jabatan_id" value="3"
-                                        id="jabatan_pdh" <?php if ($jabatan == "3")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_pdh">PDH</label>
-                                </div>
-                                <!--<label class="label" for="select4">Jabatan</label>
-                                <select class="form-control custom-select" name="position_id">';
-                                      $query="SELECT * from position order by position_name ASC";
-                                      $result = $connection->query($query);
-                                      while($rowa = $result->fetch_assoc()) { 
-                                      if($rowa['position_id'] == $row_user['position_id']){
-                                        echo'<option value="'.$rowa['position_id'].'" selected>'.$rowa['position_name'].'</option>';
-                                      }else{
-                                        echo'<option value="'.$rowa['position_id'].'">'.$rowa['position_name'].'</option>';
-                                      }
-                                      }echo'
-                                </select>-->
-                            </div>
                         </div>
                         <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label></label>
-                            <div class="col-sm-10">
+                            <div>
                                 <select class="form-control" name="jabatan" id="jabatan">
                                     <option value="">- Pilih Jabatan -</option>
                                     <option value="1" <?php if ($jabatan == "1")
@@ -400,7 +367,7 @@ if (isset($_POST['daftar'])) { //untuk create
                                 </select>
                             </div>
                             <label for="guru" class="col-sm-2 col-form-label">Guru</label>
-                            <div class="col-sm-10">
+                            <div>
                                 <select class="form-control" name="guru" id="guru">
                                     <option value="">- Pilih guru -</option>
                                     <option value="SMP" <?php if ($guru == "SMP")
