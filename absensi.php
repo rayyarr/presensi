@@ -84,6 +84,9 @@ if (isset($_POST['simpan'])) {
         .fade {
             background-color: rgb(0 0 0 / 60%);
         }
+        .button-text{line-height:1.3em}
+        .button-alt{display: flex;justify-content: center;align-items:center}
+        .button-alt svg{width:13px;height:13px;margin-right:5px}
     </style>
 </head>
 
@@ -163,7 +166,7 @@ if (isset($_POST['simpan'])) {
                             </div>
                             <div class="button-text">
                                 <div class="button-title">ABSEN MASUK</div>
-                                <div class="button-alt">Silakan masuk</div>
+                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg>07.15 WIB</div>
                             </div>
                         </div>
                     </a>
@@ -176,7 +179,7 @@ if (isset($_POST['simpan'])) {
                             </div>
                             <div class="button-text">
                                 <div class="button-title">ABSEN KELUAR</div>
-                                <div class="button-alt">Silakan keluar</div>
+                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg>12.45 WIB</div>
                             </div>
                         </div>
                     </a>
