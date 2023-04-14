@@ -236,7 +236,7 @@ if (isset($_POST['daftar'])) {
     p,
     form>label,
     form>input {
-      color: #fff;
+      color: #fff !important;
     }
 
     .form-control {
