@@ -50,7 +50,7 @@
                     <div class="action">
                         <div class="link">
                             <a class="button" onClick="tombolMasuk();">Masuk</a>
-                            <a class="button ln" onClick="tombolMasuk();">Daftar</a>
+                            <a class="button ln" onClick="tomboldaftar();">Daftar</a>
                         </div>
                         <div class="flexIn baseline">
                             <div><a class="extL" href="#Camera">Selengkapnya</a></div>
@@ -260,21 +260,10 @@
     </style>
     <script>
         function tombolMasuk(){
-            /*Swal.fire({
-  title: 'Ingin Masuk Sebagai Guru Apa?',
-  showDenyButton: true,
-  showCancelButton: false,
-  confirmButtonText: 'SMP',
-  denyButtonText: `SMA`,
-}).then((result) => {
-  if (result.isConfirmed) {
-    Swal.fire('OK!', '', 'success')
-  } else if (result.isDenied) {
-    Swal.fire('OK', '', 'success')
-  }
-})*/
-
-window.location.href = "http://localhost/presensi/login";
+            window.location.href = "http://localhost/presensi/login";
+        }
+        function tomboldaftar(){
+            window.location.href = "http://localhost/presensi/daftar";
         }
     </script>
 </body>
