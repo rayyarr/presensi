@@ -236,11 +236,7 @@ if (isset($_POST['daftar'])) {
     p,
     form>label,
     form>input {
-<<<<<<< HEAD
-      color: #fff;
-=======
       color: #fff !important;
->>>>>>> 292b00f2941f5b41ef370901087d176d71cc96e7
     }
 
     .form-control {
@@ -432,9 +428,4 @@ if (isset($_POST['daftar'])) {
         </div>-->
   </form>
 </body>
-
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 292b00f2941f5b41ef370901087d176d71cc96e7
