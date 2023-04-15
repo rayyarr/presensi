@@ -35,23 +35,51 @@ while ($r2 = mysqli_fetch_array($q2)) {
   $guru = $r2['guru'];
 }
 
-if (isset($_POST['daftar'])) { //untuk create
+/*
+if (isset($_POST['daftar'])) {
+$nip = $_POST['nip'];
+$password = md5($_POST['password']);
+$nama = $_POST['nama'];
+$jabatan = $_POST['jabatan_id'];
+$guru = $_POST['guru'];
+if ($nip && $password && $nama && $jabatan && $guru) {
+$sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
+$q1 = mysqli_query($koneksi, $sql1);
+if ($q1) {
+$sukses = "Berhasil memasukkan data baru";
+} else {
+$error = "Gagal memasukkan data";
+}
+} else {
+$error = "Silakan masukkan semua data";
+}
+}*/
+if (isset($_POST['daftar'])) {
   $nip = $_POST['nip'];
   $password = md5($_POST['password']);
   $nama = $_POST['nama'];
   $jabatan = $_POST['jabatan_id'];
   $guru = $_POST['guru'];
 
-  if ($nip && $password && $nama && $jabatan && $guru) {
-    $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-    $q1 = mysqli_query($koneksi, $sql1);
-    if ($q1) {
-      $sukses = "Berhasil memasukkan data baru";
+  // Cek apakah NIP sudah terdaftar dalam database
+  $sql_cek_nip = "SELECT * FROM pengguna WHERE nip='$nip'";
+  $q_cek_nip = mysqli_query($koneksi, $sql_cek_nip);
+  $jml_cek_nip = mysqli_num_rows($q_cek_nip);
+
+  if ($jml_cek_nip > 0) { // Jika NIP sudah terdaftar, tampilkan pesan error
+    $error = "Mohon maaf, NIP sudah terdaftar!";
+  } else { // Jika NIP belum terdaftar, tambahkan data pengguna baru ke database
+    if ($nip && $password && $nama && $jabatan && $guru) {
+      $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
+      $q1 = mysqli_query($koneksi, $sql1);
+      if ($q1) {
+        $sukses = "Berhasil daftar akun!";
+      } else {
+        $error = "Terjadi kesalahan koneksi!";
+      }
     } else {
-      $error = "Gagal memasukkan data";
+      $error = "Silakan masukkan semua data!";
     }
-  } else {
-    $error = "Silakan masukkan semua data";
   }
 }
 ?>
@@ -116,7 +144,7 @@ if (isset($_POST['daftar'])) { //untuk create
 
       to {
         margin-top: 70px;
-        margin-bottom:70px;
+        margin-bottom: 70px;
         opacity: 1;
       }
     }
@@ -204,12 +232,18 @@ if (isset($_POST['daftar'])) { //untuk create
       border: none
     }
 
-    h3, p, form > label{color: #fff;}
+    h3,
+    p,
+    form>label,
+    form>input {
+      color: #fff;
+    }
 
-    .form-control{
-      color:#fff;
+    .form-control {
+      color: #fff;
       background-color: rgb(255 255 255 / 8%);
-      border:0px solid #fff;
+      border: 0px solid #fff;
+      font-size:14px;
     }
 
     .social div,
@@ -334,12 +368,27 @@ if (isset($_POST['daftar'])) { //untuk create
       </svg>
     </a>
     <h3>Daftar</h3>
-    <p>Masukkan Data Anda</p>
-    <?php if ($error_message): ?>
-      <div class="alert alert-danger text-center" role="alert">
-        <?php echo $error_message; ?>
+    <p>Masukkan Data Diri</p>
+    <?php
+    if ($error) {
+      ?>
+      <div class="alert alert-danger text-center" style="padding:1rem 0.5rem;font-size:14px" role="alert">
+        <?php echo $error ?>
       </div>
-    <?php endif; ?>
+      <?php
+    }
+    ?>
+    <?php
+    if ($sukses) {
+      ?>
+      <div class="alert alert-success text-center" style="padding:1rem 0.5rem;font-size:14px;line-height:1.8em" role="alert">
+        <?php echo $sukses ?>
+        <br>
+        <span>Silakan <a href="login">Login</a></span>
+      </div>
+      <?php
+    }
+    ?>
 
     <label for="nip">NIP</label>
     <input type="text" placeholder="Nomor Induk Pegawai" id="nip" name="nip">
@@ -355,27 +404,29 @@ if (isset($_POST['daftar'])) { //untuk create
     <div>
       <select class="form-control" name="jabatan_id" id="jabatan">
         <option value="">- Pilih Jabatan -</option>
-          <option value="1">Guru</option>
-          <option value="2">Tata Usaha</option>
-          <option value="3">BPH</option>
-        </select>
-      </div>
-      <label for="guru" class="col-sm-2 col-form-label">Guru</label>
-      <div>
-        <select class="form-control" name="guru" id="guru">
-          <option value="">- Pilih guru -</option>
-          <option value="SMP">SMP</option>
-          <option value="SMA">SMA</option>
-          <option value="SMP SMA">SMP SMA</option>
-        </select>
-      </div>
-      <button type="submit" name="daftar">Daftar</button>
+        <option value="1">Guru</option>
+        <option value="2">Tata Usaha</option>
+        <option value="3">BPH</option>
+      </select>
+    </div>
+    <label for="guru" class="col-sm-2 col-form-label">Guru</label>
+    <div>
+      <select class="form-control" name="guru" id="guru">
+        <option value="">- Pilih guru -</option>
+        <option value="SMP">SMP</option>
+        <option value="SMA">SMA</option>
+        <option value="SMP SMA">SMP SMA</option>
+      </select>
+    </div>
+    <button type="submit" name="daftar">Daftar</button>
 
-      <!--<div class="social">
+    <span style="margin-top:15px;color:#fff;font-size:14px">Sudah punya akun? <a href="login">Login</a></span>
+
+    <!--<div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
           <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
         </div>-->
-    </form>
-  </body>
+  </form>
+</body>
 
-  </html>
+</html>

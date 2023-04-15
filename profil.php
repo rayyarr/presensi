@@ -83,8 +83,8 @@ if (isset($_FILES['image'])) {
             //menghapus file yang lama
             $row_check = mysqli_fetch_assoc($result_check);
             $old_filename = $row_check['foto_profil'];
+            if ($old_filename != NULL) {
             unlink("foto_profil/" . $old_filename);
-
             //memperbarui data gambar dengan data gambar yang baru
             $sql_update = "UPDATE pengguna SET foto_profil='$new_filename' WHERE nip='$userid'";
             mysqli_query($conn, $sql_update);
@@ -100,16 +100,24 @@ if (isset($_FILES['image'])) {
 				  )
             </script>";
             echo $script;
-        } else {
+            } else {
             //memindahkan file ke direktori tujuan dengan nama file baru
             move_uploaded_file($tmp_image, "foto_profil/" . $new_filename);
 
             //memasukkan data gambar ke database dengan nama file baru
-            $sql = "INSERT INTO pengguna (foto_profil) VALUES ('$userid', '$new_filename')";
+            $sql = "UPDATE pengguna SET foto_profil='$new_filename' WHERE nip='$userid'";
             mysqli_query($conn, $sql);
 
-            echo "Gambar berhasil diunggah";
-        }
+            $script = "<script>
+				Swal.fire(
+					'Gambar berhasil diunggah',
+					'Silakan refresh halaman ini',
+					'success',
+                );
+            </script>";
+            echo $script;
+            }
+        } //else {}
     } else {
         $script = "<script>
               alert('Hanya file dengan ekstensi jpg, jpeg, png, atau gif yang diizinkan');
