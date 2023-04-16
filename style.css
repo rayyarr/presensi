@@ -293,7 +293,7 @@ h1.t{font-size: 40px;margin-bottom: 30px;}
 }
 
 .footer__title {
-  font-size: 2rem;
+  font-size: 1.2rem;
   margin-bottom: var(--mb-4);
 }
 
@@ -308,7 +308,8 @@ h1.t{font-size: 40px;margin-bottom: 30px;}
 }
 
 .footer__copy {
-  font-size: var(--smaller-font-size);
+  font-size: 14px;
+  font-weight: 400;
 }
 
 /* ===== MEDIA QUERIES=====*/
