@@ -330,7 +330,7 @@ if (isset($_POST['login'])) {
 
     <button type="submit" name="login">Masuk</button>
 
-    <a href="forgot" style="margin-top:15px;color:#fff">Lupa Password?</a>
+    <a href="forgot" style="margin-top:15px;color:#fff;font-size:14px">Lupa Password?</a>
 
     <!--<div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
