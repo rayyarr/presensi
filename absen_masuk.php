@@ -61,8 +61,26 @@ if (isset($_POST['jarak'])) {
 
 			// jika selisih waktu lebih dari 0 (artinya terlambat)
 			if ($selisih_waktu > 0) {
-				$menit_terlambat = ceil($selisih_waktu / 60); // menghitung selisih waktu dalam menit
-				$keterangan = $jarak . ' kilometer' . ", TERLAMBAT $menit_terlambat menit";
+				if ($selisih_waktu < 3600) {
+					$menit_terlambat = ceil($selisih_waktu / 60); // menghitung selisih waktu dalam menit
+					if ($menit_terlambat == 60) {
+						$keterangan = $jarak . ' kilometer' . ", TERLAMBAT 1 jam";
+					} else {
+						$keterangan = $jarak . ' kilometer' . ", TERLAMBAT $menit_terlambat menit";
+					}
+				} else {
+					$jam_terlambat = floor($selisih_waktu / 3600); // menghitung selisih waktu dalam jam
+					$menit_terlambat = ceil(($selisih_waktu % 3600) / 60); // menghitung selisih waktu dalam menit
+					if ($menit_terlambat == 60) {
+						$jam_terlambat++; // jika terdapat 60 menit, tambahkan 1 jam ke jumlah jam terlambat
+						$menit_terlambat = 0; // reset jumlah menit terlambat menjadi 0
+					}
+					if ($jam_terlambat == 1) {
+						$keterangan = $jarak . ' kilometer' . ", TERLAMBAT 1 jam $menit_terlambat menit";
+					} else {
+						$keterangan = $jarak . ' kilometer' . ", TERLAMBAT $jam_terlambat jam $menit_terlambat menit";
+					}
+				}						
 			} else {
 				$keterangan = $jarak . ' kilometer';
 			}
@@ -72,8 +90,8 @@ if (isset($_POST['jarak'])) {
 					'
 				<script> 
 					swal.fire({
-						title: "Berhasil!",
-						text: "Anda berhasil absen hari ini!",
+						title: "Berhasil Masuk!",
+						html: "JARAK '.$keterangan.'",
 						icon: "success",
 					}).then((result) => {
 						setTimeout(function () {
