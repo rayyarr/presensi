@@ -106,12 +106,11 @@
   <script language="JavaScript">
     Webcam.set({
       width: 320,
-      height: auto,
+      height: 320,
       image_format: 'jpeg',
       jpeg_quality: 100
     });
     Webcam.attach('#my_camera');
-
 
     function take_snapshot() {
 
@@ -119,7 +118,7 @@
       Webcam.snap(function (data_uri) {
         // menampilkan hasil
         Swal.fire({
-            title: 'Taraaa!',
+            title: 'OK!',
             text: 'Berhasil Melakukan Absensi',
             imageUrl: '' + data_uri,
             imageWidth: 320,
