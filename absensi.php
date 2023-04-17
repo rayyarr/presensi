@@ -63,6 +63,27 @@ if (isset($_POST['simpan'])) {
     </script>';
 }
 
+// Eksekusi query dan mengambil isi jadwal masuk
+$sqlW = "SELECT waktu_masuk, waktu_pulang FROM jadwal WHERE id_jadwal = 1";
+$hasilW = mysqli_query($conn, $sqlW);
+
+// Cek apakah query berhasil dijalankan
+if (mysqli_num_rows($hasilW) > 0) {
+    // Looping untuk membaca nilai waktu_masuk dari setiap baris data
+    while ($row = mysqli_fetch_assoc($hasilW)) {
+        $jam_masuk = $row["waktu_masuk"];
+        $jam_pulang = $row["waktu_pulang"];
+    }
+} else {
+    $jam_masuk = date('H:i:s');
+    $jam_pulang = date('H:i:s');
+}
+$jam_masuk = date('H:i', strtotime($jam_masuk)); // mengubah format waktu
+$jam_masuk = $jam_masuk . " WIB"; // menambahkan "WIB" pada akhir string
+
+$jam_pulang = date('H:i', strtotime($jam_pulang)); // mengubah format waktu
+$jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -166,7 +187,7 @@ if (isset($_POST['simpan'])) {
                             </div>
                             <div class="button-text">
                                 <div class="button-title">ABSEN MASUK</div>
-                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg>07.15 WIB</div>
+                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg><?php echo $jam_masuk; ?></div>
                             </div>
                         </div>
                     </a>
@@ -179,7 +200,7 @@ if (isset($_POST['simpan'])) {
                             </div>
                             <div class="button-text">
                                 <div class="button-title">ABSEN KELUAR</div>
-                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg>12.45 WIB</div>
+                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg><?php echo $jam_pulang; ?></div>
                             </div>
                         </div>
                     </a>
