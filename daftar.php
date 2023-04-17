@@ -1,6 +1,14 @@
 <?php
 // Aini
 
+session_start(); // Mulai session
+
+// Jika user sudah login, alihkan ke halaman dashboard
+if (isset($_SESSION['nip'])) {
+  header("Location: beranda");
+  exit();
+}
+
 // Koneksi ke database
 $host = "localhost";
 $user = "root";
