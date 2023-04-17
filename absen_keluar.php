@@ -36,7 +36,7 @@ if (isset($_POST['jarak'])) {
 				<script> 
 					swal.fire({
 						title: "Gagal!",
-						text: "Anda sudah absen keluar hari ini",
+						text: "Anda sudah absen hari ini",
 						icon: "error",
 					}).then((result) => {
 						setTimeout(function () {
