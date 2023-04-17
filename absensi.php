@@ -42,7 +42,7 @@ if (isset($_POST['simpan'])) {
         popupIcon = "error";
         </script>';
     } else {
-        $sqlabs = "INSERT INTO absen SET nip = '$userid',tanggal_absen='$tanggal_absen', id_status='$id_status', keterangan='$keterangan'";
+        $sqlabs = "INSERT INTO absen SET nip = '$userid',tanggal_absen='$tanggal_absen', id_status='$id_status', tgl_keluar='$tanggal_absen', keterangan='$keterangan'";
         $hslabs = mysqli_query($conn, $sqlabs);
         echo '<script>
         popupJudul = "Berhasil!";
@@ -172,7 +172,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             </div>
             <div class="mb-3">
                 <div class="d-block">
-                    <span>Waktu saat ini: <b id="jam">belum terdeteksi</b></span>
+                    <span>Waktu saat ini: <b id="jam">belum terdeteksi</b> <b>WIB</b></span>
                 </div>
             </div>
             <!--<button id="allow-location-button" type="button" class="btn btn-primary">
