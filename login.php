@@ -323,10 +323,10 @@ if (isset($_POST['login'])) {
     <?php endif; ?>
 
     <label for="nip">NIP</label>
-    <input type="text" placeholder="Nomor Induk Pegawai" id="nip" name="nip">
+    <input type="text" placeholder="Nomor Induk Pegawai" id="nip" name="nip" required>
 
     <label for="password">Password</label>
-    <input type="password" placeholder="Kata Sandi" id="password" name="password">
+    <input type="password" placeholder="Kata Sandi" id="password" name="password" required>
 
     <button type="submit" name="login">Masuk</button>
 
