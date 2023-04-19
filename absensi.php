@@ -97,120 +97,149 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
         .fade {
             background-color: rgb(0 0 0 / 60%);
         }
-        .button-text{line-height:1.3em}
-        .button-alt{display: flex;justify-content: center;align-items:center}
-        .button-alt svg{width:13px;height:13px;margin-right:5px}
+
+        .button-text {
+            line-height: 1.3em
+        }
+
+        .button-alt {
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .button-alt svg {
+            width: 13px;
+            height: 13px;
+            margin-right: 5px
+        }
     </style>
 </head>
 
 <body>
-<div class="kolomkanan">
-		<div class="mx-auto">
+    <div class="kolomkanan">
+        <div class="mx-auto">
 
-        <div class="card mb-5 p-3">
-            <div class="leftP">
-                <div class="profileIcon leftC flex solo">
-                    <label class="a flexIns fc" for="forProfile">
-                        <span class="avatar flex center">
-                            <img class="iniprofil" src="foto_profil/<?php echo $nama_file; ?>"
-                                alt="<?php echo $nama_file; ?>">
-                        </span>
-                        <span class="n flex column">
-                            <span class="fontS">
-                                <?php
-                                if (mysqli_num_rows($result) > 0) {
-                                    // tampilkan nama
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                        ?>
-                                        <h4>
-                                            <?= $row['nama']; ?>
-                                        </h4>
-                                    </span>
-                                    <p class="opacity" style="margin-bottom:0">
-                                        NIP
-                                        <?= $row['nip']; ?> -
-                                        <?= $hasiljoin['jabatan_nama']; ?> -
-                                        <?= $row['guru']; ?>
-                                    </p>
+            <div class="card mb-5 p-3">
+                <div class="leftP">
+                    <div class="profileIcon leftC flex solo">
+                        <label class="a flexIns fc" for="forProfile">
+                            <span class="avatar flex center">
+                                <img class="iniprofil" src="foto_profil/<?php echo $nama_file; ?>"
+                                    alt="<?php echo $nama_file; ?>">
+                            </span>
+                            <span class="n flex column">
+                                <span class="fontS">
                                     <?php
+                                    if (mysqli_num_rows($result) > 0) {
+                                        // tampilkan nama
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            ?>
+                                            <h4>
+                                                <?= $row['nama']; ?>
+                                            </h4>
+                                        </span>
+                                        <p class="opacity" style="margin-bottom:0">
+                                            NIP
+                                            <?= $row['nip']; ?> -
+                                            <?= $hasiljoin['jabatan_nama']; ?> -
+                                            <?= $row['guru']; ?>
+                                        </p>
+                                        <?php
+                                        }
                                     }
-                                }
-                                ?>
-                        </span>
-                    </label>
+                                    ?>
+                            </span>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card p-3 mb-5 text-center">
-            <!--<div class="alert alert-info" role="alert">
+            <div class="card p-3 mb-5 text-center">
+                <!--<div class="alert alert-info" role="alert">
                 Sistem ini menggunakan akses lokasi agar dapat bekerja.
             </div>-->
-            <div class="mb-3">
-                <span class="d-block"><i class="bi-geo-alt text-success"></i> <a class="text-success"
-                        href="https://goo.gl/maps/zwucsvHDvmTCVtYUA" target="_blank">SMP SMA MKGR</a>: <b
-                        id="my-location">belum terdeteksi</b></span>
-            </div>
-            <div class="mb-3">
-                <span class="d-block">
-                    Lokasi Anda: <b id="your-location">belum terdeteksi</b></span>
-                <span class="d-block">Lat: <b id="your-latitude">belum terdeteksi</b> - | - Long: <b
-                        id="your-longitude">belum terdeteksi</b></span>
-            </div>
-            <div class="mb-3">
-                <div class="d-block">
-                    <span>Jarak Anda: <b id="our-distance">belum terdeteksi</b></span>
+                <div class="mb-3">
+                    <span class="d-block"><i class="bi-geo-alt text-success"></i> <a class="text-success"
+                            href="https://goo.gl/maps/zwucsvHDvmTCVtYUA" target="_blank">SMP SMA MKGR</a>: <b
+                            id="my-location">belum terdeteksi</b></span>
                 </div>
-            </div>
-            <div class="mb-3">
-                <div class="d-block">
-                    <span>Waktu saat ini: <b id="jam">belum terdeteksi</b> <b>WIB</b></span>
+                <div class="mb-3">
+                    <span class="d-block">
+                        Lokasi Anda: <b id="your-location">belum terdeteksi</b></span>
+                    <span class="d-block">Lat: <b id="your-latitude">belum terdeteksi</b> - | - Long: <b
+                            id="your-longitude">belum terdeteksi</b></span>
                 </div>
-            </div>
-            <!--<button id="allow-location-button" type="button" class="btn btn-primary">
+                <div class="mb-3">
+                    <div class="d-block">
+                        <span>Jarak Anda: <b id="our-distance">belum terdeteksi</b></span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-block">
+                        <span>Waktu saat ini: <b id="jam">belum terdeteksi</b> <b>WIB</b></span>
+                    </div>
+                </div>
+                <!--<button id="allow-location-button" type="button" class="btn btn-primary">
                 Izinkan akses lokasi saya
             </button>-->
-            <div class="wallet-footer" style="flex-wrap:wrap;justify-content:space-between">
-                <div class="item">
-                    <a href="absen_masuk.php">
-                        <div class="button-container btn-outline-biru">
-                            <div class="button-icon">
-                                <i class="bi bi-calendar2-check"></i>
+                <div class="wallet-footer" style="flex-wrap:wrap;justify-content:space-between">
+                    <div class="item">
+                        <a href="absen_masuk.php">
+                            <div class="button-container btn-outline-biru">
+                                <div class="button-icon">
+                                    <i class="bi bi-calendar2-check"></i>
+                                </div>
+                                <div class="button-text">
+                                    <div class="button-title">ABSEN MASUK</div>
+                                    <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg'
+                                            viewBox='0 0 24 24'>
+                                            <path
+                                                d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937'
+                                                transform='translate(-169.5206 -166.42857)'></path>
+                                            <rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect>
+                                        </svg>
+                                        <?php echo $jam_masuk; ?>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="button-text">
-                                <div class="button-title">ABSEN MASUK</div>
-                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg><?php echo $jam_masuk; ?></div>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <a href="absen_keluar.php">
+                            <div class="button-container btn-outline-biru">
+                                <div class="button-icon">
+                                    <i class="bi bi-calendar2-minus"></i>
+                                </div>
+                                <div class="button-text">
+                                    <div class="button-title">ABSEN KELUAR</div>
+                                    <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg'
+                                            viewBox='0 0 24 24'>
+                                            <path
+                                                d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937'
+                                                transform='translate(-169.5206 -166.42857)'></path>
+                                            <rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect>
+                                        </svg>
+                                        <?php echo $jam_pulang; ?>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="item">
-                    <a href="absen_keluar.php">
-                        <div class="button-container btn-outline-biru">
-                            <div class="button-icon">
-                                <i class="bi bi-calendar2-minus"></i>
+                        </a>
+                    </div>
+                    <div class="item">
+                        <label onclick="showModal()">
+                            <div class="button-container btn-outline-danger">
+                                <div class="button-icon">
+                                    <i class="bi bi-calendar2-x"></i>
+                                </div>
+                                <div class="button-text">
+                                    <div class="button-title">IZIN KEHADIRAN</div>
+                                    <div class="button-alt">Cuti tidak hadir</div>
+                                </div>
                             </div>
-                            <div class="button-text">
-                                <div class="button-title">ABSEN KELUAR</div>
-                                <div class="button-alt"><svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M184.7647,181.67261l-2.6583-2.65825a2,2,0,0,1-.5858-1.41423v-3.75937' transform='translate(-169.5206 -166.42857)'></path><rect class='cls-3' x='2' y='2' width='20' height='20' rx='5'></rect></svg><?php echo $jam_pulang; ?></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="item">
-                    <label onclick="showModal()">
-                        <div class="button-container btn-outline-danger">
-                            <div class="button-icon">
-                                <i class="bi bi-calendar2-x"></i>
-                            </div>
-                            <div class="button-text">
-                                <div class="button-title">IZIN KEHADIRAN</div>
-                                <div class="button-alt">Cuti tidak hadir</div>
-                            </div>
-                        </div>
-                    </label>
-                </div>
-                <!--
+                        </label>
+                    </div>
+                    <!--
                 <div class="item">
                     <div class="sa">
                         <a href="absen_masuk.php">
@@ -241,9 +270,9 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         </label>
                     </div>
                 </div> -->
+                </div>
             </div>
-        </div>
-        <!--
+            <!--
         <div class="p-3">
             <a class="btn btn-outline-dark btn-sm" href="absen_masuk.php">Absen masuk</a>
             <a class="btn btn-outline-dark btn-sm" href="absen_keluar.php">Absen keluar</a>
@@ -251,44 +280,44 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             <button type="button" class="btn btn-outline-danger btn-sm" onclick="showModal()">Izin Tidak Hadir</button>
         </div>
         -->
-    </div>
-    <!--<script src="lokasi.js"></script>-->
+        </div>
+        <!--<script src="lokasi.js"></script>-->
 
-    <!-- Modal -->
-    <div class="modal fade" id="absenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Absen Sakit / Izin</h5>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="POST">
-                        <div class="form-group">
-                            <label for="id_status">Jenis Absen</label>
-                            <select class="form-control mt-2" id="absenSelect" name="id_status">
-                                <option value="3">Sakit</option>
-                                <option value="2">Izin</option>
-                            </select>
-                        </div>
-                        <div class="form-group mt-3">
-                            <label for="keteranganTextarea">Keterangan (opsional):</label>
-                            <textarea class="form-control mt-2" name="keterangan" id="keteranganTextarea"
-                                rows="3"></textarea>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                        onClick="$('#absenModal').modal('hide')">Batal</button>
-                    <!--<button type="button" class="btn btn-primary"
+        <!-- Modal -->
+        <div class="modal fade" id="absenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Absen Sakit / Izin</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST">
+                            <div class="form-group">
+                                <label for="id_status">Jenis Absen</label>
+                                <select class="form-control mt-2" id="absenSelect" name="id_status">
+                                    <option value="3">Sakit</option>
+                                    <option value="2">Izin</option>
+                                </select>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="keteranganTextarea">Keterangan (opsional):</label>
+                                <textarea class="form-control mt-2" name="keterangan" id="keteranganTextarea"
+                                    rows="3"></textarea>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onClick="$('#absenModal').modal('hide')">Batal</button>
+                        <!--<button type="button" class="btn btn-primary"
                         onclick="insertAbsensi(<?php echo $userid; ?>)">Submit</button>-->
-                    <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
+                        <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
+                    </div>
+                    </form>
                 </div>
-                </form>
             </div>
         </div>
     </div>
-                            </div>
 
     <script>
         function showModal() {
@@ -352,6 +381,8 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                                     text: "Anda tidak mengizinkan lokasi.",
                                     icon: "error",
                                 });
+                                tombolAbsenMasuk.setAttribute('style', 'pointer-events:none;opacity:.65');
+                                tombolAbsenKeluar.setAttribute('style', 'pointer-events:none;opacity:.65');
                                 //allowLocationButton.setAttribute("disabled", true);
                                 break;
                             default:
@@ -427,48 +458,49 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 ourDistance.innerText = jarak + " kilometer";
             }
 
+            // Tombol Absen Masuk
+            var tombolAbsenMasuk = document.querySelector('a[href="absen_masuk.php"]');
+            if (tombolAbsenMasuk) {
+                tombolAbsenMasuk.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'absen_masuk.php';
+
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'jarak';
+                    input.value = jarak;
+
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+
+            // Tombol Absen Keluar
+            var tombolAbsenKeluar = document.querySelector('a[href="absen_keluar.php"]');
+            if (tombolAbsenKeluar) {
+                tombolAbsenKeluar.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'absen_keluar.php';
+
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'jarak';
+                    input.value = jarak;
+
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+
             isSupportLocation();
+
         });
-
-        // Tombol Absen Masuk
-        var tombolAbsenMasuk = document.querySelector('a[href="absen_masuk.php"]');
-        if (tombolAbsenMasuk) {
-            tombolAbsenMasuk.addEventListener('click', function (event) {
-                event.preventDefault();
-                var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'absen_masuk.php';
-
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'jarak';
-                input.value = jarak;
-
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
-            });
-        }
-
-        // Tombol Absen Keluar
-        var tombolAbsenKeluar = document.querySelector('a[href="absen_keluar.php"]');
-        if (tombolAbsenKeluar) {
-            tombolAbsenKeluar.addEventListener('click', function (event) {
-                event.preventDefault();
-                var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'absen_keluar.php';
-
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'jarak';
-                input.value = jarak;
-
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
-            });
-        }
 
         // untuk jam saat ini
         var myVar = setInterval(myTimer, 1000);
