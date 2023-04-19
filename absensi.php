@@ -180,6 +180,11 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         <span>Waktu saat ini: <b id="jam">belum terdeteksi</b> <b>WIB</b></span>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <div class="d-block">
+                        <span id="blocation" class="d-flex justify-content-center align-items-center" style="color:#0d6efd;font-weight:700"><a id="allow-location-button" type="button">Izinkan Lokasi</a> <i class="bi bi-box-arrow-up-right" style="margin-left:8px;font-size:13px"></i></span>
+                    </div>
+                </div>
                 <!--<button id="allow-location-button" type="button" class="btn btn-primary">
                 Izinkan akses lokasi saya
             </button>-->
@@ -239,6 +244,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                             </div>
                         </label>
                     </div>
+
                     <!--
                 <div class="item">
                     <div class="sa">
@@ -359,6 +365,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             const allowLocationButton = document.querySelector(
                 "#allow-location-button"
             );
+            const buttonLocation = document.querySelector("#blocation");
             const myLocation = document.querySelector("#my-location");
             const ourDistance = document.querySelector("#our-distance");
             const yourLatitude = document.querySelector("#your-latitude");
@@ -369,26 +376,41 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             const myLon = "108.36078998178328"; // Longitude SMP SMA MKGR Kertasemaya
             jarak = 1000; // Jarak Default
 
+            allowLocationButton.addEventListener('click', function () {
+                requestLocationPermission();
+            });
+
+            function requestLocationPermission() {
+                // Meminta izin akses lokasi
+                navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+                    if (result.state == 'granted') {
+                        // Jika izin akses lokasi telah diberikan, panggil fungsi untuk mendapatkan lokasi
+                        isSupportLocation();
+                    } else if (result.state == 'prompt') {
+                        // Jika pengguna belum memberikan izin akses lokasi, minta izin akses lokasi
+                        navigator.geolocation.getCurrentPosition(isSupportLocation, showError);
+                    } else if (result.state == 'denied') {
+                        // Jika pengguna telah memblokir izin akses lokasi, tampilkan pesan kesalahan
+                        swal.fire({
+                            title: "Gagal",
+                            html: "Anda telah memblokir akses lokasi.<br>Harap izinkan akses lokasi pada pengaturan browser Anda.",
+                            icon: "error",
+                        });
+                        buttonLocation.classList.remove("d-none");
+                        tombolAbsenMasuk.setAttribute('style', 'pointer-events:none;opacity:.65');
+                        tombolAbsenKeluar.setAttribute('style', 'pointer-events:none;opacity:.65');
+                    }
+                    result.onchange = function () {
+                        // Jika pengguna mengubah izin akses lokasi, panggil fungsi untuk memeriksa ulang izin akses lokasi
+                        requestLocationPermission();
+                    }
+                });
+            }
+
             function isSupportLocation() {
                 if (navigator.geolocation) {
-                    //allowLocationButton.classList.remove("d-none");
-
-                    navigator.geolocation.getCurrentPosition(showPosition, (err) => {
-                        switch (err.code) {
-                            case 1:
-                                swal.fire({
-                                    title: "Gagal",
-                                    text: "Anda tidak mengizinkan lokasi.",
-                                    icon: "error",
-                                });
-                                tombolAbsenMasuk.setAttribute('style', 'pointer-events:none;opacity:.65');
-                                tombolAbsenKeluar.setAttribute('style', 'pointer-events:none;opacity:.65');
-                                //allowLocationButton.setAttribute("disabled", true);
-                                break;
-                            default:
-                                break;
-                        }
-                    });
+                    buttonLocation.classList.remove("d-none");
+                    navigator.geolocation.getCurrentPosition(showPosition);
                 } else {
                     swal({
                         title: "Gagal",
@@ -401,6 +423,9 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             function showPosition(position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
+                buttonLocation.classList.add("d-none");
+                tombolAbsenMasuk.setAttribute('style', '');
+                tombolAbsenKeluar.setAttribute('style', '');
 
                 const apiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=id`;
 
@@ -498,7 +523,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 });
             }
 
-            isSupportLocation();
+            requestLocationPermission();
 
         });
 
