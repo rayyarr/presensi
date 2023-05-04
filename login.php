@@ -332,6 +332,8 @@ if (isset($_POST['login'])) {
 
     <a href="forgot" style="margin-top:15px;color:#fff;font-size:14px">Lupa Password?</a>
 
+    <span style="margin-top:15px;color:#fff;font-size:14px">Belum punya akun? <a href="daftar">Daftar</a></span>
+
     <!--<div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
           <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
