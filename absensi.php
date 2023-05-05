@@ -168,7 +168,10 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     <span class="d-block">
                         Lokasi Anda: <b id="your-location">belum terdeteksi</b></span>
                     <span class="d-block">Lat: <b id="your-latitude">belum terdeteksi</b> - | - Long: <b
-                            id="your-longitude">belum terdeteksi</b></span>
+                            id="your-longitude">belum terdeteksi</b> - | - <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary btn-sm" onclick="showModalMap()">
+                            Tampilkan Peta
+                        </button></span>
                 </div>
                 <div class="mb-3">
                     <div class="d-block">
@@ -182,7 +185,10 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 </div>
                 <div class="mb-3">
                     <div class="d-block">
-                        <span id="blocation" class="d-flex justify-content-center align-items-center" style="color:#0d6efd;font-weight:700"><a id="allow-location-button" type="button">Izinkan Lokasi</a> <i class="bi bi-box-arrow-up-right" style="margin-left:8px;font-size:13px"></i></span>
+                        <span id="blocation" class="d-flex justify-content-center align-items-center"
+                            style="color:#0d6efd;font-weight:700"><a id="allow-location-button" type="button">Izinkan
+                                Lokasi</a> <i class="bi bi-box-arrow-up-right"
+                                style="margin-left:8px;font-size:13px"></i></span>
                     </div>
                 </div>
                 <!--<button id="allow-location-button" type="button" class="btn btn-primary">
@@ -289,7 +295,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
         </div>
         <!--<script src="lokasi.js"></script>-->
 
-        <!-- Modal -->
+        <!-- Modal Izin -->
         <div class="modal fade" id="absenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -323,11 +329,37 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 </div>
             </div>
         </div>
+
+        <!-- Modal Map -->
+        <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="mapModalLabel">Peta Lokasi</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="mapid" style="height: 400px;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onClick="$('#mapModal').modal('hide')">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 
     <script>
         function showModal() {
             $('#absenModal').modal('show');
+        }
+        function showModalMap() {
+            $('#mapModal').modal('show');
         }
 
         function insertAbsensi(userid) {
@@ -374,6 +406,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
 
             const myLat = "-6.5005329587694884"; // Latitude SMP SMA MKGR Kertasemaya
             const myLon = "108.36078998178328"; // Longitude SMP SMA MKGR Kertasemaya
+            myLocation.innerText = "Kertasemaya, Jawa Barat, Indonesia";
             jarak = 1000; // Jarak Default
 
             allowLocationButton.addEventListener('click', function () {
@@ -423,6 +456,26 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             function showPosition(position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
+                yourLatitude.innerText = latitude;
+                yourLongitude.innerText = longitude;
+
+                var mymap;
+                $('#mapModal').on('hidden.bs.modal', function () {
+                    mymap.remove();
+                });
+                $('#mapModal').on('shown.bs.modal', function () {
+                    mymap = L.map('mapid').setView([latitude, longitude], 13);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                        maxZoom: 18,
+                        tileSize: 512,
+                        zoomOffset: -1
+                    }).addTo(mymap);
+
+                    var marker = L.marker([latitude, longitude]).addTo(mymap);
+                });
+
                 buttonLocation.classList.add("d-none");
                 tombolAbsenMasuk.setAttribute('style', '');
                 tombolAbsenKeluar.setAttribute('style', '');
@@ -438,26 +491,16 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         const negara =
                             res.countryName === "" ? "" : " " + res.countryName;
 
-                        yourLatitude.innerText = res.latitude;
-                        yourLongitude.innerText = res.longitude;
                         yourLocation.innerText = `${city}${provinsi}${negara}`;
 
-                        const userLat = res.latitude;
-                        const userLon = res.longitude;
+                        const userLat = latitude;
+                        const userLon = longitude;
 
                         calculateDistance(userLat, userLon);
                     });
             }
 
             function calculateDistance(userLat, userLon) {
-                const apiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${myLat}&longitude=${myLon}&localityLanguage=id`;
-
-                fetch(apiUrl, { headers: { "Content-Type": "application/json" } })
-                    .then((res) => res.json())
-                    .then((res) => {
-                        myLocation.innerText = `${res.locality}, ${res.principalSubdivision}, ${res.countryName}`;
-                    });
-
                 const R = 6371e3; // metres
                 const φ1 = (userLat * Math.PI) / 180; // φ, λ in radians
                 const φ2 = (myLat * Math.PI) / 180;

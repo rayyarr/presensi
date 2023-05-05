@@ -82,14 +82,15 @@ class Absensiswa extends Database
 			echo $e->getMessage();
 		}
 	}
-	public function insert_Absenmasuk($userid, $id_status, $tanggal_absen, $jam_masuk, $keterangan)
+	public function insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan)
 	{
 		try
 		{
-			$sql = "INSERT INTO absen(nip, id_status, tanggal_absen, jam_masuk, keterangan) VALUES(:nip,:id_status, :tanggal_absen, :jam_masuk, :keterangan)";
+			$sql = "INSERT INTO absen(nip, id_status, id_jadwal, tanggal_absen, jam_masuk, keterangan) VALUES(:nip,:id_status, :id_jadwal, :tanggal_absen, :jam_masuk, :keterangan)";
 			$stmt = $this->koneksi->prepare($sql);
 			$stmt->bindParam(":nip",$userid);
 			$stmt->bindParam(":id_status",$id_status);
+			$stmt->bindParam(":id_jadwal",$id_jadwal);
 			$stmt->bindParam(":tanggal_absen",$tanggal_absen);
 			$stmt->bindParam(":jam_masuk",$jam_masuk);
 			$stmt->bindParam(":keterangan",$keterangan);

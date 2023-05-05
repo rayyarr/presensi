@@ -36,13 +36,14 @@ if (isset($_POST['jarak'])) {
 				</script>
 				';
 	} else {
-		if ($jarak <= 99) {
+		if ($jarak <= 99) { // jarak ideal agar bisa masuk
 			$id_status = 1;
+			$id_jadwal = 1;
 			$tanggal_absen = date('Y-m-d');
 			$jam_masuk = date('H:i:s');
 
 			// Eksekusi query dan mengambil isi jadwal masuk
-			$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = 1";
+			$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = $id_jadwal";
 			$hasilW = mysqli_query($conn, $sqlW);
 
 			// Cek apakah query berhasil dijalankan
@@ -85,7 +86,7 @@ if (isset($_POST['jarak'])) {
 				$keterangan = $jarak . ' kilometer';
 			}
 			// eksekusi
-			if ($obj->insert_Absenmasuk($userid, $id_status, $tanggal_absen, $jam_masuk, $keterangan)) {
+			if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan)) {
 				echo
 					'
 				<script> 
