@@ -37,7 +37,7 @@ if (isset($_POST['jarak'])) {
 				';
 	} else {
 		if ($jarak <= 99) { // jarak ideal agar bisa masuk
-			$id_status = 1;
+			$id_status = 1; // status masuk
 			$id_jadwal = 1;
 			$tanggal_absen = date('Y-m-d');
 			$jam_masuk = date('H:i:s');
