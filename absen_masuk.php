@@ -14,8 +14,9 @@ $dbname = "presensi";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-if (isset($_POST['jarak'])) {
+if (isset($_POST['jarak'], $_POST['data_uri'])) {
 	$jarak = $_POST['jarak'];
+	$data_uri = $_POST['data_uri'];
 	//echo "Jarak: " . $jarak . " kilometer";
 
 	# kita cek dulu apakah dia sudah absen sebelumnya
@@ -86,7 +87,7 @@ if (isset($_POST['jarak'])) {
 				$keterangan = $jarak . ' kilometer';
 			}
 			// eksekusi
-			if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan)) {
+			if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $data_uri)) {
 				echo
 					'
 				<script> 

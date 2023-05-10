@@ -1,12 +1,12 @@
 <?php
 
-$nip = "";
+/*$nip = "";
 $password = "";
 $nama = "";
 $jabatan = "";
 $guru = "";
 $sukses = "";
-$error = "";
+$error = "";*/
 
 session_start(); // Mulai session
 
@@ -174,6 +174,9 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     });
                     Webcam.attach('#my_camera');
                 </script>
+
+                <!-- -->
+
                 <div class="mb-3">
                     <span class="d-block"><i class="bi-geo-alt text-success"></i> <a class="text-success"
                             href="https://goo.gl/maps/zwucsvHDvmTCVtYUA" target="_blank">SMP SMA MKGR</a>: <b
@@ -307,295 +310,303 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     Hadir</button>
         </div>
         -->
-    </div>
-    <!--< script src="lokasi.js">
+        </div>
+        <!--< script src="lokasi.js">
         </script> -->
 
         <!--Modal Izin-->
-            <div class="modal fade" id="absenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Absen Sakit / Izin</h5>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="POST">
-                                <div class="form-group">
-                                    <label for="id_status">Jenis Absen</label>
-                                    <select class="form-control mt-2" id="absenSelect" name="id_status">
-                                        <option value="3">Sakit</option>
-                                        <option value="2">Izin</option>
-                                    </select>
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label for="keteranganTextarea">Keterangan (opsional):</label>
-                                    <textarea class="form-control mt-2" name="keterangan" id="keteranganTextarea"
-                                        rows="3"></textarea>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                onClick="$('#absenModal').modal('hide')">Batal</button>
-                            <!--<button type="button" class="btn btn-primary"
+        <div class="modal fade" id="absenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Absen Sakit / Izin</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST">
+                            <div class="form-group">
+                                <label for="id_status">Jenis Absen</label>
+                                <select class="form-control mt-2" id="absenSelect" name="id_status">
+                                    <option value="3">Sakit</option>
+                                    <option value="2">Izin</option>
+                                </select>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="keteranganTextarea">Keterangan (opsional):</label>
+                                <textarea class="form-control mt-2" name="keterangan" id="keteranganTextarea"
+                                    rows="3"></textarea>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onClick="$('#absenModal').modal('hide')">Batal</button>
+                        <!--<button type="button" class="btn btn-primary"
                                             onclick="insertAbsensi(<?php echo $userid; ?>)">Submit</button>-->
-                            <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
-                        </div>
-                        </form>
+                        <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--Modal Map-->
+        <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="mapModalLabel">Peta Lokasi</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="mapid" style="height: 400px;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onClick="$('#mapModal').modal('hide')">Tutup</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!--Modal Map-->
-                <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="mapModalLabel">Peta Lokasi</h5>
-                            </div>
-                            <div class="modal-body">
-                                <div id="mapid" style="height: 400px;"></div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    onClick="$('#mapModal').modal('hide')">Tutup</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    </div>
 
-                </div>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 
-                <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <script>
+        function showModal() {
+            $('#absenModal').modal('show');
+        }
+        function showModalMap() {
+            $('#mapModal').modal('show');
+        }
 
-                <script>
-                    function showModal() {
-                        $('#absenModal').modal('show');
+        function insertAbsensi(userid) {
+            var absenSelect = document.getElementById("absenSelect");
+            var id_status = absenSelect.options[absenSelect.selectedIndex].value;
+
+            if (id_status === "") {
+                alert("Anda harus memilih jenis absen!");
+            } else {
+                var keterangan = document.getElementById("keteranganTextarea").value;
+                console.log(userid);
+
+                // Mengirim data absen ke PHP menggunakan Ajax
+                $.ajax({
+                    url: "",
+                    type: "POST",
+                    data: {
+                        userid: userid,
+                        id_status: id_status,
+                        keterangan: keterangan
+                    },
+                    success: function (data) {
+                        $('#absenModal').modal('hide');
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat menyimpan absen!");
                     }
-                    function showModalMap() {
-                        $('#mapModal').modal('show');
-                    }
+                });
+            }
+        }
 
-                    function insertAbsensi(userid) {
-                        var absenSelect = document.getElementById("absenSelect");
-                        var id_status = absenSelect.options[absenSelect.selectedIndex].value;
+        //////////////////////////////////////////////////////////////
 
-                        if (id_status === "") {
-                            alert("Anda harus memilih jenis absen!");
-                        } else {
-                            var keterangan = document.getElementById("keteranganTextarea").value;
-                            console.log(userid);
+        window.addEventListener("load", () => {
+            const allowLocationButton = document.querySelector(
+                "#allow-location-button"
+            );
+            const buttonLocation = document.querySelector("#blocation");
+            const myLocation = document.querySelector("#my-location");
+            const ourDistance = document.querySelector("#our-distance");
+            const yourLatitude = document.querySelector("#your-latitude");
+            const yourLongitude = document.querySelector("#your-longitude");
+            const yourLocation = document.querySelector("#your-location");
 
-                            // Mengirim data absen ke PHP menggunakan Ajax
-                            $.ajax({
-                                url: "",
-                                type: "POST",
-                                data: {
-                                    userid: userid,
-                                    id_status: id_status,
-                                    keterangan: keterangan
-                                },
-                                success: function (data) {
-                                    $('#absenModal').modal('hide');
-                                },
-                                error: function () {
-                                    alert("Terjadi kesalahan saat menyimpan absen!");
-                                }
-                            });
-                        }
-                    }
+            const myLat = "-6.5005329587694884"; // Latitude SMP SMA MKGR Kertasemaya
+            const myLon = "108.36078998178328"; // Longitude SMP SMA MKGR Kertasemaya
+            myLocation.innerText = "Kertasemaya, Jawa Barat, Indonesia";
+            jarak = 1000; // Jarak Default
 
-                    //////////////////////////////////////////////////////////////
+            allowLocationButton.addEventListener('click', function () {
+                requestLocationPermission();
+            });
 
-                    window.addEventListener("load", () => {
-                        const allowLocationButton = document.querySelector(
-                            "#allow-location-button"
-                        );
-                        const buttonLocation = document.querySelector("#blocation");
-                        const myLocation = document.querySelector("#my-location");
-                        const ourDistance = document.querySelector("#our-distance");
-                        const yourLatitude = document.querySelector("#your-latitude");
-                        const yourLongitude = document.querySelector("#your-longitude");
-                        const yourLocation = document.querySelector("#your-location");
-
-                        const myLat = "-6.5005329587694884"; // Latitude SMP SMA MKGR Kertasemaya
-                        const myLon = "108.36078998178328"; // Longitude SMP SMA MKGR Kertasemaya
-                        myLocation.innerText = "Kertasemaya, Jawa Barat, Indonesia";
-                        jarak = 1000; // Jarak Default
-
-                        allowLocationButton.addEventListener('click', function () {
-                            requestLocationPermission();
+            function requestLocationPermission() {
+                // Meminta izin akses lokasi
+                navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+                    if (result.state == 'granted') {
+                        // Jika izin akses lokasi telah diberikan, panggil fungsi untuk mendapatkan lokasi
+                        isSupportLocation();
+                    } else if (result.state == 'prompt') {
+                        // Jika pengguna belum memberikan izin akses lokasi, minta izin akses lokasi
+                        navigator.geolocation.getCurrentPosition(isSupportLocation, showError);
+                    } else if (result.state == 'denied') {
+                        // Jika pengguna telah memblokir izin akses lokasi, tampilkan pesan kesalahan
+                        swal.fire({
+                            title: "Gagal",
+                            html: "Anda telah memblokir akses lokasi.<br>Harap izinkan akses lokasi pada pengaturan browser Anda.",
+                            icon: "error",
                         });
-
-                        function requestLocationPermission() {
-                            // Meminta izin akses lokasi
-                            navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-                                if (result.state == 'granted') {
-                                    // Jika izin akses lokasi telah diberikan, panggil fungsi untuk mendapatkan lokasi
-                                    isSupportLocation();
-                                } else if (result.state == 'prompt') {
-                                    // Jika pengguna belum memberikan izin akses lokasi, minta izin akses lokasi
-                                    navigator.geolocation.getCurrentPosition(isSupportLocation, showError);
-                                } else if (result.state == 'denied') {
-                                    // Jika pengguna telah memblokir izin akses lokasi, tampilkan pesan kesalahan
-                                    swal.fire({
-                                        title: "Gagal",
-                                        html: "Anda telah memblokir akses lokasi.<br>Harap izinkan akses lokasi pada pengaturan browser Anda.",
-                                        icon: "error",
-                                    });
-                                    buttonLocation.classList.remove("d-none");
-                                    tombolAbsenMasuk.setAttribute('style', 'pointer-events:none;opacity:.65');
-                                    tombolAbsenKeluar.setAttribute('style', 'pointer-events:none;opacity:.65');
-                                }
-                                result.onchange = function () {
-                                    // Jika pengguna mengubah izin akses lokasi, panggil fungsi untuk memeriksa ulang izin akses lokasi
-                                    requestLocationPermission();
-                                }
-                            });
-                        }
-
-                        function isSupportLocation() {
-                            if (navigator.geolocation) {
-                                buttonLocation.classList.remove("d-none");
-                                navigator.geolocation.getCurrentPosition(showPosition);
-                            } else {
-                                swal({
-                                    title: "Gagal",
-                                    text: "browser ini tidak mendukung akses lokasi.",
-                                    icon: "error",
-                                });
-                            }
-                        }
-
-                        function showPosition(position) {
-                            const latitude = position.coords.latitude;
-                            const longitude = position.coords.longitude;
-                            yourLatitude.innerText = latitude;
-                            yourLongitude.innerText = longitude;
-
-                            var mymap;
-                            $('#mapModal').on('hidden.bs.modal', function () {
-                                mymap.remove();
-                            });
-                            $('#mapModal').on('shown.bs.modal', function () {
-                                mymap = L.map('mapid').setView([latitude, longitude], 13);
-
-                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-                                    maxZoom: 18,
-                                    tileSize: 512,
-                                    zoomOffset: -1
-                                }).addTo(mymap);
-
-                                var marker = L.marker([latitude, longitude]).addTo(mymap);
-                            });
-
-                            buttonLocation.classList.add("d-none");
-                            tombolAbsenMasuk.setAttribute('style', '');
-                            tombolAbsenKeluar.setAttribute('style', '');
-
-                            const apiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=id`;
-
-                            fetch(apiUrl, { headers: { "Content-Type": "application/json" } })
-                                .then((res) => res.json())
-                                .then((res) => {
-                                    console.log(res);
-                                    const city = res.city === "" ? "" : res.city + ", ";
-                                    const provinsi = res.principalSubdivision === "" ? "" : res.principalSubdivision + ", ";
-                                    const negara =
-                                        res.countryName === "" ? "" : " " + res.countryName;
-
-                                    yourLocation.innerText = `${city}${provinsi}${negara}`;
-
-                                    const userLat = latitude;
-                                    const userLon = longitude;
-
-                                    calculateDistance(userLat, userLon);
-                                });
-                        }
-
-                        function calculateDistance(userLat, userLon) {
-                            const R = 6371e3; // metres
-                            const φ1 = (userLat * Math.PI) / 180; // φ, λ in radians
-                            const φ2 = (myLat * Math.PI) / 180;
-                            const Δφ = ((myLat - userLat) * Math.PI) / 180;
-                            const Δλ = ((myLon - userLon) * Math.PI) / 180;
-
-                            const a =
-                                Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                                Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-                            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-                            const d = R * c; // in metres
-                            const distance = d.toFixed(0);
-
-                            const distanceInKm = distance / 1000;
-
-                            jarak = Intl.NumberFormat('id-ID', { minimumFractionDigits: 3 }).format(distanceInKm);
-
-                            console.log(distanceInKm.toFixed(3));
-
-                            console.log(Intl.NumberFormat().format(distanceInKm) + " kilometer");
-
-                            ourDistance.innerText = jarak + " kilometer";
-                        }
-
-                        // Tombol Absen Masuk
-                        var tombolAbsenMasuk = document.querySelector('a[href="absen_masuk.php"]');
-                        if (tombolAbsenMasuk) {
-                            tombolAbsenMasuk.addEventListener('click', function (event) {
-                                event.preventDefault();
-                                var form = document.createElement('form');
-                                form.method = 'POST';
-                                form.action = 'absen_masuk.php';
-
-                                var input = document.createElement('input');
-                                input.type = 'hidden';
-                                input.name = 'jarak';
-                                input.value = jarak;
-
-                                form.appendChild(input);
-                                document.body.appendChild(form);
-                                form.submit();
-                            });
-                        }
-
-                        // Tombol Absen Keluar
-                        var tombolAbsenKeluar = document.querySelector('a[href="absen_keluar.php"]');
-                        if (tombolAbsenKeluar) {
-                            tombolAbsenKeluar.addEventListener('click', function (event) {
-                                event.preventDefault();
-                                var form = document.createElement('form');
-                                form.method = 'POST';
-                                form.action = 'absen_keluar.php';
-
-                                var input = document.createElement('input');
-                                input.type = 'hidden';
-                                input.name = 'jarak';
-                                input.value = jarak;
-
-                                form.appendChild(input);
-                                document.body.appendChild(form);
-                                form.submit();
-                            });
-                        }
-
+                        buttonLocation.classList.remove("d-none");
+                        tombolAbsenMasuk.setAttribute('style', 'pointer-events:none;opacity:.65');
+                        tombolAbsenKeluar.setAttribute('style', 'pointer-events:none;opacity:.65');
+                    }
+                    result.onchange = function () {
+                        // Jika pengguna mengubah izin akses lokasi, panggil fungsi untuk memeriksa ulang izin akses lokasi
                         requestLocationPermission();
+                    }
+                });
+            }
 
+            function isSupportLocation() {
+                if (navigator.geolocation) {
+                    buttonLocation.classList.remove("d-none");
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    swal({
+                        title: "Gagal",
+                        text: "browser ini tidak mendukung akses lokasi.",
+                        icon: "error",
                     });
+                }
+            }
 
-                    // untuk jam saat ini
-                    var myVar = setInterval(myTimer, 1000);
+            function showPosition(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                yourLatitude.innerText = latitude;
+                yourLongitude.innerText = longitude;
 
-                    function myTimer() {
-                        var d = new Date();
-                        d.setHours(d.getHours()); // Waktu Indonesia Barat (GMT+7)
-                        var t = d.toLocaleTimeString('en-US', { hour12: false });
-                        document.getElementById("jam").innerHTML = t;
-                    } myTimer();
-                </script>
+                var mymap;
+                $('#mapModal').on('hidden.bs.modal', function () {
+                    mymap.remove();
+                });
+                $('#mapModal').on('shown.bs.modal', function () {
+                    mymap = L.map('mapid').setView([latitude, longitude], 13);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                        maxZoom: 18,
+                        tileSize: 512,
+                        zoomOffset: -1
+                    }).addTo(mymap);
+
+                    var marker = L.marker([latitude, longitude]).addTo(mymap);
+                });
+
+                buttonLocation.classList.add("d-none");
+                tombolAbsenMasuk.setAttribute('style', '');
+                tombolAbsenKeluar.setAttribute('style', '');
+
+                const apiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=id`;
+
+                fetch(apiUrl, { headers: { "Content-Type": "application/json" } })
+                    .then((res) => res.json())
+                    .then((res) => {
+                        console.log(res);
+                        const city = res.city === "" ? "" : res.city + ", ";
+                        const provinsi = res.principalSubdivision === "" ? "" : res.principalSubdivision + ", ";
+                        const negara =
+                            res.countryName === "" ? "" : " " + res.countryName;
+
+                        yourLocation.innerText = `${city}${provinsi}${negara}`;
+
+                        const userLat = latitude;
+                        const userLon = longitude;
+
+                        calculateDistance(userLat, userLon);
+                    });
+            }
+
+            function calculateDistance(userLat, userLon) {
+                const R = 6371e3; // metres
+                const φ1 = (userLat * Math.PI) / 180; // φ, λ in radians
+                const φ2 = (myLat * Math.PI) / 180;
+                const Δφ = ((myLat - userLat) * Math.PI) / 180;
+                const Δλ = ((myLon - userLon) * Math.PI) / 180;
+
+                const a =
+                    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                const d = R * c; // in metres
+                const distance = d.toFixed(0);
+
+                const distanceInKm = distance / 1000;
+
+                jarak = Intl.NumberFormat('id-ID', { minimumFractionDigits: 3 }).format(distanceInKm);
+
+                console.log(distanceInKm.toFixed(3));
+
+                console.log(Intl.NumberFormat().format(distanceInKm) + " kilometer");
+
+                ourDistance.innerText = jarak + " kilometer";
+            }
+
+            // Tombol Absen Masuk
+            var tombolAbsenMasuk = document.querySelector('a[href="absen_masuk.php"]');
+            if (tombolAbsenMasuk) {
+                tombolAbsenMasuk.addEventListener('click', function (event) {
+                    Webcam.snap(function (data_uri) {
+                        event.preventDefault();
+                        var form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'absen_masuk.php';
+
+                        var inputJarak = document.createElement('input');
+                        inputJarak.type = 'hidden';
+                        inputJarak.name = 'jarak';
+                        inputJarak.value = jarak;
+                        form.appendChild(inputJarak);
+
+                        var inputDataUri = document.createElement('input');
+                        inputDataUri.type = 'hidden';
+                        inputDataUri.name = 'data_uri';
+                        inputDataUri.value = data_uri;
+                        form.appendChild(inputDataUri);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
+                });
+            }
+
+            // Tombol Absen Keluar
+            var tombolAbsenKeluar = document.querySelector('a[href="absen_keluar.php"]');
+            if (tombolAbsenKeluar) {
+                tombolAbsenKeluar.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'absen_keluar.php';
+
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'jarak';
+                    input.value = jarak;
+
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+
+            requestLocationPermission();
+
+        });
+
+        // untuk jam saat ini
+        var myVar = setInterval(myTimer, 1000);
+
+        function myTimer() {
+            var d = new Date();
+            d.setHours(d.getHours()); // Waktu Indonesia Barat (GMT+7)
+            var t = d.toLocaleTimeString('en-US', { hour12: false });
+            document.getElementById("jam").innerHTML = t;
+        } myTimer();
+    </script>
 </body>
 
 </html>
