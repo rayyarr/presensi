@@ -14,10 +14,9 @@ $dbname = "presensi";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-if (isset($_POST['jarak'], $_POST['data_uri'])) {
+if (isset($_POST['photo'], $_POST['jarak'])) {
 	$jarak = $_POST['jarak'];
-	$data_uri = $_POST['data_uri'];
-	//echo "Jarak: " . $jarak . " kilometer";
+	$photo = $_POST["photo"];
 
 	# kita cek dulu apakah dia sudah absen sebelumnya
 	if ($obj->cek_Absenmasuk($userid)) {
@@ -42,6 +41,12 @@ if (isset($_POST['jarak'], $_POST['data_uri'])) {
 			$id_jadwal = 1;
 			$tanggal_absen = date('Y-m-d');
 			$jam_masuk = date('H:i:s');
+
+			// Simpan foto ke folder hasil_absen dengan nama yang unik
+			$file_foto = $userid . "_" . date('Y-m-d') . ".png";
+			$filePath = "hasil_absen/" . $file_foto;
+			file_put_contents($filePath, base64_decode(explode(",", $photo)[1]));
+			//echo "Jarak: " . $jarak . " kilometer";
 
 			// Eksekusi query dan mengambil isi jadwal masuk
 			$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = $id_jadwal";
@@ -82,18 +87,18 @@ if (isset($_POST['jarak'], $_POST['data_uri'])) {
 					} else {
 						$keterangan = $jarak . ' kilometer' . ", TERLAMBAT $jam_terlambat jam $menit_terlambat menit";
 					}
-				}						
+				}
 			} else {
 				$keterangan = $jarak . ' kilometer';
 			}
 			// eksekusi
-			if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $data_uri)) {
+			if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $file_foto)) {
 				echo
 					'
 				<script> 
 					swal.fire({
 						title: "Berhasil Masuk!",
-						html: "JARAK '.$keterangan.'",
+						html: "JARAK ' . $keterangan . '",
 						icon: "success",
 					}).then((result) => {
 						setTimeout(function () {

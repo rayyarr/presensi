@@ -159,21 +159,9 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 <!--<div class="alert alert-info" role="alert">
                     Sistem ini menggunakan akses lokasi agar dapat bekerja.
                 </div>-->
-                <div class="text-center" style="align-items:center;margin-right:auto;margin-left:auto" id="my_camera">
+                <div class="mb-3" style="align-items:center;margin-right:auto;margin-left:auto">
+                    <video id="video" width="280" height="200" style="transform: scaleX(-1);" autoplay></video>
                 </div>
-                <!-- webcamjs lewat LOKAL -->
-                <script src="https://rayyarr.github.io/presensi/header/webcam.js"></script>
-
-                <!-- Configure a few settings and attach camera -->
-                <script>
-                    Webcam.set({
-                        width: 320,
-                        height: 320,
-                        image_format: 'jpeg',
-                        jpeg_quality: 100
-                    });
-                    Webcam.attach('#my_camera');
-                </script>
 
                 <!-- -->
 
@@ -214,7 +202,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             </button > -->
                 <div class="wallet-footer" style="flex-wrap:wrap;justify-content:space-between">
                     <div class="item">
-                        <a href="absen_masuk.php">
+                        <label id="captureButton">
                             <div class="button-container btn-outline-biru">
                                 <div class="button-icon">
                                     <i class="bi bi-calendar2-check"></i>
@@ -232,7 +220,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                                     </div>
                                 </div>
                             </div>
-                        </a>
+                        </label>
                     </div>
                     <div class="item">
                         <a href="absen_keluar.php">
@@ -596,6 +584,152 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             requestLocationPermission();
 
         });
+
+        // Mengambil elemen video dan tombol ambil foto
+        const video = document.getElementById("video");
+        const captureButton = document.getElementById("captureButton");
+
+        function requestCameraPermission() {
+            // Meminta izin akses kamera
+            navigator.permissions.query({ name: 'camera' }).then(function (result) {
+                if (result.state === 'granted') {
+                    // Jika izin akses kamera telah diberikan, coba akses kamera lagi
+                    accessCamera();
+                } else if (result.state === 'prompt') {
+                    // Jika pengguna belum memberikan izin akses kamera, minta izin akses kamera
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function (stream) {
+                            video.srcObject = stream;
+                        })
+                        .catch(function (error) {
+                            showError("Error accessing webcam: " + error);
+                        });
+                } else if (result.state === 'denied') {
+                    // Jika pengguna telah memblokir izin akses kamera, tampilkan pesan kesalahan
+                    Swal.fire({
+                        title: "Gagal",
+                        html: "Anda telah memblokir akses kamera.<br>Harap izinkan akses kamera pada pengaturan browser Anda.",
+                        icon: "error",
+                    });
+                    // Tambahkan logika tambahan jika diperlukan setelah pemblokiran izin akses kamera
+                }
+                result.onchange = function () {
+                    // Jika pengguna mengubah izin akses kamera, panggil fungsi untuk memeriksa ulang izin akses kamera
+                    requestCameraPermission();
+                };
+            });
+        }
+
+        // Fungsi untuk mengakses kamera dan mengatur aliran video
+        function accessCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (error) {
+                    showError("Error accessing webcam: " + error);
+                });
+        }
+
+        // Fungsi untuk menampilkan pesan kesalahan
+        function showError(error) {
+            console.log(error);
+            // Tambahkan logika tambahan jika diperlukan untuk menangani kesalahan akses kamera
+        }
+
+        // Panggil fungsi untuk meminta izin akses kamera
+        requestCameraPermission();
+
+        ///////////////////////////////////////////////////////
+
+        // Mengambil foto saat tombol ambil foto diklik
+        captureButton.addEventListener("click", async function () {
+            // Memeriksa izin kamera
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                // Izin kamera diberikan, melanjutkan dengan kode pengambilan foto
+                stream.getTracks().forEach((track) => track.stop()); // Menutup stream kamera yang tidak digunakan
+                takePhoto();
+            } catch (error) {
+                // Izin kamera tidak diberikan atau terjadi kesalahan lain
+                Swal.fire("Harap izinkan akses kamera!");
+            }
+        });
+
+        // Fungsi untuk mengambil foto
+        function takePhoto() {
+            // Membuat elemen canvas untuk mengambil foto
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+
+            // Mengatur ukuran canvas sesuai dengan ukuran video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Menggambar video pada canvas
+            context.scale(-1, 1); // Tambahkan baris ini untuk membalikkan gambar secara horizontal
+            context.drawImage(video, 0, 0, -canvas.width, canvas.height);
+
+            // Mengubah foto menjadi URL data (base64)
+            const photo = canvas.toDataURL("image/png");
+
+            if (photo) {
+                // Menampilkan SweetAlert2 dengan pesan dan foto
+                Swal.fire({
+                    title: "Ingin Absen Masuk?",
+                    text: "",
+                    imageUrl: photo,
+                    imageAlt: "Foto Absen",
+                    showCancelButton: true,
+                    confirmButtonText: "Masuk",
+                    cancelButtonText: "Batal",
+                    preConfirm: () => {
+                        return new Promise((resolve) => {
+                            const image = new Image();
+                            image.src = photo;
+                            image.onerror = () => {
+                                Swal.showValidationMessage("Foto tidak dapat dimuat!");
+                                resolve(false);
+                            };
+                            image.onload = () => {
+                                resolve(true);
+                            };
+                        });
+                    },
+                }).then((result) => {
+                    // Jika tombol "Absen Masuk" pada SweetAlert2 diklik
+                    if (result.isConfirmed) {
+                        // Buat formulir dinamis
+                        const form = document.createElement("form");
+                        form.action = "absen_masuk.php";
+                        form.method = "POST";
+                        form.style.display = "none";
+
+                        // Tambahkan input jarak ke dalam formulir
+                        const jarakInput = document.createElement("input");
+                        jarakInput.type = "hidden";
+                        jarakInput.name = "jarak";
+                        jarakInput.value = jarak;
+                        form.appendChild(jarakInput);
+
+                        // Tambahkan input foto ke dalam formulir
+                        const photoInput = document.createElement("input");
+                        photoInput.type = "hidden";
+                        photoInput.name = "photo";
+                        photoInput.value = photo;
+                        form.appendChild(photoInput);
+
+                        // Tambahkan formulir ke dalam dokumen
+                        document.body.appendChild(form);
+
+                        // Submit formulir
+                        form.submit();
+                    }
+                });
+            } else {
+                Swal.fire("Tidak dapat menangkap gambar!");
+            }
+        }
 
         // untuk jam saat ini
         var myVar = setInterval(myTimer, 1000);

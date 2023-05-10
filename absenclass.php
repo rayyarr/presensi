@@ -82,7 +82,7 @@ class Absensiswa extends Database
 			echo $e->getMessage();
 		}
 	}
-	public function insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $data_uri)
+	public function insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $file_foto)
 	{
 		try
 		{
@@ -94,7 +94,7 @@ class Absensiswa extends Database
 			$stmt->bindParam(":tanggal_absen",$tanggal_absen);
 			$stmt->bindParam(":jam_masuk",$jam_masuk);
 			$stmt->bindParam(":keterangan",$keterangan);
-			$stmt->bindParam(":foto_absen",$data_uri);
+			$stmt->bindParam(":foto_absen",$file_foto);
 
 			$stmt->execute();
 			return true;

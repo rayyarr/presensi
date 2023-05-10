@@ -106,10 +106,10 @@ svg{width: 24px;height: 24px;fill: currentColor;}
 .button-alt{font-size:12px;}
 
 .swal2-modal > *{font-size:16px;}
-.swal2-title{line-height:1.3em;font-size:20px;text-align:center;padding:15px 30px 0 30px;}
+.swal2-title{line-height:1.3em;font-size:17px;text-align:center;padding:15px 30px 0 30px;}
 .swal2-timer-progress-bar-container > *{opacity:.7;background:#00B6FF;margin:0 2px}
 .swal2-modal{background:#EAEAEA;box-shadow: 0 4px 30px rgba(255,255,255, 0.3);backdrop-filter: blur(2px);-webkit-backdrop-filter: blur(2px);border: 1px solid rgba(255, 255, 255, 0.3);border-radius: 8px;max-width:330px;top:-60px;}
-.swal2-styled.swal2-confirm, .swal2-styled.swal2-cancel{position: relative;background-color: #4839eb;color: #fff;border-radius:18px;z-index: 1;transition: all 0.2s;}
+.swal2-styled.swal2-confirm, .swal2-styled.swal2-cancel{position: relative;font-size:14px;color: #fff;border-radius:12px;z-index: 1;transition: all 0.2s;}
 
 /* */
 
