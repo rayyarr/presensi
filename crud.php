@@ -1,13 +1,6 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "presensi";
 
-$koneksi = mysqli_connect($host, $user, $pass, $db);
-if (!$koneksi) { //cek koneksi
-    die("Tidak bisa terkoneksi ke database");
-}
+include_once 'main-admin.php';
 
 $nip = "";
 $password = "";
@@ -25,7 +18,7 @@ if (isset($_GET['op'])) {
 if ($op == 'delete') {
     $id = $_GET['id'];
     $sql1 = "delete from pengguna where id = '$id'";
-    $q1 = mysqli_query($koneksi, $sql1);
+    $q1 = mysqli_query($conn, $sql1);
     if ($q1) {
         $sukses = "Berhasil hapus data";
     } else {
@@ -39,7 +32,7 @@ if ($op == 'edit') {
                                              FROM pengguna
                                              INNER JOIN jabatan ON pengguna.jabatan_id where id = '$id' = jabatan.jabatan_id where id = '$id'
                                              ORDER BY pengguna.id where id = '$id' DESC";
-    $q1 = mysqli_query($koneksi, $sqldef);
+    $q1 = mysqli_query($conn, $sqldef);
     $r1 = mysqli_fetch_array($q1);
     $nip = $r1['nip'];
     $password = md5($r1['password']);
@@ -61,7 +54,7 @@ if (isset($_POST['simpan'])) { //untuk create
     if ($nip && $password && $nama && $jabatan && $guru) {
         if ($op == 'edit') { //untuk update
             $sql1 = "update pengguna set nip = '$nip',password='$password',nama='$nama',jabatan_id = '$jabatan',guru='$guru' where id = '$id'";
-            $q1 = mysqli_query($koneksi, $sql1);
+            $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Data berhasil diupdate";
             } else {
@@ -69,7 +62,7 @@ if (isset($_POST['simpan'])) { //untuk create
             }
         } else { //untuk insert
             $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-            $q1 = mysqli_query($koneksi, $sql1);
+            $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Berhasil memasukkan data baru";
             } else {
@@ -93,7 +86,7 @@ if (isset($_POST['simpan'])) { //untuk create
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <style>
         .mx-auto {
-            width: 800px
+            max-width: 800px
         }
 
         .card {
@@ -113,21 +106,17 @@ if (isset($_POST['simpan'])) { //untuk create
                 <?php
                 if ($error) {
                     ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?php echo $error ?>
-                    </div>
+                    <script>Swal.fire("<?php echo $error ?>");</script>
                     <?php
-                    header("refresh:3;url=index.php"); //5 : detik
+                    
                 }
                 ?>
                 <?php
                 if ($sukses) {
                     ?>
-                    <div class="alert alert-success" role="alert">
-                        <?php echo $sukses ?>
-                    </div>
+                    <script>Swal.fire("<?php echo $sukses ?>");</script>
                     <?php
-                    header("refresh:3;url=index.php");
+                    
                 }
                 ?>
                 <form action="" method="POST">
@@ -210,7 +199,7 @@ if (isset($_POST['simpan'])) { //untuk create
             </div>
 
             <!-- untuk mengeluarkan data -->
-            <div class="card">
+            <div class="card mb-5">
                 <div class="card-header text-white bg-secondary">
                     Data Pengguna
                 </div>
@@ -232,7 +221,7 @@ if (isset($_POST['simpan'])) { //untuk create
                                              FROM pengguna
                                              INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
                                              ORDER BY pengguna.id DESC";
-                                    $q2 = mysqli_query($koneksi, $sql2);
+                                    $q2 = mysqli_query($conn, $sql2);
                                     $urut = 1;
                                     while ($r2 = mysqli_fetch_array($q2)) {
                                         $id = $r2['id'];
@@ -259,9 +248,9 @@ if (isset($_POST['simpan'])) { //untuk create
                                     <?php echo $guru ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="index.php?op=edit&id=<?php echo $id ?>"><button type="button"
+                                    <a href="crud.php?op=edit&id=<?php echo $id ?>"><button type="button"
                                             class="btn btn-warning">Edit</button></a>
-                                    <a href="index.php?op=delete&id=<?php echo $id ?>"
+                                    <a href="crud.php?op=delete&id=<?php echo $id ?>"
                                         onclick="return confirm('Yakin mau delete data?')"><button type="button"
                                             class="btn btn-danger">Delete</button></a>
                                 </td>

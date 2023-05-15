@@ -314,10 +314,24 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         <form action="" method="POST">
                             <div class="form-group">
                                 <label for="id_status">Jenis Absen</label>
-                                <select class="form-control mt-2" id="absenSelect" name="id_status">
+                                <?php
+                                $qstatus = "SELECT id_status, nama_status FROM status_absen WHERE id_status <> 1";
+                                $hasilstatus = $conn->query($qstatus);
+                                if ($hasilstatus->num_rows > 0) {
+                                    echo '<select class="form-control mt-2" id="absenSelect" name="id_status">';
+                                    while ($row = $hasilstatus->fetch_assoc()) {
+                                        $nama_status = $row["nama_status"];
+                                        echo '<option value="' . $row["id_status"] . '">' . $nama_status . '</option>';
+                                    }
+                                    echo '</select>';
+                                } else {
+                                    echo "Tidak ada data yang ditemukan.";
+                                }
+                                ?>
+                                <!--<select class="form-control mt-2" id="absenSelect" name="id_status">
                                     <option value="3">Sakit</option>
                                     <option value="2">Izin</option>
-                                </select>
+                                </select>-->
                             </div>
                             <div class="form-group mt-3">
                                 <label for="keteranganTextarea">Keterangan (opsional):</label>
@@ -534,7 +548,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             }
 
             // Tombol Absen Masuk
-            var tombolAbsenMasuk = document.querySelector('a[href="absen_masuk.php"]');
+            var tombolAbsenMasuk = document.getElementById("captureButton"); //document.querySelector('a[href="absen_masuk.php"]');
             if (tombolAbsenMasuk) {
                 tombolAbsenMasuk.addEventListener('click', function (event) {
                     Webcam.snap(function (data_uri) {
