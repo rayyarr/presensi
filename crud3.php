@@ -1,5 +1,5 @@
 <?php
-include_once 'sw-header-admin.php';
+include_once 'main-admin.php';
 
 $id_status = "";
 $nama_status = "";
@@ -14,7 +14,7 @@ if (isset($_GET['op'])) {
 if ($op == 'delete') {
     $id_status = $_GET['id'];
     $sql1 = "delete from status_absen where id_status = '$id_status'";
-    $q1 = mysqli_query($koneksi, $sql1);
+    $q1 = mysqli_query($kconn, $sql1);
     if ($q1) {
         $sukses = "Berhasil hapus data";
     } else {
@@ -40,7 +40,7 @@ if (isset($_POST['simpan'])) { //untuk create
     if ($id_status && $nama_status) {
         if ($op == 'edit') { //untuk update
             $sql1 = "update status_absen set nama_status='$nama_status' where id_status = '$id_status'";
-            $q1 = mysqli_query($koneksi, $sql1);
+            $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Data berhasil diupdate";
             } else {
@@ -48,7 +48,7 @@ if (isset($_POST['simpan'])) { //untuk create
             }
         } else { //untuk insert
             $sql1 = "insert into status_absen(id_status,nama_status) values ('$id_status','$nama_status')";
-            $q1 = mysqli_query($koneksi, $sql1);
+            $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Berhasil memasukkan data baru";
             } else {
@@ -89,24 +89,20 @@ if (isset($_POST['simpan'])) { //untuk create
                 Edit status_absen
             </div>
             <div class="card-body">
-                <?php
+            <?php
                 if ($error) {
                     ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?php echo $error ?>
-                    </div>
+                    <script>Swal.fire("<?php echo $error ?>");</script>
                     <?php
-                    header("refresh:3;url=crud3"); //5 : detik
+                    
                 }
                 ?>
                 <?php
                 if ($sukses) {
                     ?>
-                    <div class="alert alert-success" role="alert">
-                        <?php echo $sukses ?>
-                    </div>
+                    <script>Swal.fire("<?php echo $sukses ?>");</script>
                     <?php
-                    header("refresh:3;url=crud3");
+                    
                 }
                 ?>
                 <form action="" method="POST">
@@ -147,7 +143,7 @@ if (isset($_POST['simpan'])) { //untuk create
                         <tbody>
                             <?php
                                     $sql2 = "SELECT * FROM status_absen";
-                                    $q2 = mysqli_query($koneksi, $sql2);
+                                    $q2 = mysqli_query($conn, $sql2);
                                     $urut = 1;
                                     while ($r2 = mysqli_fetch_array($q2)) {
                                         $id_status = $r2['id_status'];
