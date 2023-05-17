@@ -14,7 +14,7 @@ if (isset($_GET['op'])) {
 }
 if ($op == 'delete') {
     $id_jadwal = $_GET['id'];
-    $sql1 = "delete from pengguna where id = '$id_jadwal'";
+    $sql1 = "delete from jadwal where id_jadwal= '$id_jadwal'";
     $q1 = mysqli_query($conn, $sql1);
     if ($q1) {
         $sukses = "Berhasil hapus data";
@@ -92,24 +92,20 @@ if (isset($_POST['simpan'])) { //untuk create
                 Edit Jadwal
             </div>
             <div class="card-body">
-                <?php
+            <?php
                 if ($error) {
                     ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?php echo $error ?>
-                    </div>
+                    <script>Swal.fire("<?php echo $error ?>");</script>
                     <?php
-                    header("refresh:3;url=index.php"); //5 : detik
+                    
                 }
                 ?>
                 <?php
                 if ($sukses) {
                     ?>
-                    <div class="alert alert-success" role="alert">
-                        <?php echo $sukses ?>
-                    </div>
+                    <script>Swal.fire("<?php echo $sukses ?>");</script>
                     <?php
-                    header("refresh:3;url=index.php");
+                    
                 }
                 ?>
                 <form action="" method="POST">

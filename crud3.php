@@ -14,7 +14,7 @@ if (isset($_GET['op'])) {
 if ($op == 'delete') {
     $id_status = $_GET['id'];
     $sql1 = "delete from status_absen where id_status = '$id_status'";
-    $q1 = mysqli_query($kconn, $sql1);
+    $q1 = mysqli_query($conn, $sql1);
     if ($q1) {
         $sukses = "Berhasil hapus data";
     } else {
@@ -24,7 +24,7 @@ if ($op == 'delete') {
 if ($op == 'edit') {
     $id_status = $_GET['id'];
     $sqldef = "select * from status_absen where id_status = '$id_status'";
-    $q1 = mysqli_query($koneksi, $sqldef);
+    $q1 = mysqli_query($conn, $sqldef);
     $r1 = mysqli_fetch_array($q1);
     $id_status = $r1['id_status'];
     $nama_status = $r1['nama_status'];
