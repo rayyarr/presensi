@@ -1,13 +1,5 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "presensi";
-
-$koneksi = mysqli_connect($host, $user, $pass, $db);
-if (!$koneksi) { //cek koneksi
-    die("Tidak bisa terkoneksi ke database");
-}
+include_once 'main-admin.php';
 
 $id_jadwal = "";
 $waktu_masuk = "";
@@ -23,7 +15,7 @@ if (isset($_GET['op'])) {
 if ($op == 'delete') {
     $id_jadwal = $_GET['id'];
     $sql1 = "delete from pengguna where id = '$id_jadwal'";
-    $q1 = mysqli_query($koneksi, $sql1);
+    $q1 = mysqli_query($conn, $sql1);
     if ($q1) {
         $sukses = "Berhasil hapus data";
     } else {
@@ -33,7 +25,7 @@ if ($op == 'delete') {
 if ($op == 'edit') {
     $id_jadwal = $_GET['id'];
     $sqldef = "select * from jadwal where id_jadwal = '$id_jadwal'";
-    $q1 = mysqli_query($koneksi, $sqldef);
+    $q1 = mysqli_query($conn, $sqldef);
     $r1 = mysqli_fetch_array($q1);
     $id_jadwal = $r1['id_jadwal'];
     $waktu_masuk = $r1['waktu_masuk'];
@@ -51,7 +43,7 @@ if (isset($_POST['simpan'])) { //untuk create
     if ($id_jadwal && $waktu_masuk && $waktu_pulang) {
         if ($op == 'edit') { //untuk update
             $sql1 = "update jadwal set waktu_masuk='$waktu_masuk',waktu_pulang='$waktu_pulang' where id_jadwal = '$id_jadwal'";
-            $q1 = mysqli_query($koneksi, $sql1);
+            $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Data berhasil diupdate";
             } else {
@@ -59,7 +51,7 @@ if (isset($_POST['simpan'])) { //untuk create
             }
         } else { //untuk insert
             $sql1 = "insert into jadwal(id_jadwal,waktu_masuk,waktu_pulang) values ('$id_jadwal','$waktu_masuk','$waktu_pulang'";
-            $q1 = mysqli_query($koneksi, $sql1);
+            $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Berhasil memasukkan data baru";
             } else {
@@ -165,7 +157,7 @@ if (isset($_POST['simpan'])) { //untuk create
                         <tbody>
                             <?php
                                     $sql2 = "SELECT * FROM jadwal";
-                                    $q2 = mysqli_query($koneksi, $sql2);
+                                    $q2 = mysqli_query($conn, $sql2);
                                     $urut = 1;
                                     while ($r2 = mysqli_fetch_array($q2)) {
                                         $id_jadwal = $r2['id_jadwal'];

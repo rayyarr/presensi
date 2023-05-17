@@ -238,10 +238,10 @@ Beranda
     <div class="kolomkiri">
     <div class="navigation active">
     <ul>
-        <li class="list';if ($current_page == "beranda.php") {echo " active";} echo'">
+        <li class="list';if ($current_page == "#") {echo " active";} echo'">
             <b></b>
             <b></b>
-            <a href="beranda" data-text="Home">
+            <a href="#" data-text="Home">
                 <span class="icon"><i class="bi bi-house-door"></i></span>
                 <span class="title">Home</span>
             </a>
@@ -254,20 +254,20 @@ Beranda
                 <span class="title">Pengguna</span>
             </a>
         </li>
-        <li class="list';if ($current_page == "profil.php") {echo " active";} echo'">
+        <li class="list';if ($current_page == "crud3.php") {echo " active";} echo'">
             <b></b>
             <b></b>
-            <a href="profil" data-text="Profil">
-                <span class="icon"><i class="bi bi-person-lines-fill"></i></span>
-                <span class="title">Profil</span>
+            <a href="crud3" data-text="Status Absen">
+                <span class="icon"><i class="bi bi-list-check"></i></span>
+                <span class="title">Status Absen</span>
             </a>
         </li>
-        <li class="list';if ($current_page == "riwayat.php") {echo " active";} echo'">
+        <li class="list';if ($current_page == "crud2.php") {echo " active";} echo'">
             <b></b>
             <b></b>
-            <a href="riwayat" data-text="Riwayat">
-                <span class="icon"><i class="bi bi-card-checklist"></i></span>
-                <span class="title">Riwayat</span>
+            <a href="crud2" data-text="Jadwal">
+                <span class="icon"><i class="bi bi-calendar-week"></i></span>
+                <span class="title">Jadwal</span>
             </a>
         </li>
     </ul>
