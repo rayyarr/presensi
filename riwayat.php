@@ -39,6 +39,7 @@ include_once 'sw-header.php';
     .card {
         margin-top: 10px;
     }
+    .table>tbody{font-size:14px}
 </style>
 
 <body>
