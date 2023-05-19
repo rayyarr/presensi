@@ -14,9 +14,10 @@ $dbname = "presensi";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-if (isset($_POST['photo'], $_POST['jarak'])) {
+if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
 	$jarak = $_POST['jarak'];
 	$photo = $_POST["photo"];
+	$latlong = $_POST['latlong'];
 
 	# kita cek dulu apakah dia sudah absen sebelumnya
 	if ($obj->cek_Absenmasuk($userid)) {
@@ -92,7 +93,7 @@ if (isset($_POST['photo'], $_POST['jarak'])) {
 				$keterangan = $jarak . ' kilometer';
 			}
 			// eksekusi
-			if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $file_foto)) {
+			if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $file_foto, $latlong)) {
 				echo
 					'
 				<script> 

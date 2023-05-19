@@ -30,6 +30,8 @@ include_once 'sw-header.php';
 
 <head>
     <title>Tabel Absen</title>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 </head>
 <style>
     .mx-auto {
@@ -43,11 +45,40 @@ include_once 'sw-header.php';
     .table>tbody {
         font-size: 14px
     }
-    .ftabsen, .swal2-image{border-radius:8px}
-    .ftabsen:hover{cursor:pointer;transform:scale(1.1);transition:all .3s ease}
+    td.text-center{vertical-align: middle;}
+    
+    .ftabsen,
+    .swal2-image {
+        border-radius: 8px
+    }
+
+    .ftabsen:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+        transition: all .3s ease
+    }
 </style>
 
 <body>
+    <!--Modal Map-->
+    <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">Peta Lokasi</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="mapid" style="height: 400px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                        onClick="$('#mapModal').modal('hide')">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="kolomkanan">
         <div class="mx-auto">
 
@@ -155,12 +186,13 @@ include_once 'sw-header.php';
                     <table class="table table-bordered">
                         <thead>
                             <tr style="text-align:center">
-                                <th>Tanggal</th>
+                                <th width="150">Tanggal</th>
                                 <th>Jam Masuk</th>
                                 <th>Jam Keluar</th>
                                 <th>Status</th>
-                                <th>Keterangan</th>
-                                <th>Foto</th>
+                                <th width="180">Keterangan</th>
+                                <th width="50">Foto</th>
+                                <th>Lokasi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -196,7 +228,7 @@ include_once 'sw-header.php';
                                 echo '<td>' . $nama_hari . ', ' . str_pad($i, 2, '0', STR_PAD_LEFT) . ' ' . $nama_bulan . ' ' . $tahun . '</td>';
 
                                 // ambil data absen dari database berdasarkan tanggal dan nip
-                                $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen 
+                                $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen, absen.latlong 
                         FROM absen 
                         JOIN status_absen ON absen.id_status = status_absen.id_status 
                         WHERE nip = $userid AND tanggal_absen = '$tahun-$bulan-" . str_pad($i, 2, '0', STR_PAD_LEFT) . "'
@@ -211,6 +243,7 @@ include_once 'sw-header.php';
                                     $status = $data_absen['nama_status'];
                                     $keterangan = $data_absen['keterangan'];
                                     $fotoAbsen = $data_absen['foto_absen'];
+                                    $latlong = $data_absen['latlong'];
                                 } else {
                                     // jika data absen tidak ditemukan, tampilkan status kosong dan keterangan kosong
                                     $jam_masuk = '';
@@ -218,6 +251,7 @@ include_once 'sw-header.php';
                                     $status = '';
                                     $keterangan = '-';
                                     $fotoAbsen = '';
+                                    $latlong = '';
                                     // tambahkan keterangan untuk hari Minggu
                                     if ($nama_hari == 'Minggu') {
                                         $keterangan = 'Libur Akhir Pekan';
@@ -231,9 +265,14 @@ include_once 'sw-header.php';
                                 echo '<td>' . $status . '</td>';
                                 echo '<td>' . $keterangan . '</td>';
                                 if (!empty($fotoAbsen)) {
-                                    echo '<td>';
-                                    echo '<img class="ftabsen" src="hasil_absen/' . $fotoAbsen . '" alt="Foto Absen" id="' . $i . '" width="40px" height="40px" onclick="showFoto(\'' . $fotoAbsen . '\')">';
+                                    echo '<td class="text-center">';
+                                    echo '<img class="ftabsen" src="hasil_absen/' . $fotoAbsen . '" alt="Foto Absen" id="' . $i . '" width="50px" height="50px" onclick="showFoto(\'' . $fotoAbsen . '\')">';
                                     echo '</td>';
+                                } else {
+                                    echo '<td></td>';
+                                }
+                                if (!empty($latlong)) {
+                                    echo '<td class="text-center"><button type="button" class="tmlokasi btn btn-primary btn-sm" onclick="showModalMap(\'' . $latlong . '\')">Lihat</button></td>';
                                 } else {
                                     echo '<td></td>';
                                 }
@@ -247,6 +286,55 @@ include_once 'sw-header.php';
                                     title: 'Foto Absen: <?php echo $nama ?>',
                                     imageUrl: 'hasil_absen/' + fotoAbsen,
                                     imageWidth: 300,
+                                });
+                            }
+                            var mymap;
+                            $('#mapModal').on('hidden.bs.modal', function () {
+                                mymap.remove();
+                            });
+                            function showModalMap(latlong) {
+                                $('#mapModal').modal('show');
+                                $('#mapModal').on('shown.bs.modal', function () {
+                                    var mapContainer = document.getElementById('mapid');
+
+                                    // Hapus peta yang ada jika sudah diinisialisasi sebelumnya
+                                    if (mapContainer && mapContainer._leaflet_id) {
+                                        mapContainer._leaflet_id = null;
+                                    }
+
+                                    // Split latlong menjadi latitude dan longitude
+                                    var coordinates = latlong.split(',');
+                                    var latitude = parseFloat(coordinates[0]);
+                                    var longitude = parseFloat(coordinates[1]);
+
+                                    // Gunakan nilai latitude dan longitude dalam setView()
+                                    mymap = L.map('mapid').setView([latitude, longitude], 13);
+
+                                    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                                        attribution: 'Map data &copy; <a href="https://www.mapbox.com/">Mapbox</a>',
+                                        maxZoom: 18,
+                                        tileSize: 512,
+                                        zoomOffset: -1,
+                                        id: 'mapbox/streets-v11',
+                                        accessToken: 'pk.eyJ1IjoiYWRpZ3VuYXdhbnhkIiwiYSI6ImNrcWp2Yjg2cDA0ZjAydnJ1YjN0aDNnbm4ifQ.htvHCgSgN0UuV8hhZBfBfQ'
+                                    }).addTo(mymap);
+
+                                    L.marker([latitude, longitude]).addTo(mymap);
+                                    L.circle([latitude, longitude], 550, {
+                                        color: 'red',
+                                        fillColor: '#f03',
+                                        fillOpacity: 0.5
+                                    }).addTo(mymap).bindPopup("<?php echo $nama; ?>").openPopup();
+                                    var popup = L.popup();
+                                    function onMapClick(e) {
+                                        popup
+                                            .setLatLng(e.latlng)
+                                            .setContent("" + e.latlng.toString())
+                                            .openOn(mymap);
+                                    }
+                                    mymap.on('click', onMapClick);
+
+                                    //var marker = L.marker([latitude, longitude]).addTo(mymap);
                                 });
                             }
                         </script>

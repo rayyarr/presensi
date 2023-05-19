@@ -130,16 +130,16 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                             </span>
                             <span class="n flex column">
                                 <span class="fontS">
-                                            <h4>
-                                                <?php echo $nama ?>
-                                            </h4>
-                                        </span>
-                                        <p class="opacity" style="margin-bottom:0">
-                                            NIP
-                                            <?php echo $nip ?> -
-                                            <?php echo $jabatan ?> -
-                                            <?php echo $guru ?>
-                                        </p>
+                                    <h4>
+                                        <?php echo $nama ?>
+                                    </h4>
+                                </span>
+                                <p class="opacity" style="margin-bottom:0">
+                                    NIP
+                                    <?php echo $nip ?> -
+                                    <?php echo $jabatan ?> -
+                                    <?php echo $guru ?>
+                                </p>
                             </span>
                         </label>
                     </div>
@@ -468,6 +468,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             function showPosition(position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
+                latlong = latitude + ", " + longitude;
                 yourLatitude.innerText = latitude;
                 yourLongitude.innerText = longitude;
 
@@ -488,19 +489,19 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     }).addTo(mymap);
 
                     L.marker([latitude, longitude]).addTo(mymap);
-          L.circle([latitude, longitude], 550, {
-  		color: 'red',
-  		fillColor: '#f03',
-  		fillOpacity: 0.5
-  		}).addTo(mymap).bindPopup("<?php echo $nama;?>").openPopup();
-          var popup = L.popup();
-          function onMapClick(e) {
-  		popup
-  			.setLatLng(e.latlng)
-  			.setContent(""+ e.latlng.toString())
-  			.openOn(mymap);
-  		}
-  		mymap.on('click', onMapClick);
+                    L.circle([latitude, longitude], 550, {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5
+                    }).addTo(mymap).bindPopup("<?php echo $nama; ?>").openPopup();
+                    var popup = L.popup();
+                    function onMapClick(e) {
+                        popup
+                            .setLatLng(e.latlng)
+                            .setContent("" + e.latlng.toString())
+                            .openOn(mymap);
+                    }
+                    mymap.on('click', onMapClick);
 
                     //var marker = L.marker([latitude, longitude]).addTo(mymap);
                 });
@@ -564,6 +565,12 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         var form = document.createElement('form');
                         form.method = 'POST';
                         form.action = 'absen_masuk.php';
+
+                        var inputlatlong = document.createElement('input');
+                        inputlatlong.type = 'hidden';
+                        inputlatlong.name = 'latlong';
+                        inputlatlong.value = latlong;
+                        form.appendChild(inputlatlong);
 
                         var inputJarak = document.createElement('input');
                         inputJarak.type = 'hidden';
@@ -733,6 +740,12 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         jarakInput.name = "jarak";
                         jarakInput.value = jarak;
                         form.appendChild(jarakInput);
+
+                        const inputlatlong = document.createElement('input');
+                        inputlatlong.type = 'hidden';
+                        inputlatlong.name = 'latlong';
+                        inputlatlong.value = latlong;
+                        form.appendChild(inputlatlong);
 
                         // Tambahkan input foto ke dalam formulir
                         const photoInput = document.createElement("input");
