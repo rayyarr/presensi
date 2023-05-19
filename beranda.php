@@ -81,27 +81,18 @@ echo "Tidak ada data pengguna.";
 									alt="<?php echo $nama_file; ?>">
 							</span>
 							<span class="n flex column">
-								<span class="fontS">
-									<?php
-									if (mysqli_num_rows($result) > 0) {
-										// tampilkan nama
-										while ($row = mysqli_fetch_assoc($result)) {
-											?>
-											<h4>
-												<?= $row['nama']; ?>
-											</h4>
-										</span>
-										<p class="opacity" style="margin-bottom:0">
-											NIP
-											<?= $row['nip']; ?> -
-											<?= $hasiljoin['jabatan_nama']; ?> -
-											<?= $row['guru']; ?>
-										</p>
-										<?php
-										}
-									}
-									?>
-							</span>
+                                <span class="fontS">
+                                            <h4>
+                                                <?php echo $nama ?>
+                                            </h4>
+                                        </span>
+                                        <p class="opacity" style="margin-bottom:0">
+                                            NIP
+                                            <?php echo $nip ?> -
+                                            <?php echo $jabatan ?> -
+                                            <?php echo $guru ?>
+                                        </p>
+                            </span>
 						</label>
 					</div>
 				</div>

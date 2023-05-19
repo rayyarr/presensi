@@ -130,25 +130,16 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                             </span>
                             <span class="n flex column">
                                 <span class="fontS">
-                                    <?php
-                                    if (mysqli_num_rows($result) > 0) {
-                                        // tampilkan nama
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            ?>
                                             <h4>
-                                                <?= $row['nama']; ?>
+                                                <?php echo $nama ?>
                                             </h4>
                                         </span>
                                         <p class="opacity" style="margin-bottom:0">
                                             NIP
-                                            <?= $row['nip']; ?> -
-                                            <?= $hasiljoin['jabatan_nama']; ?> -
-                                            <?= $row['guru']; ?>
+                                            <?php echo $nip ?> -
+                                            <?php echo $jabatan ?> -
+                                            <?php echo $guru ?>
                                         </p>
-                                        <?php
-                                        }
-                                    }
-                                    ?>
                             </span>
                         </label>
                     </div>
@@ -487,14 +478,31 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 $('#mapModal').on('shown.bs.modal', function () {
                     mymap = L.map('mapid').setView([latitude, longitude], 13);
 
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                        attribution: 'Map data &copy; <a href="https://www.mapbox.com/">Mapbox</a>',
                         maxZoom: 18,
                         tileSize: 512,
-                        zoomOffset: -1
+                        zoomOffset: -1,
+                        id: 'mapbox/streets-v11',
+                        accessToken: 'pk.eyJ1IjoiYWRpZ3VuYXdhbnhkIiwiYSI6ImNrcWp2Yjg2cDA0ZjAydnJ1YjN0aDNnbm4ifQ.htvHCgSgN0UuV8hhZBfBfQ'
                     }).addTo(mymap);
 
-                    var marker = L.marker([latitude, longitude]).addTo(mymap);
+                    L.marker([latitude, longitude]).addTo(mymap);
+          L.circle([latitude, longitude], 550, {
+  		color: 'red',
+  		fillColor: '#f03',
+  		fillOpacity: 0.5
+  		}).addTo(mymap).bindPopup("<?php echo $nama;?>").openPopup();
+          var popup = L.popup();
+          function onMapClick(e) {
+  		popup
+  			.setLatLng(e.latlng)
+  			.setContent(""+ e.latlng.toString())
+  			.openOn(mymap);
+  		}
+  		mymap.on('click', onMapClick);
+
+                    //var marker = L.marker([latitude, longitude]).addTo(mymap);
                 });
 
                 buttonLocation.classList.add("d-none");

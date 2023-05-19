@@ -42,6 +42,15 @@ $joinges = mysqli_query($conn, $sql3);
 $hasiljoin = mysqli_fetch_array($joinges);
 $jabatan = $hasiljoin['jabatan_nama'];
 
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $nama = $row['nama'];
+        $nip = $row['nip'];
+        $jabatan = $hasiljoin['jabatan_nama'];
+        $guru = $row['guru'];
+    }
+}
+
 if ($hasiljoin['foto_profil'] == NULL) {
   //jika tidak ada data gambar yang tersimpan di database, gunakan gambar default
   $nama_file = "default.png";
