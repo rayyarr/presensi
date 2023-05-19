@@ -43,6 +43,8 @@ include_once 'sw-header.php';
     .table>tbody {
         font-size: 14px
     }
+    .ftabsen, .swal2-image{border-radius:8px}
+    .ftabsen:hover{cursor:pointer;transform:scale(1.1);transition:all .3s ease}
 </style>
 
 <body>
@@ -158,6 +160,7 @@ include_once 'sw-header.php';
                                 <th>Jam Keluar</th>
                                 <th>Status</th>
                                 <th>Keterangan</th>
+                                <th>Foto</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -193,7 +196,7 @@ include_once 'sw-header.php';
                                 echo '<td>' . $nama_hari . ', ' . str_pad($i, 2, '0', STR_PAD_LEFT) . ' ' . $nama_bulan . ' ' . $tahun . '</td>';
 
                                 // ambil data absen dari database berdasarkan tanggal dan nip
-                                $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan 
+                                $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen 
                         FROM absen 
                         JOIN status_absen ON absen.id_status = status_absen.id_status 
                         WHERE nip = $userid AND tanggal_absen = '$tahun-$bulan-" . str_pad($i, 2, '0', STR_PAD_LEFT) . "'
@@ -207,12 +210,14 @@ include_once 'sw-header.php';
                                     $jam_keluar = $data_absen['jam_keluar'];
                                     $status = $data_absen['nama_status'];
                                     $keterangan = $data_absen['keterangan'];
+                                    $fotoAbsen = $data_absen['foto_absen'];
                                 } else {
                                     // jika data absen tidak ditemukan, tampilkan status kosong dan keterangan kosong
                                     $jam_masuk = '';
                                     $jam_keluar = '';
                                     $status = '';
                                     $keterangan = '-';
+                                    $fotoAbsen = '';
                                     // tambahkan keterangan untuk hari Minggu
                                     if ($nama_hari == 'Minggu') {
                                         $keterangan = 'Libur Akhir Pekan';
@@ -225,10 +230,26 @@ include_once 'sw-header.php';
                                 echo '<td>' . $jam_keluar . '</td>';
                                 echo '<td>' . $status . '</td>';
                                 echo '<td>' . $keterangan . '</td>';
+                                if (!empty($fotoAbsen)) {
+                                    echo '<td>';
+                                    echo '<img class="ftabsen" src="hasil_absen/' . $fotoAbsen . '" alt="Foto Absen" id="' . $i . '" width="40px" height="40px" onclick="showFoto(\'' . $fotoAbsen . '\')">';
+                                    echo '</td>';
+                                } else {
+                                    echo '<td></td>';
+                                }
                                 echo '</tr>';
                             }
                             ?>
                         </tbody>
+                        <script>
+                            function showFoto(fotoAbsen) {
+                                swal.fire({
+                                    title: 'Foto Absen: <?php echo $nama ?>',
+                                    imageUrl: 'hasil_absen/' + fotoAbsen,
+                                    imageWidth: 300,
+                                });
+                            }
+                        </script>
                     </table>
                 </div>
             </div>
