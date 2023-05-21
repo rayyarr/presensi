@@ -1,21 +1,6 @@
 <?php
-
-/*$nip = "";
-$password = "";
-$nama = "";
-$jabatan = "";
-$guru = "";
-$sukses = "";
-$error = "";*/
-
-session_start(); // Mulai session
-
-// Jika user belum login, alihkan ke halaman login
-if (!isset($_SESSION['nip'])) {
-    header("Location: login");
-    exit();
-}
-
+// Rayya
+session_start();
 include_once 'sw-header.php';
 
 //if ($_SERVER['REQUEST_METHOD'] === 'POST') {

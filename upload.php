@@ -1,14 +1,7 @@
 <?php
 // Rayya
-include_once 'sw-header.php';
-
 session_start(); // Mulai session
-
-// Jika user belum login, alihkan ke halaman login
-if (!isset($_SESSION['nip'])) {
-	header("Location: login");
-	exit();
-}
+include_once 'sw-header.php';
 
 //memeriksa apakah ada file yang diunggah
 if(isset($_FILES['image'])){

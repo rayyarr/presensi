@@ -1,6 +1,5 @@
 <?php
 // Aini
-
 include_once 'cfgdb.php';
 
 session_start(); // Mulai session

@@ -1,5 +1,6 @@
 <?php
 session_start(); // Mulai session
+include_once 'sw-header.php';
 
 $nip = "";
 $password = "";
@@ -8,14 +9,6 @@ $jabatan = "";
 $guru = "";
 $sukses = "";
 $error = "";
-
-include_once 'sw-header.php';
-
-// Jika user belum login, alihkan ke halaman login
-if (!isset($_SESSION['nip'])) {
-    header("Location: login");
-    exit();
-}
 
 //if ($op == 'edit') {
 //$id = $_GET['id'];

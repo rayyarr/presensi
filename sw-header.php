@@ -4,7 +4,8 @@
 include_once 'cfgdb.php';
 
 if (!isset($_SESSION['nip'])) {
-	header("Location: login.php");
+	header("Location: login");
+    exit();
 } else {
 header("Cache-Control: no-cache, must-revalidate");
 

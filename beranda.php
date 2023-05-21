@@ -1,13 +1,7 @@
 <?php
 // Rayya
-
-session_start(); // Mulai session
-
-// Jika user belum login, alihkan ke halaman login
-if (!isset($_SESSION['nip'])) {
-	header("Location: login");
-	exit();
-}
+session_start();
+include_once 'sw-header.php';
 
 // Jika tombol logout ditekan
 if (isset($_POST['logout'])) {
@@ -15,32 +9,6 @@ if (isset($_POST['logout'])) {
 	header("Location: login"); // Alihkan ke halaman login setelah logout berhasil
 	exit();
 }
-
-include_once 'sw-header.php';
-
-/* Tampilkan tabel pengguna
-if ($result !== false && $result->num_rows > 0) {
-echo "<table>
-<tr>
-<th>ID</th>
-<th>NIP</th>
-<th>Nama</th>
-<th>Jabatan ID</th>
-<th>Guru</th>
-</tr>";
-while ($row = $result->fetch_assoc()) {
-echo "<tr>
-<td>" . $row["id"] . "</td>
-<td>" . $row["nip"] . "</td>
-<td>" . $row["nama"] . "</td>
-<td>" . $row["jabatan_id"] . "</td>
-<td>" . $row["guru"] . "</td>
-</tr>";
-}
-echo "</table><br>";
-} else {
-echo "Tidak ada data pengguna.";
-} */
 ?>
 <!DOCTYPE html>
 <html>

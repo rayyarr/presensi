@@ -1,24 +1,12 @@
 <?php
 session_start(); // Mulai session
 
+include_once 'cfgdb.php';
+
 // Jika user belum login, alihkan ke halaman login
 if (!isset($_SESSION['nip'])) {
     header("Location: login");
     exit();
-}
-
-// Koneksi ke database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "presensi";
-$nama = "";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Cek koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
 }
 
 // Ambil data pengguna sesuai dengan sesi
