@@ -1,12 +1,5 @@
 <?php
-/*$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "dbcrud";
-$koneksi = mysqli_connect($host, $user, $pass, $db);
-if (!$koneksi) { //cek koneksi
-die("Tidak bisa terkoneksi ke database");
-}*/
+session_start(); // Mulai session
 
 $nip = "";
 $password = "";
@@ -16,15 +9,13 @@ $guru = "";
 $sukses = "";
 $error = "";
 
-session_start(); // Mulai session
+include_once 'sw-header.php';
 
 // Jika user belum login, alihkan ke halaman login
 if (!isset($_SESSION['nip'])) {
     header("Location: login");
     exit();
 }
-
-include_once 'sw-header.php';
 
 //if ($op == 'edit') {
 //$id = $_GET['id'];

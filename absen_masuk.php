@@ -2,7 +2,7 @@
 session_start(); // Mulai session
 require_once('sw-header.php');
 require_once('database.php');
-require_once('Absenclass.php');
+require_once('absenclass.php');
 $obj = new Absensiswa;
 $userid = $_SESSION['nip'];
 

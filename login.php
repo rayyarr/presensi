@@ -1,5 +1,6 @@
 <?php
 // Aini
+include_once 'cfgdb.php';
 
 session_start(); // Mulai session
 
@@ -7,19 +8,6 @@ session_start(); // Mulai session
 if (isset($_SESSION['nip'])) {
   header("Location: beranda");
   exit();
-}
-
-// Koneksi ke database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "presensi";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Cek koneksi
-if ($conn->connect_error) {
-  die("Koneksi gagal: " . $conn->connect_error);
 }
 
 $error_message = '';

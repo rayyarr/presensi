@@ -1,23 +1,14 @@
 <?php
 // Aini
 
+include_once 'cfgdb.php';
+
 session_start(); // Mulai session
 
 // Jika user sudah login, alihkan ke halaman dashboard
 if (isset($_SESSION['nip'])) {
   header("Location: beranda");
   exit();
-}
-
-// Koneksi ke database
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "presensi";
-
-$koneksi = mysqli_connect($host, $user, $pass, $db);
-if (!$koneksi) { //cek koneksi
-  die("Tidak bisa terkoneksi ke database");
 }
 
 $nip = "";
@@ -33,7 +24,7 @@ $ambil = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama,
           FROM pengguna
           INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
           ORDER BY pengguna.id DESC";
-$q2 = mysqli_query($koneksi, $ambil);
+$q2 = mysqli_query($conn, $ambil);
 $urut = 1;
 while ($r2 = mysqli_fetch_array($q2)) {
   $id = $r2['id'];
@@ -52,7 +43,7 @@ $jabatan = $_POST['jabatan_id'];
 $guru = $_POST['guru'];
 if ($nip && $password && $nama && $jabatan && $guru) {
 $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-$q1 = mysqli_query($koneksi, $sql1);
+$q1 = mysqli_query($conn, $sql1);
 if ($q1) {
 $sukses = "Berhasil memasukkan data baru";
 } else {
@@ -71,7 +62,7 @@ if (isset($_POST['daftar'])) {
 
   // Cek apakah NIP sudah terdaftar dalam database
   $sql_cek_nip = "SELECT * FROM pengguna WHERE nip='$nip'";
-  $q_cek_nip = mysqli_query($koneksi, $sql_cek_nip);
+  $q_cek_nip = mysqli_query($conn, $sql_cek_nip);
   $jml_cek_nip = mysqli_num_rows($q_cek_nip);
 
   if ($jml_cek_nip > 0) { // Jika NIP sudah terdaftar, tampilkan pesan error
@@ -79,7 +70,7 @@ if (isset($_POST['daftar'])) {
   } else { // Jika NIP belum terdaftar, tambahkan data pengguna baru ke database
     if ($nip && $password && $nama && $jabatan && $guru) {
       $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-      $q1 = mysqli_query($koneksi, $sql1);
+      $q1 = mysqli_query($conn, $sql1);
       if ($q1) {
         $sukses = "Berhasil daftar akun!";
       } else {
