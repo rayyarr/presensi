@@ -6,14 +6,6 @@ require_once('absenclass.php');
 $obj = new Absensiswa;
 $userid = $_SESSION['nip'];
 
-// Koneksi ke database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "presensi";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
 if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
 	$jarak = $_POST['jarak'];
 	$photo = $_POST["photo"];
