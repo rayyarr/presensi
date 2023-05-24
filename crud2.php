@@ -50,7 +50,7 @@ if (isset($_POST['simpan'])) { //untuk create
                 $error = "Data gagal diupdate";
             }
         } else { //untuk insert
-            $sql1 = "insert into jadwal(id_jadwal,waktu_masuk,waktu_pulang) values ('$id_jadwal','$waktu_masuk','$waktu_pulang'";
+            $sql1 = "insert into jadwal(id_jadwal,waktu_masuk,waktu_pulang) values ('$id_jadwal','$waktu_masuk','$waktu_pulang')";
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Berhasil memasukkan data baru";
@@ -118,13 +118,13 @@ if (isset($_POST['simpan'])) { //untuk create
                     <div class="mb-3 row">
                         <label for="waktu_masuk" class="col-sm-2 col-form-label">Waktu Masuk</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="waktu_masuk" name="waktu_masuk" value="<?php echo $waktu_masuk ?>" required>
+                            <input type="time" class="form-control" id="waktu_masuk" name="waktu_masuk" value="<?php echo $waktu_masuk ?>" required>
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label for="waktu_pulang" class="col-sm-2 col-form-label">Waktu Pulang</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="waktu_pulang" name="waktu_pulang" value="<?php echo $waktu_pulang ?>" required>
+                            <input type="time" class="form-control" id="waktu_pulang" name="waktu_pulang" value="<?php echo $waktu_pulang ?>" required>
                         </div>
                     </div>
                         <div class="col-12">

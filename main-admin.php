@@ -226,10 +226,10 @@ Beranda
     <div class="kolomkiri">
     <div class="navigation active">
     <ul>
-        <li class="list';if ($current_page == "#") {echo " active";} echo'">
+        <li class="list';if ($current_page == "dasboard_admin.php") {echo " active";} echo'">
             <b></b>
             <b></b>
-            <a href="#" data-text="Home">
+            <a href="dasboard_admin.php" data-text="Home">
                 <span class="icon"><i class="bi bi-house-door"></i></span>
                 <span class="title">Home</span>
             </a>
@@ -256,6 +256,14 @@ Beranda
             <a href="crud2" data-text="Jadwal">
                 <span class="icon"><i class="bi bi-calendar-week"></i></span>
                 <span class="title">Jadwal</span>
+            </a>
+        </li>
+        <li class="list';if ($current_page == "rekap.php" || $current_page == "hasil_rekap.php") {echo " active";} echo'">
+            <b></b>
+            <b></b>
+            <a href="rekap" data-text="Rekap">
+                <span class="icon"><i class="bi bi-journals"></i></span>
+                <span class="title">Rekap</span>
             </a>
         </li>
     </ul>

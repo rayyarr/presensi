@@ -15,18 +15,8 @@ if (isset($_GET['op'])) {
 } else {
     $op = "";
 }
-if ($op == 'delete') {
-    $id = $_GET['id'];
-    $sql1 = "delete from pengguna where id = '$id'";
-    $q1 = mysqli_query($conn, $sql1);
-    if ($q1) {
-        $sukses = "Berhasil hapus data";
-    } else {
-        $error = "Gagal melakukan delete data";
-    }
-}
-if ($op == 'edit') {
-    $id = $_GET['id'];
+if ($op == 'show') {
+    $nip = $_GET['nip'];
     $sqldef = "select * from pengguna where id = '$id'";
     $sql1 = "SELECT pengguna.id where id = '$id', pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
                                              FROM pengguna
@@ -44,35 +34,7 @@ if ($op == 'edit') {
         $error = "Data tidak ditemukan";
     }
 }
-if (isset($_POST['simpan'])) { //untuk create
-    $nip = $_POST['nip'];
-    $password = md5($_POST['password']);
-    $nama = $_POST['nama'];
-    $jabatan = $_POST['jabatan_id'];
-    $guru = $_POST['guru'];
 
-    if ($nip && $password && $nama && $jabatan && $guru) {
-        if ($op == 'edit') { //untuk update
-            $sql1 = "update pengguna set nip = '$nip',password='$password',nama='$nama',jabatan_id = '$jabatan',guru='$guru' where id = '$id'";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Data berhasil diupdate";
-            } else {
-                $error = "Data gagal diupdate";
-            }
-        } else { //untuk insert
-            $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Berhasil memasukkan data baru";
-            } else {
-                $error = "Gagal memasukkan data";
-            }
-        }
-    } else {
-        $error = "Silakan masukkan semua data";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -148,11 +110,8 @@ if (isset($_POST['simpan'])) { //untuk create
                                     <?php echo $guru ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="crud.php?op=edit&id=<?php echo $id ?>"><button type="button"
-                                            class="btn btn-warning">Edit</button></a>
-                                    <a href="crud.php?op=delete&id=<?php echo $id ?>"
-                                        onclick="return confirm('Yakin mau delete data?')"><button type="button"
-                                            class="btn btn-danger">Delete</button></a>
+                                    <a href="hasil_rekap?op=show&nip=<?php echo $nip ?>"><button type="button"
+                                            class="btn btn-warning">Lihat</button></a>
                                 </td>
                             </tr>
                             <?php
