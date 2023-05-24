@@ -98,39 +98,39 @@ if (isset($_POST['simpan'])) { //untuk create
 <body>
     <div class="mx-auto">
 
-            <!-- untuk mengeluarkan data -->
-            <div class="card">
-                <div class="card-header text-white bg-secondary">
-                    Data Pengguna
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">NIP</th>
-                                <th scope="col">Nama</th>
-                                <th scope="col">Jabatan</th>
-                                <th scope="col">Guru</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                                    $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
+        <!-- untuk mengeluarkan data -->
+        <div class="card">
+            <div class="card-header text-white bg-secondary">
+                Data Pengguna
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">NIP</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Jabatan</th>
+                            <th scope="col">Guru</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
                                              FROM pengguna
                                              INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
                                              ORDER BY pengguna.id DESC";
-                                    $q2 = mysqli_query($conn, $sql2);
-                                    $urut = 1;
-                                    while ($r2 = mysqli_fetch_array($q2)) {
-                                        $id = $r2['id'];
-                                        $nip = $r2['nip'];
-                                        $nama = $r2['nama'];
-                                        $jabatan = $r2['jabatan_nama'];
-                                        $guru = $r2['guru'];
+                        $q2 = mysqli_query($conn, $sql2);
+                        $urut = 1;
+                        while ($r2 = mysqli_fetch_array($q2)) {
+                            $id = $r2['id'];
+                            $nip = $r2['nip'];
+                            $nama = $r2['nama'];
+                            $jabatan = $r2['jabatan_nama'];
+                            $guru = $r2['guru'];
 
-                                        ?>
+                            ?>
                             <tr>
                                 <th scope="row">
                                     <?php echo $urut++ ?>
@@ -156,12 +156,18 @@ if (isset($_POST['simpan'])) { //untuk create
                                 </td>
                             </tr>
                             <?php
-                                    }
-                                    ?>
+                        }
+                        ?>
                     </tbody>
 
                 </table>
             </div>
-    </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('.table').DataTable();
+            });
+        </script>
 </body>
+
 </html>

@@ -90,11 +90,16 @@ echo'
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"/>
   <link rel="stylesheet" href="header/style.css?';time(); echo '" id="myStylesheet">
   <!-- <link rel="stylesheet" href="header/sw-custom.css"> -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">';
   
 echo'
 </head>
-
+<style>
+.btn{border-radius:18px !important;}
+</style>
 <body>';
   echo'
 <!-- App Sidebar -->
