@@ -24,6 +24,17 @@ if ($result->num_rows > 0) {
     $total_absen = 0;
 }
 
+$sql = "SELECT COUNT(*) AS total_jabatan FROM jabatan";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $jumlah_jabatan = $row["total_jabatan"];
+} else {
+    $jumlah_jabatan = 0;
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,7 +85,7 @@ if ($result->num_rows > 0) {
   
   <div class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title mb-3"><?php echo $jumlah_pengguna; ?> Pengguna</h5>
+      <h5 class="card-title mb-3"><?php echo $jumlah_jabatan; ?> Jabatan</h5>
       <a href="crud" class="btn btn-primary">Lihat</a>
     </div>
   </div>
