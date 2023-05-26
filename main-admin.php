@@ -271,6 +271,14 @@ Beranda
                 <span class="title">Rekap</span>
             </a>
         </li>
+        <li class="list';if ($current_page == "crud4.php") {echo " active";} echo'">
+            <b></b>
+            <b></b>
+            <a href="crud4" data-text="Jabatan">
+                <span class="icon"><i class="bi bi-person-badge"></i></span>
+                <span class="title">Jabatan</span>
+            </a>
+        </li>
     </ul>
 </div>
 </div>
