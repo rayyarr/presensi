@@ -110,7 +110,7 @@ if ($op == 'show') {
                                     <?php echo $guru ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="hasil_rekap?op=show&nip=<?php echo $nip ?>"><button type="button"
+                                    <a href="hasil_rekap?nip=<?php echo $nip ?>"><button type="button"
                                             class="btn btn-warning">Lihat</button></a>
                                 </td>
                             </tr>

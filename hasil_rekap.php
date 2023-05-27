@@ -3,10 +3,8 @@ include_once 'main-admin.php';
 
 $userid = '';
 
-if (isset($_GET['op']) && isset($_GET['nip'])) {
-    if ($_GET['op'] === 'show') {
+if (isset($_GET['nip'])) {
         $userid = $_GET['nip'];
-    }
 }
 
 ?>
@@ -69,25 +67,6 @@ if (isset($_GET['op']) && isset($_GET['nip'])) {
 
             <div class="card p-3" style="margin-bottom:50px">
 
-                <!--<form method="post" action="">
-                <label for="bulan">Pilih Bulan:</label>
-                <select name="bulan" id="bulan">
-                    <option value="01">Januari</option>
-                    <option value="02">Februari</option>
-                    <option value="03">Maret</option>
-                    <option value="04">April</option>
-                    <option value="05">Mei</option>
-                    <option value="06">Juni</option>
-                    <option value="07">Juli</option>
-                    <option value="08">Agustus</option>
-                    <option value="09">September</option>
-                    <option value="10">Oktober</option>
-                    <option value="11">November</option>
-                    <option value="12">Desember</option>
-                </select>
-                <button type="submit" name="submit">Tampilkan</button>
-            </form>-->
-
                 <?php
                 // set default timezone
                 date_default_timezone_set('Asia/Jakarta');
@@ -115,6 +94,7 @@ if (isset($_GET['op']) && isset($_GET['nip'])) {
                 ?>
                 <h3 class="mb-3">Tabel Absen</h3>
                 <form method="get" action="">
+                    <input type="text" style="display:none" name="nip" value="<?php echo $userid; ?>">
                     <div class="form-group row mb-3">
                         <label for="tahun" class="col-sm-2 col-form-label">Tahun:</label>
                         <div class="col-sm-10">
@@ -139,7 +119,7 @@ if (isset($_GET['op']) && isset($_GET['nip'])) {
                     </div>
                     <button type="submit" class="btn btn-primary">Tampilkan</button>
                     <a class="btn btn-success"
-                        href="eksporEXCEL.php?tahun=<?php echo $tahun; ?>&bulan=<?php echo $bulan; ?>">Ekspor EXCEL</a>
+                        href="ekspor_rekap?nip=<?php echo $userid; ?>&tahun=<?php echo $tahun; ?>&bulan=<?php echo $bulan; ?>">Ekspor EXCEL</a>
                 </form>
                 <br>
                 <div class="table-responsive">
