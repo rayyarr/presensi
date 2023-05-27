@@ -7,6 +7,17 @@ if (isset($_GET['nip'])) {
         $userid = $_GET['nip'];
 }
 
+$sql = "SELECT pengguna.nama, jabatan.jabatan_nama FROM pengguna INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id WHERE nip=$userid";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+  $row = $result->fetch_assoc();
+  $nama_pengguna = $row["nama"];
+  $nama_jabatan = $row["jabatan_nama"];
+} else {
+  $nama_pengguna = 0;
+  $nama_jabatan = 0;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -92,7 +103,7 @@ if (isset($_GET['nip'])) {
                     }
                 }
                 ?>
-                <h3 class="mb-3">Tabel Absen</h3>
+                <h4 class="mb-3">Tabel Absen: <?php echo $nama_pengguna ?> - <?php echo $nama_jabatan ?></h4>
                 <form method="get" action="">
                     <input type="text" style="display:none" name="nip" value="<?php echo $userid; ?>">
                     <div class="form-group row mb-3">
@@ -223,7 +234,7 @@ if (isset($_GET['nip'])) {
                         <script>
                             function showFoto(fotoAbsen) {
                                 swal.fire({
-                                    title: 'Foto Absen: <?php echo $nama ?>',
+                                    title: 'Foto Absen: <?php echo $nama_pengguna ?>',
                                     imageUrl: 'hasil_absen/' + fotoAbsen,
                                     imageWidth: 300,
                                 });
@@ -264,7 +275,7 @@ if (isset($_GET['nip'])) {
                                         color: 'red',
                                         fillColor: '#f03',
                                         fillOpacity: 0.5
-                                    }).addTo(mymap).bindPopup("<?php echo $nama; ?>").openPopup();
+                                    }).addTo(mymap).bindPopup("<?php echo $nama_pengguna; ?>").openPopup();
                                     var popup = L.popup();
                                     function onMapClick(e) {
                                         popup
