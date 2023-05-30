@@ -5,6 +5,7 @@ include_once 'cfgdb.php';
 header("Cache-Control: no-cache, must-revalidate");
 
 $current_page = basename($_SERVER['PHP_SELF']);
+$today = date("Y-m-d");
 $userid = 123;
 
 // Eksekusi query dan mengambil isi

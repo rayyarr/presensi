@@ -13,7 +13,6 @@ if ($result->num_rows > 0) {
   $jumlah_pengguna = 0;
 }
 
-$today = date("Y-m-d");
 $sql1 = "SELECT COUNT(*) AS total_absen FROM absen WHERE DATE(tanggal_absen) = '$today'";
 $result = $conn->query($sql1);
 
@@ -79,8 +78,7 @@ if ($result->num_rows > 0) {
 <body>
   <div class="mx-auto">
 
-    <!-- ======================= Cards ================== -->
-    <div class="cardBox">
+    <!--<div class="cardBox">
       <div class="card">
         <div>
           <div class="numbers">1,504</div>
@@ -124,7 +122,7 @@ if ($result->num_rows > 0) {
           <ion-icon name="cash-outline"></ion-icon>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <div class="card-container">
       <div class="card" style="width: 18rem;">
