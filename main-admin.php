@@ -264,7 +264,7 @@ Beranda
                 <span class="title">Jadwal</span>
             </a>
         </li>
-        <li class="list';if ($current_page == "rekap.php" || $current_page == "hasil_rekap.php") {echo " active";} echo'">
+        <li class="list';if ($current_page == "rekap.php" || $current_page == "hasil_rekap.php" || $current_page == "rekap_harian.php") {echo " active";} echo'">
             <b></b>
             <b></b>
             <a href="rekap" data-text="Rekap">
