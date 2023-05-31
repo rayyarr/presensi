@@ -191,7 +191,6 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="col">
                 <div class="card-body">
-                    <!--<h5 class="card-title">D3 Teknik Informatika 1C</h5>-->
                     <p class="card-text"><small class="text-muted">Ubah foto profil - <i>Abaikan jika tak perlu</i></small></p>
 
                     <form method="post" enctype="multipart/form-data">
