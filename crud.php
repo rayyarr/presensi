@@ -269,7 +269,7 @@ if ($op == 'simpan') {
             </div>
 
             <!-- untuk mengeluarkan data -->
-            <div class="card">
+            <div class="card mb-5">
                 <div class="card-header text-white bg-secondary">
                     Data Pengguna
                 </div>

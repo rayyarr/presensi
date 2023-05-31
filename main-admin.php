@@ -235,9 +235,9 @@ Beranda
         <li class="list';if ($current_page == "dasboard_admin.php") {echo " active";} echo'">
             <b></b>
             <b></b>
-            <a href="dasboard_admin.php" data-text="Home">
+            <a href="dasboard_admin.php" data-text="Beranda">
                 <span class="icon"><i class="bi bi-house-door"></i></span>
-                <span class="title">Home</span>
+                <span class="title">Beranda</span>
             </a>
         </li>
         <li class="list';if ($current_page == "crud.php") {echo " active";} echo'">

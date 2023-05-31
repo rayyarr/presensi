@@ -72,96 +72,130 @@ if ($result->num_rows > 0) {
       margin-right: 10px;
       /* Untuk memberikan jarak antara kartu-kartu */
     }
+
+    /* ======================= Cards ====================== */
+    .cardBox {
+      position: relative;
+      width: 100%;
+      /*padding: 20px;*/
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px;
+    }
+
+    .cardBox a {
+      text-decoration: none;
+    }
+
+    .cardBox .card {
+      position: relative;
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction:row;
+      grid-gap:10px;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .cardBox .card .numbers {
+      position: relative;
+      font-weight: 500;
+      font-size: 2.5rem;
+      color: #2a2185;
+    }
+
+    .cardBox .card .cardName {
+      color: #5f5f5f;
+      font-size: 1.1rem;
+      margin-top: 5px;
+    }
+
+    .cardBox .card .iconBx {
+      position: absolute;
+      right:20px;
+      font-size: 2.3rem;
+      color: #5f5f5f;
+    }
+
+    .cardBox .card:hover {
+      background: #2a2185;
+    }
+
+    .cardBox .card:hover .numbers,
+    .cardBox .card:hover .cardName,
+    .cardBox .card:hover .iconBx {
+      color: #fff;
+    }
   </style>
 </head>
 
 <body>
   <div class="mx-auto">
 
-    <!--<div class="cardBox">
-      <div class="card">
-        <div>
-          <div class="numbers">1,504</div>
-          <div class="cardName">Daily Views</div>
-        </div>
+    <div class="cardBox">
+      <a href="crud">
+        <div class="card">
+          <div>
+            <div class="numbers">
+              <?php echo $jumlah_pengguna; ?>
+            </div>
+            <div class="cardName">Pengguna</div>
+          </div>
 
-        <div class="iconBx">
-          <ion-icon name="eye-outline"></ion-icon>
+          <div class="iconBx">
+            <i class="bi bi-people"></i>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="card">
-        <div>
-          <div class="numbers">80</div>
-          <div class="cardName">Sales</div>
-        </div>
+      <a href="rekap_harian">
+        <div class="card">
+          <div>
+            <div class="numbers">
+              <?php echo $total_absen; ?>
+            </div>
+            <div class="cardName">Absen Hari Ini</div>
+          </div>
 
-        <div class="iconBx">
-          <ion-icon name="cart-outline"></ion-icon>
+          <div class="iconBx">
+            <i class="bi bi-people"></i>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="card">
-        <div>
-          <div class="numbers">284</div>
-          <div class="cardName">Comments</div>
-        </div>
+      <a href="crud4">
+        <div class="card">
+          <div>
+            <div class="numbers">
+              <?php echo $jumlah_jabatan; ?>
+            </div>
+            <div class="cardName">Jabatan</div>
+          </div>
 
-        <div class="iconBx">
-          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <div class="iconBx">
+            <i class="bi bi-people"></i>
+          </div>
         </div>
-      </div>
+      </a>
 
-      <div class="card">
-        <div>
-          <div class="numbers">$7,842</div>
-          <div class="cardName">Earning</div>
-        </div>
+      <a href="crud3">
+        <div class="card">
+          <div>
+            <div class="numbers">
+              <?php echo $jumlah_status; ?>
+            </div>
+            <div class="cardName">Status Absen</div>
+          </div>
 
-        <div class="iconBx">
-          <ion-icon name="cash-outline"></ion-icon>
+          <div class="iconBx">
+            <i class="bi bi-people"></i>
+          </div>
         </div>
-      </div>
-    </div>-->
-
-    <div class="card-container">
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title mb-3">
-            <?php echo $jumlah_pengguna; ?> Pengguna
-          </h5>
-          <a href="crud" class="btn btn-primary">Lihat</a>
-        </div>
-      </div>
-
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title mb-3">
-            <?php echo $total_absen; ?> Absen Hari Ini
-          </h5>
-          <a href="rekap_harian" class="btn btn-primary">Lihat</a>
-        </div>
-      </div>
-
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title mb-3">
-            <?php echo $jumlah_jabatan; ?> Jabatan
-          </h5>
-          <a href="crud4" class="btn btn-primary">Lihat</a>
-        </div>
-      </div>
+      </a>
     </div>
-
-    <div class="card" style="width: 17rem;">
-      <div class="card-body">
-        <h5 class="card-title mb-3">
-          <?php echo $jumlah_status; ?> Status Absen
-        </h5>
-        <a href="crud3" class="btn btn-primary">Lihat</a>
-      </div>
-    </div>
-  </div>
 
   </div>
 </body>
