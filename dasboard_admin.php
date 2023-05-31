@@ -315,7 +315,7 @@ $result = mysqli_query($conn, $query);
     <!-- ================= New Customers ================ -->
     <div class="recentCustomers mb-5">
       <div class="cardHeader">
-        <h3>Absensi Terakhir</h3>
+        <h4>Absensi Hari Ini - <i>Realtime</i></h4>
       </div>
 
       <table id="riwayat_absensi">
@@ -334,7 +334,7 @@ $result = mysqli_query($conn, $query);
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-          setInterval(loadAbsensi, 3000); // Memuat data absensi setiap 5 detik (5000 ms)
+          setInterval(loadAbsensi, 5000); // Memuat data absensi setiap 5 detik (5000 ms)
           loadAbsensi(); // Memuat data absensi saat halaman pertama kali dimuat
         });
       </script>

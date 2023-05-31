@@ -6,7 +6,7 @@ include_once 'sw-header.php';
 //if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_POST['simpan'])) {
     $tanggal_absen = date('Y-m-d');
-    $jam = date('H:i:s');
+    $jam_masuk = date('H:i:s');
     $id_status = $_POST['id_status'];
     $keterangan = $_POST['keterangan'];
     $ku = "SELECT * FROM absen WHERE nip='$userid' AND tanggal_absen='$tanggal_absen'";
@@ -19,7 +19,7 @@ if (isset($_POST['simpan'])) {
         popupIcon = "error";
         </script>';
     } else {
-        $sqlabs = "INSERT INTO absen SET nip = '$userid',tanggal_absen='$tanggal_absen', id_status='$id_status', tgl_keluar='$tanggal_absen', keterangan='$keterangan'";
+        $sqlabs = "INSERT INTO absen SET nip = '$userid',tanggal_absen='$tanggal_absen', jam_masuk='$jam_masuk', id_status='$id_status', tgl_keluar='$tanggal_absen', keterangan='$keterangan'";
         $hslabs = mysqli_query($conn, $sqlabs);
         echo '<script>
         popupJudul = "Berhasil!";
