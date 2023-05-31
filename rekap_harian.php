@@ -151,7 +151,7 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
     JOIN status_absen ON absen.id_status = status_absen.id_status
     JOIN pengguna ON absen.nip = pengguna.nip
     WHERE tanggal_absen = '$tanggal'
-    ORDER BY absen.id_absen DESC";
+    ORDER BY absen.jam_masuk DESC";
                                    $result = mysqli_query($conn, $query);
 
                                    if (mysqli_num_rows($result) > 0) {

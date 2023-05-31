@@ -290,7 +290,7 @@ if ($op == 'simpan') {
                                     $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, pengguna.password, jabatan.jabatan_nama, pengguna.guru
                                              FROM pengguna
                                              INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
-                                             ORDER BY pengguna.id DESC";
+                                             ORDER BY pengguna.nama ASC";
                                     $q2 = mysqli_query($conn, $sql2);
                                     $urut = 1;
                                     while ($r2 = mysqli_fetch_array($q2)) {
