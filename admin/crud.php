@@ -117,10 +117,11 @@ if ($op == 'simpan') {
 </head>
 
 <body>
-    <div class="mx-auto">
-        <div class="card">
+    <div class="mx-auto mb-5">
+
+        <div class="card mb-3">
             <div class="card-header">
-                Pendaftaran
+                Tambah Pengguna
             </div>
             <div class="card-body">
                 <?php
@@ -203,7 +204,7 @@ if ($op == 'simpan') {
                             </div>
                         </div>
                         <div class="col-12">
-                            <input type="submit" name="simpan" value="Simpan Data" class="btn btn-primary" />
+                            <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>
@@ -269,8 +270,8 @@ if ($op == 'simpan') {
             </div>
 
             <!-- untuk mengeluarkan data -->
-            <div class="card mb-5">
-                <div class="card-header text-white bg-secondary">
+            <div class="card">
+                <div class="card-header">
                     Data Pengguna
                 </div>
                 <div class="card-body">
@@ -319,9 +320,7 @@ if ($op == 'simpan') {
                                     <?php echo $guru ?>
                                 </td>
                                 <td scope="row">
-                                    <!--<a href="crud.php?op=edit&id=<?php echo $id ?>"><button type="button"
-                                            class="btn btn-warning">Edit</button></a>-->
-                                    <a data-bs-toggle="modal" data-bs-target="#editModal"
+                                <a data-bs-toggle="modal" data-bs-target="#editModal"
                                         data-id="<?php echo $id ?>" data-nip="<?php echo $nip ?>"
                                         data-nama="<?php echo $nama ?>" data-password="<?php echo $password ?>" data-jabatan="<?php echo $jabatan ?>"
                                         data-guru="<?php echo $guru ?>">
@@ -339,62 +338,61 @@ if ($op == 'simpan') {
 
                 </table>
             </div>
-        </div>
-        <script>
-            $(document).ready(function () {
-                $('.table').DataTable();
-            });
-        </script>
-        <script>
-            var editModal = new bootstrap.Modal(document.getElementById('editModal'), {
-                keyboard: false
-            });
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+    <script>
+        var editModal = new bootstrap.Modal(document.getElementById('editModal'), {
+            keyboard: false
+        });
 
-            // Menangkap event klik tombol "Edit" pada setiap baris tabel
-            var editButtons = document.querySelectorAll('a[data-bs-toggle="modal"]');
-            editButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    // Mendapatkan data dari atribut data-* pada tombol
-                    var id = this.getAttribute('data-id');
-                    var nip = this.getAttribute('data-nip');
-                    var nama = this.getAttribute('data-nama');
-                    var password = this.getAttribute('data-password');
-                    var jabatan = this.getAttribute('data-jabatan');
-                    var guru = this.getAttribute('data-guru');
+        // Menangkap event klik tombol "Edit" pada setiap baris tabel
+        var editButtons = document.querySelectorAll('a[data-bs-toggle="modal"]');
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Mendapatkan data dari atribut data-* pada tombol
+                var id = this.getAttribute('data-id');
+                var nip = this.getAttribute('data-nip');
+                var nama = this.getAttribute('data-nama');
+                var password = this.getAttribute('data-password');
+                var jabatan = this.getAttribute('data-jabatan');
+                var guru = this.getAttribute('data-guru');
 
-                    // Mengisi nilai input field di dalam modal dengan data yang diperoleh
-                    document.getElementById('editId').value = id;
-                    document.getElementById('editNip').value = nip;
-                    document.getElementById('editNama').value = nama;
-                    document.getElementById('editPassword').value = password;
-                    // Memilih radio button berdasarkan nilai jabatan
-                    var jabatanRadioButtons = document.getElementsByName('editJabatan');
-                    jabatanRadioButtons.forEach(function (radioButton) {
-                        if (jabatan === "Guru" && radioButton.value === "1") {
-                            radioButton.checked = true;
-                        } else if (jabatan === "Tata Usaha" && radioButton.value === "2") {
-                            radioButton.checked = true;
-                        } else if (jabatan === "BPH" && radioButton.value === "3") {
-                            radioButton.checked = true;
-                        }
-                    });
-
-                    var editGuruSelect = document.getElementById('editGuru');
-                    // Loop melalui setiap opsi dan membandingkannya dengan nilai guru
-                    for (var i = 0; i < editGuruSelect.options.length; i++) {
-                        if (editGuruSelect.options[i].value === guru) {
-                            // Jika nilai opsi sama dengan guru, atur opsi tersebut sebagai terpilih
-                            editGuruSelect.options[i].selected = true;
-                            break;
-                        }
+                // Mengisi nilai input field di dalam modal dengan data yang diperoleh
+                document.getElementById('editId').value = id;
+                document.getElementById('editNip').value = nip;
+                document.getElementById('editNama').value = nama;
+                document.getElementById('editPassword').value = password;
+                // Memilih radio button berdasarkan nilai jabatan
+                var jabatanRadioButtons = document.getElementsByName('editJabatan');
+                jabatanRadioButtons.forEach(function (radioButton) {
+                    if (jabatan === "Guru" && radioButton.value === "1") {
+                        radioButton.checked = true;
+                    } else if (jabatan === "Tata Usaha" && radioButton.value === "2") {
+                        radioButton.checked = true;
+                    } else if (jabatan === "BPH" && radioButton.value === "3") {
+                        radioButton.checked = true;
                     }
-
-                    // Menampilkan modal edit
-                    editModal.show();
                 });
-            });
-        </script>
 
+                var editGuruSelect = document.getElementById('editGuru');
+                // Loop melalui setiap opsi dan membandingkannya dengan nilai guru
+                for (var i = 0; i < editGuruSelect.options.length; i++) {
+                    if (editGuruSelect.options[i].value === guru) {
+                        // Jika nilai opsi sama dengan guru, atur opsi tersebut sebagai terpilih
+                        editGuruSelect.options[i].selected = true;
+                        break;
+                    }
+                }
+
+                // Menampilkan modal edit
+                editModal.show();
+            });
+        });
+    </script>
 </body>
 
 </html>

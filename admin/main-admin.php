@@ -36,6 +36,8 @@ echo '" id="myStylesheet">
 </head>
 <style>
 .btn{border-radius:18px !important;}
+.card, .modal-content {border:0;border-radius: 30px !important;}
+.card-header {background:none !important}
 </style>
 <body>
 

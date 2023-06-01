@@ -61,8 +61,8 @@ if ($op == 'show') {
     <div class="mx-auto">
 
         <!-- untuk mengeluarkan data -->
-        <div class="card">
-            <div class="card-header text-white bg-secondary">
+        <div class="card mb-3">
+            <div class="card-header">
                 Data Pengguna
             </div>
             <div class="card-body">

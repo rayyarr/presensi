@@ -174,7 +174,7 @@ $result = mysqli_query($conn, $query);
       padding: 20px;
       background: var(--white);
       box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
-      border-radius: 20px;
+      border-radius: 30px;
     }
 
     .recentCustomers .imgBx {

@@ -87,17 +87,17 @@ if (isset($_POST['simpan'])) { //untuk create
 <body>
     <div class="mx-auto">
         <!-- untuk memasukkan data -->
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-header">
                 Edit Jadwal
             </div>
             <div class="card-body">
-            <?php
+                <?php
                 if ($error) {
                     ?>
                     <script>Swal.fire("<?php echo $error ?>");</script>
                     <?php
-                    
+
                 }
                 ?>
                 <?php
@@ -105,61 +105,64 @@ if (isset($_POST['simpan'])) { //untuk create
                     ?>
                     <script>Swal.fire("<?php echo $sukses ?>");</script>
                     <?php
-                    
+
                 }
                 ?>
                 <form action="" method="POST">
                     <div class="mb-3 row">
                         <label for="id_jadwal" class="col-sm-2 col-form-label">ID Jadwal</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="id_jadwal" name="id_jadwal" value="<?php echo $id_jadwal ?>" required>
+                            <input type="text" class="form-control" id="id_jadwal" name="id_jadwal"
+                                value="<?php echo $id_jadwal ?>" required>
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label for="waktu_masuk" class="col-sm-2 col-form-label">Waktu Masuk</label>
                         <div class="col-sm-10">
-                            <input type="time" class="form-control" id="waktu_masuk" name="waktu_masuk" value="<?php echo $waktu_masuk ?>" required>
+                            <input type="time" class="form-control" id="waktu_masuk" name="waktu_masuk"
+                                value="<?php echo $waktu_masuk ?>" required>
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label for="waktu_pulang" class="col-sm-2 col-form-label">Waktu Pulang</label>
                         <div class="col-sm-10">
-                            <input type="time" class="form-control" id="waktu_pulang" name="waktu_pulang" value="<?php echo $waktu_pulang ?>" required>
+                            <input type="time" class="form-control" id="waktu_pulang" name="waktu_pulang"
+                                value="<?php echo $waktu_pulang ?>" required>
                         </div>
                     </div>
-                        <div class="col-12">
-                            <input type="submit" name="simpan" value="Simpan Data" class="btn btn-primary" />
-                        </div>
-                    </form>
-                </div>
+                    <div class="col-12">
+                        <input type="submit" name="simpan" value="Simpan Data" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <!-- untuk mengeluarkan data -->
-            <div class="card">
-                <div class="card-header text-white bg-secondary">
-                    Data Pengguna
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">ID Jadwal</th>
-                                <th scope="col">Waktu Masuk</th>
-                                <th scope="col">Waktu Pulang</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                                    $sql2 = "SELECT * FROM jadwal";
-                                    $q2 = mysqli_query($conn, $sql2);
-                                    $urut = 1;
-                                    while ($r2 = mysqli_fetch_array($q2)) {
-                                        $id_jadwal = $r2['id_jadwal'];
-                                        $waktu_masuk  = $r2['waktu_masuk'];
-                                        $waktu_pulang = $r2['waktu_pulang'];
-                                        ?>
+        <!-- untuk mengeluarkan data -->
+        <div class="card">
+            <div class="card-header">
+                Data Pengguna
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">ID Jadwal</th>
+                            <th scope="col">Waktu Masuk</th>
+                            <th scope="col">Waktu Pulang</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql2 = "SELECT * FROM jadwal";
+                        $q2 = mysqli_query($conn, $sql2);
+                        $urut = 1;
+                        while ($r2 = mysqli_fetch_array($q2)) {
+                            $id_jadwal = $r2['id_jadwal'];
+                            $waktu_masuk = $r2['waktu_masuk'];
+                            $waktu_pulang = $r2['waktu_pulang'];
+                            ?>
                             <tr>
                                 <th scope="row">
                                     <?php echo $urut++ ?>
@@ -182,13 +185,15 @@ if (isset($_POST['simpan'])) { //untuk create
                                 </td>
                             </tr>
                             <?php
-                                    }
-                                    ?>
+                        }
+                        ?>
                     </tbody>
 
                 </table>
             </div>
         </div>
+        
     </div>
 </body>
+
 </html>

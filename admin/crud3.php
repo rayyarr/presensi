@@ -84,7 +84,7 @@ if (isset($_POST['simpan'])) { //untuk create
 <body>
     <div class="mx-auto">
         <!-- untuk memasukkan data -->
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-header">
                 Edit status_absen
             </div>
@@ -127,7 +127,7 @@ if (isset($_POST['simpan'])) { //untuk create
 
             <!-- untuk mengeluarkan data -->
             <div class="card">
-                <div class="card-header text-white bg-secondary">
+                <div class="card-header">
                     Data Pengguna
                 </div>
                 <div class="card-body">
