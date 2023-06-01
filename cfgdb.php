@@ -15,4 +15,7 @@ $conn = NEW mysqli($DB_HOST, $DB_USER, $DB_PASSWD, $DB_NAME);
 if ($conn->connect_error) {
 	die("Koneksi gagal: " . $conn->connect_error);
 }
+
+date_default_timezone_set('Asia/Jakarta');
+
 ?>

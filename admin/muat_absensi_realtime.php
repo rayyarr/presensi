@@ -1,5 +1,5 @@
 <?php
-include_once 'cfgdb.php';
+include_once '../cfgdb.php';
 
 // set default timezone
 date_default_timezone_set('Asia/Jakarta');
