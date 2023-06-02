@@ -65,7 +65,7 @@ if (mysqli_num_rows($result) > 0) {
         } else {
             // Jika ada data gambar yang tersimpan di database, tampilkan gambar tersebut
             $nama_file = $data_absen['foto_profil'];
-            $path_to_file = "foto_profil/" . $nama_file;
+            $path_to_file = "../foto_profil/" . $nama_file;
             if (!file_exists($path_to_file)) {
                 // Jika file tidak ada, gunakan gambar default
                 $nama_file = "default.png";
@@ -74,7 +74,7 @@ if (mysqli_num_rows($result) > 0) {
 
         echo '<tr>
             <td width="60px">
-              <div class="imgBx"><img src="foto_profil/' . $nama_file . '" alt=""></div>
+              <div class="imgBx"><img src="../foto_profil/' . $nama_file . '" alt=""></div>
             </td>
             <td>
               <h4>' . $nama . ' <br> <span>Telah melakukan absen <b>' . $status . '</b> ' . formatWaktu($minutes_diff) . '</b></span></h4>

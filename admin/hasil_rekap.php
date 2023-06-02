@@ -217,7 +217,7 @@ if ($result->num_rows > 0) {
                                 echo '<td>' . $keterangan . '</td>';
                                 if (!empty($fotoAbsen)) {
                                     echo '<td class="text-center">';
-                                    echo '<img class="ftabsen" src="hasil_absen/' . $fotoAbsen . '" alt="Foto Absen" id="' . $i . '" width="50px" height="50px" onclick="showFoto(\'' . $fotoAbsen . '\')">';
+                                    echo '<img class="ftabsen" src="../hasil_absen/' . $fotoAbsen . '" alt="Foto Absen" id="' . $i . '" width="50px" height="50px" onclick="showFoto(\'' . $fotoAbsen . '\')">';
                                     echo '</td>';
                                 } else {
                                     echo '<td></td>';
@@ -235,7 +235,7 @@ if ($result->num_rows > 0) {
                             function showFoto(fotoAbsen) {
                                 swal.fire({
                                     title: 'Foto Absen: <?php echo $nama_pengguna ?>',
-                                    imageUrl: 'hasil_absen/' + fotoAbsen,
+                                    imageUrl: '../hasil_absen/' + fotoAbsen,
                                     imageWidth: 300,
                                 });
                             }

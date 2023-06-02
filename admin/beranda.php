@@ -300,7 +300,7 @@ $result = mysqli_query($conn, $query);
 
                     <?php if (!empty($fotoAbsen)): ?>
                       <td class="text-center">
-                        <img class="ftabsen" src="hasil_absen/<?php echo $fotoAbsen; ?>" alt="Foto Absen" id="<?php echo $i ?>"
+                        <img class="ftabsen" src="../hasil_absen/<?php echo $fotoAbsen; ?>" alt="Foto Absen" id="<?php echo $i ?>"
                           width="50px" height="50px" onclick="showFoto('<?php echo $fotoAbsen; ?>', '<?php echo $nama; ?>')">
                       </td>
                     <?php else: ?>
@@ -371,7 +371,7 @@ $result = mysqli_query($conn, $query);
             function showFoto(fotoAbsen, nama) {
               swal.fire({
                 title: 'Foto Absen: ' + nama,
-                imageUrl: 'hasil_absen/' + fotoAbsen,
+                imageUrl: '../hasil_absen/' + fotoAbsen,
                 imageWidth: 300,
               });
             }
@@ -430,7 +430,7 @@ $result = mysqli_query($conn, $query);
       } else {
         ?>
         <!-- Tampilkan pesan jika tidak ada absensi -->
-        <div class="alert alert-info">Tidak ada absensi untuk
+        <div class="alert alert-info">Tidak/belum ada absensi untuk
           <?php echo $nama_hari . ', ' . date('d', strtotime($tanggal)) . ' ' . $nama_bulan . ' ' . date('Y', strtotime($tanggal)) ?>
         </div>
         <?php
