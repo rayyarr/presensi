@@ -52,7 +52,7 @@ echo '
     <i class="bi bi-list open"></i>
     <i class="bi bi-x close"></i>
 </div>
-<a href="crud" style="margin-left:8px;color:black;text-decoration:none">Presensi Guru berbasis Web</a>
+<a href="beranda" style="margin-left:8px;color:black;text-decoration:none">Presensi Guru berbasis Web</a>
 </nav>
 </header>
 
@@ -62,13 +62,13 @@ echo '
     <div class="navigation active">
     <ul>
         <li class="list';
-if ($current_page == "dasboard_admin.php") {
+if ($current_page == "beranda.php") {
     echo " active";
 }
 echo '">
             <b></b>
             <b></b>
-            <a href="dasboard_admin.php" data-text="Beranda">
+            <a href="beranda" data-text="Beranda">
                 <span class="icon"><i class="bi bi-house-door"></i></span>
                 <span class="title">Beranda</span>
             </a>
