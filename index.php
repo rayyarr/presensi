@@ -8,7 +8,7 @@
     <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://unpkg.com/ionicons@latest/dist/ionicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="index_lp_style.css">
+    <link rel="stylesheet" href="index_lp.css">
 
     <title>SMP dan SMA Pesantren MKGR Kertasemaya</title>
     <meta name="description" content="SMP dan SMA Pesantren MKGR Kertasemaya">
