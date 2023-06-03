@@ -100,7 +100,7 @@ svg{width: 24px;height: 24px;fill: currentColor;}
 .btn-outline-biru{color:#243763;}
 .btn-outline-biru:hover{color:#fff;background-color: #243763;}
 
-.button-container{display:flex;align-items:center;justify-content:center;padding:10px;margin:10px;border:1px solid #ccc;border-radius:5px;}
+.button-container{display:flex;align-items:center;justify-content:center;padding:10px;margin:10px;border:1px solid #ccc;border-radius:18px;}
 .button-icon{margin-left:10px;margin-right:10px}
 .button-icon i{font-size: 28px;}
 .button-text{display:flex;flex-direction:column;margin-left: 10px;}

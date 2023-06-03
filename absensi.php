@@ -685,7 +685,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             context.drawImage(video, 0, 0, -canvas.width, canvas.height);
 
             // Mengubah foto menjadi URL data (base64)
-            const photo = canvas.toDataURL("image/png");
+            const photo = canvas.toDataURL("image/jpeg", 0.5); // Mengompresi gambar dengan kualitas 50%
 
             if (photo) {
                 // Menampilkan SweetAlert2 dengan pesan dan foto
@@ -750,6 +750,8 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 Swal.fire("Tidak dapat menangkap gambar!");
             }
         }
+
+
 
         // untuk jam saat ini
         var myVar = setInterval(myTimer, 1000);

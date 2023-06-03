@@ -8,7 +8,7 @@ $userid = $_SESSION['nip'];
 
 if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
 	$jarak = $_POST['jarak'];
-	$photo = $_POST["photo"];
+	$compressedPhoto = $_POST['photo'];
 	$latlong = $_POST['latlong'];
 
 	# kita cek dulu apakah dia sudah absen sebelumnya
@@ -35,11 +35,14 @@ if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
 			$tanggal_absen = date('Y-m-d');
 			$jam_masuk = date('H:i:s');
 
-			// Simpan foto ke folder hasil_absen dengan nama yang unik
+			// Mendekode data gambar yang dikirim sebagai base64
+			$decodedPhoto = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $compressedPhoto));
+
+			// Menentukan direktori penyimpanan gambar
+			$targetDirectory = "hasil_absen/";
 			$file_foto = $userid . "_" . date('Y-m-d') . ".png";
-			$filePath = "hasil_absen/" . $file_foto;
-			file_put_contents($filePath, base64_decode(explode(",", $photo)[1]));
-			//echo "Jarak: " . $jarak . " kilometer";
+			$targetPath = $targetDirectory . $file_foto;
+			file_put_contents($targetPath, $decodedPhoto);
 
 			// Eksekusi query dan mengambil isi jadwal masuk
 			$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = $id_jadwal";

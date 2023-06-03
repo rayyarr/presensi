@@ -70,7 +70,7 @@ if (mysqli_num_rows($hgm) > 0) {
 // Mengambil Data Absensi
 
 require_once('database.php');
-require_once('Absenclass.php');
+require_once('absenclass.php');
 date_default_timezone_set('Asia/Jakarta');
 $obj = new Absensiswa;
 /////////////////////////////////////////////////////////////////

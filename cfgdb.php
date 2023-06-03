@@ -1,15 +1,13 @@
 <?php
-$DB_HOST 	= 'localhost';
-$DB_USER 	= 'root';
-$DB_PASSWD  = '';
-$DB_NAME 	= 'presensi';
+require_once 'cfgcom.php';
 
 // Koneksi Database
-@define("DB_HOST", $DB_HOST);
-@define("DB_USER", $DB_USER);
-@define("DB_PASSWD" , $DB_PASSWD);
-@define("DB_NAME", $DB_NAME);
-$conn = NEW mysqli($DB_HOST, $DB_USER, $DB_PASSWD, $DB_NAME);
+$host = $config['host'];
+$user = $config['user'];
+$pass = $config['pass'];
+$db = $config['db'];
+
+$conn = NEW mysqli($host, $user, $pass, $db);
 
 // Cek koneksi
 if ($conn->connect_error) {
@@ -17,5 +15,4 @@ if ($conn->connect_error) {
 }
 
 date_default_timezone_set('Asia/Jakarta');
-
 ?>
