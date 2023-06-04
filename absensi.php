@@ -3,12 +3,20 @@
 session_start();
 include_once 'cfgall.php';
 
-//if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_POST['simpan'])) {
     $tanggal_absen = date('Y-m-d');
     $jam_masuk = date('H:i:s');
     $id_status = $_POST['id_status'];
     $keterangan = $_POST['keterangan'];
+
+    // Mengambil informasi file yang diunggah
+    $nama_file = $_FILES['lampiran']['name'];
+    $image_ext = explode('.', $nama_file);
+    $file_ext = strtolower(end($image_ext));
+    $ukuran_file = $_FILES['lampiran']['size'];
+    $tipe_file = $_FILES['lampiran']['type'];
+    $tmp_file = $_FILES['lampiran']['tmp_name'];
+
     $ku = "SELECT * FROM absen WHERE nip='$userid' AND tanggal_absen='$tanggal_absen'";
     $hsl = mysqli_query($conn, $ku);
     if (mysqli_num_rows($hsl) > 0) {
@@ -19,7 +27,35 @@ if (isset($_POST['simpan'])) {
         popupIcon = "error";
         </script>';
     } else {
-        $sqlabs = "INSERT INTO absen SET nip = '$userid',tanggal_absen='$tanggal_absen', jam_masuk='$jam_masuk', id_status='$id_status', tgl_keluar='$tanggal_absen', keterangan='$keterangan'";
+        // Memeriksa apakah file telah diunggah
+        if (!empty($nama_file)) {
+            // Memeriksa jenis file yang diunggah
+            $allowed_types = array('image/jpeg', 'image/jpg', 'image/png');
+            if (!in_array($tipe_file, $allowed_types)) {
+                // Jika jenis file tidak diizinkan, berikan pesan error
+                echo '<script>
+            popupJudul = "Gagal!";
+            popupText = "Jenis file yang diunggah tidak diizinkan. Hanya file JPEG, JPG, dan PNG yang diperbolehkan.";
+            popupIcon = "error";
+            </script>';
+            } elseif ($ukuran_file > 500000) {
+                // Jika ukuran file melebihi batas, berikan pesan error
+                echo '<script>
+            popupJudul = "Gagal!";
+            popupText = "Ukuran file terlalu besar. Maksimal ukuran file yang diizinkan adalah 500KB.";
+            popupIcon = "error";
+            </script>';
+            } else {
+                // Memindahkan file ke lokasi yang diinginkan
+                $nama_file = $userid . "_" . date('Y-m-d') . "." . $file_ext;
+                $tujuan_file = "hasil_absen/" . $nama_file;
+                move_uploaded_file($tmp_file, $tujuan_file);
+            }
+        } else {
+            $nama_file = NULL;
+        }
+
+        $sqlabs = "INSERT INTO absen SET nip = '$userid',tanggal_absen='$tanggal_absen', jam_masuk='$jam_masuk', id_status='$id_status', tgl_keluar='$tanggal_absen', keterangan='$keterangan', foto_absen='$nama_file'";
         $hslabs = mysqli_query($conn, $sqlabs);
         echo '<script>
         popupJudul = "Berhasil!";
@@ -27,6 +63,7 @@ if (isset($_POST['simpan'])) {
         popupIcon = "success";
         </script>';
     }
+
     echo '<script>
     swal.fire({
         title: "" + popupJudul,
@@ -287,14 +324,14 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         <h5 class="modal-title" id="exampleModalLabel">Absen Sakit / Izin</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="POST">
+                        <form action="" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="id_status">Jenis Absen</label>
                                 <?php
                                 $qstatus = "SELECT id_status, nama_status FROM status_absen WHERE id_status <> 1";
                                 $hasilstatus = $conn->query($qstatus);
                                 if ($hasilstatus->num_rows > 0) {
-                                    echo '<select class="form-control mt-2" id="absenSelect" name="id_status">';
+                                    echo '<select class="form-control" id="absenSelect" name="id_status">';
                                     while ($row = $hasilstatus->fetch_assoc()) {
                                         $nama_status = $row["nama_status"];
                                         echo '<option value="' . $row["id_status"] . '">' . $nama_status . '</option>';
@@ -304,28 +341,32 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                                     echo "Tidak ada data yang ditemukan.";
                                 }
                                 ?>
-                                <!--<select class="form-control mt-2" id="absenSelect" name="id_status">
-                                    <option value="3">Sakit</option>
-                                    <option value="2">Izin</option>
-                                </select>-->
                             </div>
-                            <div class="form-group mt-3">
+                            <div class="form-group">
                                 <label for="keteranganTextarea">Keterangan (opsional):</label>
-                                <textarea class="form-control mt-2" name="keterangan" id="keteranganTextarea"
+                                <textarea class="form-control" name="keterangan" id="keteranganTextarea"
                                     rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="lampiranInput">Lampiran Foto Bukti/Surat:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="lampiranInput" name="lampiran">
+                                    <label class="custom-file-label" for="lampiranInput">Pilih file</label>
+                                </div>
                             </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
                             onClick="$('#absenModal').modal('hide')">Batal</button>
                         <!--<button type="button" class="btn btn-primary"
-                                            onclick="insertAbsensi(<?php echo $userid; ?>)">Submit</button>-->
+                                    onclick="insertAbsensi(<?php echo $userid; ?>)">Submit</button>-->
                         <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
                     </div>
                     </form>
                 </div>
             </div>
         </div>
+
 
         <!--Modal Map-->
         <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
