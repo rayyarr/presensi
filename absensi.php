@@ -411,30 +411,32 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             });
 
             function requestLocationPermission() {
-                // Meminta izin akses lokasi
-                navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-                    if (result.state == 'granted') {
-                        // Jika izin akses lokasi telah diberikan, panggil fungsi untuk mendapatkan lokasi
-                        isSupportLocation();
-                    } else if (result.state == 'prompt') {
-                        // Jika pengguna belum memberikan izin akses lokasi, minta izin akses lokasi
-                        navigator.geolocation.getCurrentPosition(isSupportLocation, showError);
-                    } else if (result.state == 'denied') {
-                        // Jika pengguna telah memblokir izin akses lokasi, tampilkan pesan kesalahan
-                        swal.fire({
-                            title: "Gagal",
-                            html: "Anda telah memblokir akses lokasi.<br>Harap izinkan akses lokasi pada pengaturan browser Anda.",
-                            icon: "error",
-                        });
-                        buttonLocation.classList.remove("d-none");
-                        tombolAbsenMasuk.setAttribute('style', 'pointer-events:none;opacity:.65');
-                        tombolAbsenKeluar.setAttribute('style', 'pointer-events:none;opacity:.65');
-                    }
-                    result.onchange = function () {
-                        // Jika pengguna mengubah izin akses lokasi, panggil fungsi untuk memeriksa ulang izin akses lokasi
-                        requestLocationPermission();
-                    }
-                });
+                <?php if (!isset($_POST['simpan'])) { ?>
+                    // Meminta izin akses lokasi
+                    navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+                        if (result.state == 'granted') {
+                            // Jika izin akses lokasi telah diberikan, panggil fungsi untuk mendapatkan lokasi
+                            isSupportLocation();
+                        } else if (result.state == 'prompt') {
+                            // Jika pengguna belum memberikan izin akses lokasi, minta izin akses lokasi
+                            navigator.geolocation.getCurrentPosition(isSupportLocation, showError);
+                        } else if (result.state == 'denied') {
+                            // Jika pengguna telah memblokir izin akses lokasi, tampilkan pesan kesalahan
+                            swal.fire({
+                                title: "Gagal Mendeteksi!",
+                                html: "Anda telah memblokir akses lokasi. Harap izinkan akses lokasi pada pengaturan browser Anda.",
+                                icon: "error",
+                            });
+                            buttonLocation.classList.remove("d-none");
+                            tombolAbsenMasuk.setAttribute('style', 'pointer-events:none;opacity:.65');
+                            tombolAbsenKeluar.setAttribute('style', 'pointer-events:none;opacity:.65');
+                        }
+                        result.onchange = function () {
+                            // Jika pengguna mengubah izin akses lokasi, panggil fungsi untuk memeriksa ulang izin akses lokasi
+                            requestLocationPermission();
+                        }
+                    });
+                <?php } ?>
             }
 
             function isSupportLocation() {
@@ -542,8 +544,8 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             }
 
             // Tombol Absen Masuk
-            var tombolAbsenMasuk = document.getElementById("captureButton"); //document.querySelector('a[href="absen_masuk.php"]');
-            if (tombolAbsenMasuk) {
+            var tombolAbsenMasuk = document.getElementById("captureButton");
+            /*if (tombolAbsenMasuk) {
                 tombolAbsenMasuk.addEventListener('click', function (event) {
                     Webcam.snap(function (data_uri) {
                         event.preventDefault();
@@ -573,7 +575,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         form.submit();
                     });
                 });
-            }
+            }*/
 
             // Tombol Absen Keluar
             var tombolAbsenKeluar = document.querySelector('a[href="absen_keluar.php"]');
@@ -604,34 +606,36 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
         const captureButton = document.getElementById("captureButton");
 
         function requestCameraPermission() {
-            // Meminta izin akses kamera
-            navigator.permissions.query({ name: 'camera' }).then(function (result) {
-                if (result.state === 'granted') {
-                    // Jika izin akses kamera telah diberikan, coba akses kamera lagi
-                    accessCamera();
-                } else if (result.state === 'prompt') {
-                    // Jika pengguna belum memberikan izin akses kamera, minta izin akses kamera
-                    navigator.mediaDevices.getUserMedia({ video: true })
-                        .then(function (stream) {
-                            video.srcObject = stream;
-                        })
-                        .catch(function (error) {
-                            showError("Error accessing webcam: " + error);
-                        });
-                } else if (result.state === 'denied') {
-                    // Jika pengguna telah memblokir izin akses kamera, tampilkan pesan kesalahan
-                    Swal.fire({
-                        title: "Gagal",
-                        html: "Anda telah memblokir akses kamera.<br>Harap izinkan akses kamera pada pengaturan browser Anda.",
-                        icon: "error",
+            <?php if (!isset($_POST['simpan'])) { ?>
+                    // Meminta izin akses kamera
+                    navigator.permissions.query({ name: 'camera' }).then(function (result) {
+                        if (result.state === 'granted') {
+                            // Jika izin akses kamera telah diberikan, coba akses kamera lagi
+                            accessCamera();
+                        } else if (result.state === 'prompt') {
+                            // Jika pengguna belum memberikan izin akses kamera, minta izin akses kamera
+                            navigator.mediaDevices.getUserMedia({ video: true })
+                                .then(function (stream) {
+                                    video.srcObject = stream;
+                                })
+                                .catch(function (error) {
+                                    showError("Error accessing webcam: " + error);
+                                });
+                        } else if (result.state === 'denied') {
+                            // Jika pengguna telah memblokir izin akses kamera, tampilkan pesan kesalahan
+                            Swal.fire({
+                                title: "Gagal Mendeteksi!",
+                                html: "Anda telah memblokir akses kamera. Harap izinkan kamera pada pengaturan browser Anda.",
+                                icon: "error",
+                            });
+                            // Tambahkan logika tambahan jika diperlukan setelah pemblokiran izin akses kamera
+                        }
+                        result.onchange = function () {
+                            // Jika pengguna mengubah izin akses kamera, panggil fungsi untuk memeriksa ulang izin akses kamera
+                            requestCameraPermission();
+                        };
                     });
-                    // Tambahkan logika tambahan jika diperlukan setelah pemblokiran izin akses kamera
-                }
-                result.onchange = function () {
-                    // Jika pengguna mengubah izin akses kamera, panggil fungsi untuk memeriksa ulang izin akses kamera
-                    requestCameraPermission();
-                };
-            });
+            <?php } ?>
         }
 
         // Fungsi untuk mengakses kamera dan mengatur aliran video
@@ -666,7 +670,11 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 takePhoto();
             } catch (error) {
                 // Izin kamera tidak diberikan atau terjadi kesalahan lain
-                Swal.fire("Harap izinkan akses kamera!");
+                swal.fire({
+                    title: "Gagal!",
+                    html: "Harap izinkan akses kamera pada pengaturan browser Anda.",
+                    icon: "error",
+                });
             }
         });
 
