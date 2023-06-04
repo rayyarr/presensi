@@ -83,6 +83,10 @@ switch ($hari) {
         break;
 }
 
+$nama_bulan_arr = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+$tanggal = date('Y-m-d');
+$nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
+
 echo'
 <!DOCTYPE html>
 <html lang="id-ID" xml:lang="id-ID">

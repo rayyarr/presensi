@@ -86,6 +86,7 @@ if (mysqli_num_rows($hasilW) > 0) {
     // Looping untuk membaca nilai waktu_masuk dari setiap baris data
     while ($row = mysqli_fetch_assoc($hasilW)) {
         $id_jadwal = $row["id_jadwal"];
+        $hari_ini = $row["nama_hari"];
         $jam_masuk = $row["waktu_masuk"];
         $jam_pulang = $row["waktu_pulang"];
     }
@@ -200,7 +201,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 </div>
                 <div class="mb-3">
                     <div class="d-block">
-                        <span>Waktu saat ini: <b id="jam">belum terdeteksi</b> <b>WIB</b></span>
+                        <span>Saat ini: <b id="jam">belum terdeteksi</b> <b>WIB (<?php echo $hari_ini . ', ' . date('d', strtotime($tanggal)) . ' ' . $nama_bulan . ' ' . date('Y', strtotime($tanggal)) ?>)</b></span>
                     </div>
                 </div>
                 <div class="mb-3">
