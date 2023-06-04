@@ -73,7 +73,7 @@ if (isset($_FILES['image'])) {
             }
 
             //membuat nama file baru dengan nilai nip dan uniqid
-            $new_filename = $userid . "_" . uniqid();
+            $new_filename = $userid . "_" . uniqid() . "." . $file_ext;
 
             //memindahkan file ke direktori tujuan dengan nama file baru
             move_uploaded_file($tmp_image, "foto_profil/" . $new_filename);
