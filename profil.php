@@ -10,8 +10,6 @@ $guru = "";
 $sukses = "";
 $error = "";
 
-//if ($op == 'edit') {
-//$id = $_GET['id'];
 $sqldef = "select * from pengguna where nip = '$userid'";
 $q1 = mysqli_query($conn, $sqldef);
 $r1 = mysqli_fetch_array($q1);
@@ -24,7 +22,6 @@ $guru = $r1['guru'];
 if ($nip == '') {
     $error = "Data tidak ditemukan";
 }
-//}
 
 if (isset($_POST['simpan'])) { //untuk update
     $nama = $_POST['nama'];
@@ -45,7 +42,6 @@ if (isset($_POST['simpan'])) { //untuk update
 }
 
 //PROSES UPLOAD/UPDATE GAMBAR
-//memeriksa apakah ada file yang diunggah
 if (isset($_FILES['image'])) {
     $image = $_FILES['image']['name'];
     $tmp_image = $_FILES['image']['tmp_name'];
@@ -53,38 +49,32 @@ if (isset($_FILES['image'])) {
     $file_ext = strtolower(end($image_ext));
 
     //membuat array untuk ekstensi file yang diperbolehkan
-    $allowed_ext = array('jpg', 'jpeg', 'png', 'gif');
+    $allowed_ext = array('jpg', 'jpeg', 'png');
 
     //memeriksa apakah ekstensi file diizinkan
     if (in_array($file_ext, $allowed_ext)) {
-        //membuat nama file baru dengan gabungan nilai nip dan nama file
-        $new_filename = $userid . "_" . $image;
+        //memeriksa ukuran file
+        $file_size = $_FILES['image']['size']; // ukuran file dalam bytes
+        $max_file_size = 500 * 1024; // 500 KB
 
-        //memeriksa apakah pengguna sudah memiliki data gambar yang tersimpan di database
-        $sql_check = "SELECT foto_profil FROM pengguna WHERE nip='$userid'";
-        $result_check = mysqli_query($conn, $sql_check);
-        if (mysqli_num_rows($result_check) > 0) {
-            //menghapus file yang lama
-            $row_check = mysqli_fetch_assoc($result_check);
-            $old_filename = $row_check['foto_profil'];
-            if ($old_filename != NULL) {
-            unlink("foto_profil/" . $old_filename);
-            //memperbarui data gambar dengan data gambar yang baru
-            $sql_update = "UPDATE pengguna SET foto_profil='$new_filename' WHERE nip='$userid'";
-            mysqli_query($conn, $sql_update);
+        if ($file_size <= $max_file_size) {
+            //memeriksa apakah pengguna sudah memiliki data gambar yang tersimpan di database
+            $sql_check = "SELECT foto_profil FROM pengguna WHERE nip='$userid'";
+            $result_check = mysqli_query($conn, $sql_check);
+            if (mysqli_num_rows($result_check) > 0) {
+                // Menghapus file yang lama berawalan $userid
+                $file_directory = "foto_profil/";
+                $files = glob($file_directory . $userid . "_*");
+                foreach ($files as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+            }
 
-            //memindahkan file ke direktori tujuan dengan nama file baru
-            move_uploaded_file($tmp_image, "foto_profil/" . $new_filename);
+            //membuat nama file baru dengan nilai nip dan uniqid
+            $new_filename = $userid . "_" . uniqid();
 
-            $script = "<script>
-				Swal.fire(
-					'Gambar berhasil diunggah dan diperbarui',
-					'Silakan refresh halaman ini',
-					'success',
-				  )
-            </script>";
-            echo $script;
-            } else {
             //memindahkan file ke direktori tujuan dengan nama file baru
             move_uploaded_file($tmp_image, "foto_profil/" . $new_filename);
 
@@ -93,19 +83,31 @@ if (isset($_FILES['image'])) {
             mysqli_query($conn, $sql);
 
             $script = "<script>
-				Swal.fire(
-					'Gambar berhasil diunggah',
-					'Silakan refresh halaman ini',
-					'success',
+                Swal.fire(
+                    'Gambar berhasil diunggah dan diperbarui',
+                    'Silakan refresh halaman ini',
+                    'success'
+                )
+            </script>";
+            echo $script;
+        } else {
+            $script = "<script>
+                Swal.fire(
+                    'Gagal Upload Profil!',
+                    'Ukuran melebihi batas yang diizinkan (500KB)',
+                    'error'
                 );
             </script>";
             echo $script;
-            }
-        } //else {}
+        }
     } else {
         $script = "<script>
-              alert('Hanya file dengan ekstensi jpg, jpeg, png, atau gif yang diizinkan');
-            </script>";
+            Swal.fire(
+                'Gagal Upload Profil!',
+                'Hanya file dengan ekstensi jpg, jpeg, atau png yang diizinkan',
+                'error'
+            );
+        </script>";
         echo $script;
     }
 }

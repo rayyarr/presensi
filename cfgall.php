@@ -50,31 +50,11 @@ if ($hasiljoin['foto_profil'] == NULL) {
   }
 }
 
-// Ambil nama
-//$query = "SELECT nama, nip FROM pengguna WHERE nip = '$userid'";
-//$hasil = mysqli_query($conn, $sqlUtama);
-
-/*mengambil data gambar dari database
-$sql = "SELECT * FROM gambar WHERE nip='$userid'";
-$hgm = mysqli_query($conn, $sql);
-
-if (mysqli_num_rows($hgm) > 0) {
-    $row = mysqli_fetch_assoc($hgm);
-    $nama_file = $row['nama_file'];
-} else {
-    $nama_file = "default.png";
-}
-
-*/
-
 // Mengambil Data Absensi
-
 require_once('database.php');
 require_once('absenclass.php');
-date_default_timezone_set('Asia/Jakarta');
 $obj = new Absensiswa;
-/////////////////////////////////////////////////////////////////
-$d = $obj->data_Absen($userid); //kita set usernya misal punya id satu
+$d = $obj->data_Absen($userid);
 
 echo'
 <!DOCTYPE html>
