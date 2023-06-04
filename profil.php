@@ -1,6 +1,6 @@
 <?php
 session_start(); // Mulai session
-include_once 'sw-header.php';
+include_once 'cfgall.php';
 
 $nip = "";
 $password = "";

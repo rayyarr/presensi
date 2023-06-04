@@ -1,7 +1,7 @@
 <?php
 // Rayya
 session_start();
-include_once 'sw-header.php';
+include_once 'cfgall.php';
 
 //if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_POST['simpan'])) {

@@ -1,7 +1,7 @@
 <?php
 // Rayya
 session_start();
-include_once 'sw-header.php';
+include_once 'cfgall.php';
 
 // Jika tombol logout ditekan
 if (isset($_POST['logout'])) {
