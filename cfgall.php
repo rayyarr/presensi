@@ -86,60 +86,21 @@ echo'
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
   <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
 
-  <!--resource-->
-  <link href="//fonts.googleapis.com" rel="preconnect dns-prefetch"/>
-  <link href="//api.github.com" rel="preconnect dns-prefetch"/>
-  <link href="//api.mapbox.com" rel="preconnect dns-prefetch"/>
-  <link href="//cdnjs.cloudflare.com" rel="preconnect dns-prefetch"/>
-  <link href="//unpkg.com" rel="preconnect dns-prefetch"/>
-  <!--<link href="//kit.fontawesome.com" rel="preconnect dns-prefetch"/>-->
-
   <!-- Jquery -->
-  <!--<script src="header/jquery-3.4.1.min.js"></script>-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!--<script src="https://kit.fontawesome.com/a8249a03a7.js" crossorigin="anonymous"></script>-->
 
   <!--CSS-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"/>
-  <link rel="stylesheet" href="header/style.css?';time(); echo '" id="myStylesheet">
-  <!-- <link rel="stylesheet" href="header/sw-custom.css"> -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">';
+  <link rel="stylesheet" href="header/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   
-echo'
 </head>
 
 <body>';
 if (isset($_SESSION['nip'])) {
-  echo'
-<!-- App Header -->
-    <!--<div class="appHeader bg-primary text-light">
-        <div class="left">
-            <button class="headerButton" id="sidebarCollapse" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button" aria-label="Toggle menu">
-            <i class="bi bi-list"></i></button>
-        <div class="pageTitle">
-            <a href="./" style="color:white;font-weight:700">Presensi Guru</a>
-        </div>
-        </div>-->
-        
-        <!--<div class="right">
-            <div class="headerButton" data-toggle="dropdown" id="dropdownMenuLink" aria-haspopup="true">';
-              if($row_user['photo'] ==''){
-                echo'<img src="'.$site_url.'/content/avatar.jpg" alt="image" class="imaged w40">';
-              }else{
-                echo'
-                <img src="'.$site_url.'/content/karyawan/'.$row_user['photo'].'" alt="image" class="imaged w40">';}
-              echo'
-               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';?>
-                <a class="dropdown-item" onclick="location.href='profile';" href="profile"><ion-icon size="small" name="person-outline"></ion-icon>Profil</a>
-                <a class="dropdown-item" onclick="location.href='logout';" href="logout"><ion-icon size="small" name="log-out-outline"></ion-icon>Keluar</a>
-              </div>
-            </div>
-        </div>-->
-    </div>
-<?php
 echo'
 <!-- App Sidebar -->
 
@@ -187,15 +148,6 @@ echo'
 </label>
 </div>
 </div>
-
-<!--<div class="offcanvas-header border-bottom">
-  <a href="/" class="d-flex align-items-center text-decoration-none offcanvas-title d-sm-block">
-    <h3>
-      <i class="bi bi-chat-right-text-fill"></i>
-      <span>Qurrotu Aini</span>
-    </h3>
-  </a>
-</div>-->
 
 <div class="offcanvas-body px-0">
 

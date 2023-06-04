@@ -5,7 +5,7 @@ include_once 'sw-header.php';
 $nip = "";
 $password = "";
 $nama = "";
-$jabatan = "";
+$jabatan_id = "";
 $guru = "";
 $sukses = "";
 $error = "";
@@ -18,7 +18,7 @@ $r1 = mysqli_fetch_array($q1);
 $nip = $r1['nip'];
 $password = md5($r1['password']);
 $nama = $r1['nama'];
-$jabatan = $r1['jabatan_id'];
+$jabatan_id = $r1['jabatan_id'];
 $guru = $r1['guru'];
 
 if ($nip == '') {
@@ -28,11 +28,11 @@ if ($nip == '') {
 
 if (isset($_POST['simpan'])) { //untuk update
     $nama = $_POST['nama'];
-    $jabatan = $_POST['jabatan_id'];
+    $jabatan_id = $_POST['jabatan_id'];
     $guru = $_POST['guru'];
 
-    if ($nip && $password && $nama && $jabatan && $guru) {
-        $sql1 = "update pengguna set nama='$nama',jabatan_id = '$jabatan',guru='$guru' where nip = '$userid'";
+    if ($nip && $password && $nama && $jabatan_id && $guru) {
+        $sql1 = "update pengguna set nama='$nama',jabatan_id = '$jabatan_id',guru='$guru' where nip = '$userid'";
         $q1 = mysqli_query($conn, $sql1);
         if ($q1) {
             $sukses = "Data berhasil diupdate";
@@ -252,25 +252,25 @@ if (isset($_POST['submit'])) {
                     <div class="mb-3 row">
                         <!--<label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?php echo $jabatan ?>" required>
+                            <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?php echo $jabatan_id ?>" required>
                         </div>-->
                         <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
                         <div class="col-sm-10">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="jabatan_id" value="1"
-                                    id="jabatan_guru" <?php if ($jabatan == "1")
+                                    id="jabatan_guru" <?php if ($jabatan_id == "1")
                                         echo "checked" ?>>
                                     <label class="form-check-label" for="jabatan_guru">Guru</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="jabatan_id" value="2" id="jabatan_tu"
-                                    <?php if ($jabatan == "2")
+                                    <?php if ($jabatan_id == "2")
                                         echo "checked" ?>>
                                     <label class="form-check-label" for="jabatan_tu">Tata Usaha</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="jabatan_id" value="3"
-                                        id="jabatan_pdh" <?php if ($jabatan == "3")
+                                        id="jabatan_pdh" <?php if ($jabatan_id == "3")
                                         echo "checked" ?>>
                                     <label class="form-check-label" for="jabatan_pdh">PDH</label>
                                 </div>
