@@ -2,6 +2,7 @@
 include_once 'main-admin.php';
 
 $id_jadwal = "";
+$nama_hari = "";
 $waktu_masuk = "";
 $waktu_pulang = "";
 $sukses = "";
@@ -28,6 +29,7 @@ if ($op == 'edit') {
     $q1 = mysqli_query($conn, $sqldef);
     $r1 = mysqli_fetch_array($q1);
     $id_jadwal = $r1['id_jadwal'];
+    $nama_hari = $r1['nama_hari'];
     $waktu_masuk = $r1['waktu_masuk'];
     $waktu_pulang = $r1['waktu_pulang'];
 
@@ -37,10 +39,11 @@ if ($op == 'edit') {
 }
 if (isset($_POST['simpan'])) { //untuk create
     $id_jadwal = $_POST['id_jadwal'];
+    $nama_hari = $_POST['nama_hari'];
     $waktu_masuk = $_POST['waktu_masuk'];
     $waktu_pulang = $_POST['waktu_pulang'];
 
-    if ($id_jadwal && $waktu_masuk && $waktu_pulang) {
+    if ($id_jadwal && $nama_hari && $waktu_masuk && $waktu_pulang) {
         if ($op == 'edit') { //untuk update
             $sql1 = "update jadwal set waktu_masuk='$waktu_masuk',waktu_pulang='$waktu_pulang' where id_jadwal = '$id_jadwal'";
             $q1 = mysqli_query($conn, $sql1);
@@ -117,6 +120,13 @@ if (isset($_POST['simpan'])) { //untuk create
                         </div>
                     </div>
                     <div class="mb-3 row">
+                        <label for="nama_hari" class="col-sm-2 col-form-label">Hari</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="nama_hari" name="nama_hari"
+                                value="<?php echo $nama_hari ?>" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
                         <label for="waktu_masuk" class="col-sm-2 col-form-label">Waktu Masuk</label>
                         <div class="col-sm-10">
                             <input type="time" class="form-control" id="waktu_masuk" name="waktu_masuk"
@@ -146,8 +156,8 @@ if (isset($_POST['simpan'])) { //untuk create
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">ID Jadwal</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Hari</th>
                             <th scope="col">Waktu Masuk</th>
                             <th scope="col">Waktu Pulang</th>
                             <th scope="col">Aksi</th>
@@ -160,15 +170,16 @@ if (isset($_POST['simpan'])) { //untuk create
                         $urut = 1;
                         while ($r2 = mysqli_fetch_array($q2)) {
                             $id_jadwal = $r2['id_jadwal'];
+                            $nama_hari = $r2['nama_hari'];
                             $waktu_masuk = $r2['waktu_masuk'];
                             $waktu_pulang = $r2['waktu_pulang'];
                             ?>
                             <tr>
-                                <th scope="row">
-                                    <?php echo $urut++ ?>
-                                </th>
                                 <td scope="row">
                                     <?php echo $id_jadwal ?>
+                                </td>
+                                <td scope="row">
+                                    <?php echo $nama_hari ?>
                                 </td>
                                 <td scope="row">
                                     <?php echo $waktu_masuk ?>

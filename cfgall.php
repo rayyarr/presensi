@@ -55,6 +55,33 @@ require_once('database.php');
 require_once('absenclass.php');
 $obj = new Absensiswa;
 $d = $obj->data_Absen($userid);
+// Mendapatkan hari saat ini dalam bahasa Indonesia
+$hari = date("l");
+$hari_ini = "";
+
+switch ($hari) {
+    case "Monday":
+        $hari_ini = "Senin";
+        break;
+    case "Tuesday":
+        $hari_ini = "Selasa";
+        break;
+    case "Wednesday":
+        $hari_ini = "Rabu";
+        break;
+    case "Thursday":
+        $hari_ini = "Kamis";
+        break;
+    case "Friday":
+        $hari_ini = "Jumat";
+        break;
+    case "Saturday":
+        $hari_ini = "Sabtu";
+        break;
+    case "Sunday":
+        $hari_ini = "Minggu";
+        break;
+}
 
 echo'
 <!DOCTYPE html>

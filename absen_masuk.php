@@ -1,10 +1,7 @@
 <?php
 session_start(); // Mulai session
 require_once('cfgall.php');
-require_once('database.php');
-require_once('absenclass.php');
-$obj = new Absensiswa;
-$userid = $_SESSION['nip'];
+$id_jadwal = mysqli_fetch_array(mysqli_query($conn, "SELECT id_jadwal FROM jadwal WHERE nama_hari = '$hari_ini'"))['id_jadwal'];
 
 if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
 	$jarak = $_POST['jarak'];
@@ -29,9 +26,8 @@ if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
 				</script>
 				';
 	} else {
-		if ($jarak <= 99) { // jarak ideal agar bisa masuk
-			$id_status = 1; // status masuk
-			$id_jadwal = 1;
+		if ($jarak <= 99) { // jarak maksimal (km) agar bisa masuk
+			$id_status = 1; // 1 yaitu masuk
 			$tanggal_absen = date('Y-m-d');
 			$jam_masuk = date('H:i:s');
 

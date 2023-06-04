@@ -78,13 +78,14 @@ if (isset($_POST['simpan'])) {
 }
 
 // Eksekusi query dan mengambil isi jadwal masuk
-$sqlW = "SELECT waktu_masuk, waktu_pulang FROM jadwal WHERE id_jadwal = 1";
+$sqlW = "SELECT * FROM jadwal WHERE nama_hari = '$hari_ini'";
 $hasilW = mysqli_query($conn, $sqlW);
 
 // Cek apakah query berhasil dijalankan
 if (mysqli_num_rows($hasilW) > 0) {
     // Looping untuk membaca nilai waktu_masuk dari setiap baris data
     while ($row = mysqli_fetch_assoc($hasilW)) {
+        $id_jadwal = $row["id_jadwal"];
         $jam_masuk = $row["waktu_masuk"];
         $jam_pulang = $row["waktu_pulang"];
     }
