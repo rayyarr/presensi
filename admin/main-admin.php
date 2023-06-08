@@ -2,6 +2,11 @@
 
 include_once '../cfgdb.php';
 
+if(!isset($_SESSION['username'])){
+    header("Location: index");
+    exit();
+}
+
 header("Cache-Control: no-cache, must-revalidate");
 
 $current_page = basename($_SERVER['PHP_SELF']);
@@ -74,37 +79,37 @@ echo '">
             </a>
         </li>
         <li class="list';
-if ($current_page == "crud.php") {
+if ($current_page == "pengguna.php") {
     echo " active";
 }
 echo '">
             <b></b>
             <b></b>
-            <a href="crud" data-text="Data Pengguna">
+            <a href="pengguna" data-text="Data Pengguna">
                 <span class="icon"><i class="bi bi-people"></i></span>
                 <span class="title">Pengguna</span>
             </a>
         </li>
         <li class="list';
-if ($current_page == "crud3.php") {
+if ($current_page == "status.php") {
     echo " active";
 }
 echo '">
             <b></b>
             <b></b>
-            <a href="crud3" data-text="Status Absen">
+            <a href="status" data-text="Status Absen">
                 <span class="icon"><i class="bi bi-list-check"></i></span>
                 <span class="title">Status Absen</span>
             </a>
         </li>
         <li class="list';
-if ($current_page == "crud2.php") {
+if ($current_page == "jadwal.php") {
     echo " active";
 }
 echo '">
             <b></b>
             <b></b>
-            <a href="crud2" data-text="Jadwal">
+            <a href="jadwal" data-text="Jadwal">
                 <span class="icon"><i class="bi bi-calendar-week"></i></span>
                 <span class="title">Jadwal</span>
             </a>
@@ -122,15 +127,35 @@ echo '">
             </a>
         </li>
         <li class="list';
-if ($current_page == "crud4.php") {
+if ($current_page == "jabatan.php") {
     echo " active";
 }
 echo '">
             <b></b>
             <b></b>
-            <a href="crud4" data-text="Jabatan">
+            <a href="jabatan" data-text="Jabatan">
                 <span class="icon"><i class="bi bi-person-badge"></i></span>
                 <span class="title">Jabatan</span>
+            </a>
+        </li>
+        <li class="list';
+if ($current_page == "pengaturan.php") {
+    echo " active";
+}
+echo '">
+            <b></b>
+            <b></b>
+            <a href="pengaturan" data-text="Pengaturan">
+                <span class="icon"><i class="bi bi-gear-fill"></i></span>
+                <span class="title">Pengaturan</span>
+            </a>
+        </li>
+        <li class="list">
+            <b></b>
+            <b></b>
+            <a href="logout" data-text="Logout">
+                <span class="icon"><i class="bi bi-door-open"></i></span>
+                <span class="title">Logout</span>
             </a>
         </li>
     </ul>

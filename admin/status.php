@@ -1,8 +1,10 @@
 <?php
+session_start();
+
 include_once 'main-admin.php';
 
-$jabatan_id = "";
-$jabatan_nama = "";
+$id_status = "";
+$nama_status = "";
 $sukses = "";
 $error = "";
 
@@ -12,8 +14,8 @@ if (isset($_GET['op'])) {
     $op = "";
 }
 if ($op == 'delete') {
-    $jabatan_id = $_GET['id'];
-    $sql1 = "delete from jabatan where jabatan_id = '$jabatan_id'";
+    $id_status = $_GET['id'];
+    $sql1 = "delete from status_absen where id_status = '$id_status'";
     $q1 = mysqli_query($conn, $sql1);
     if ($q1) {
         $sukses = "Berhasil hapus data";
@@ -22,24 +24,24 @@ if ($op == 'delete') {
     }
 }
 if ($op == 'edit') {
-    $jabatan_id = $_GET['id'];
-    $sqldef = "select * from jabatan where jabatan_id = '$jabatan_id'";
+    $id_status = $_GET['id'];
+    $sqldef = "select * from status_absen where id_status = '$id_status'";
     $q1 = mysqli_query($conn, $sqldef);
     $r1 = mysqli_fetch_array($q1);
-    $jabatan_id = $r1['jabatan_id'];
-    $jabatan_nama = $r1['jabatan_nama'];
+    $id_status = $r1['id_status'];
+    $nama_status = $r1['nama_status'];
 
-    if ($jabatan_id == '') {
+    if ($id_status == '') {
         $error = "Data tidak ditemukan";
     }
 }
 if (isset($_POST['simpan'])) { //untuk create
-    $jabatan_id = $_POST['jabatan_id'];
-    $jabatan_nama = $_POST['jabatan_nama'];
+    $id_status = $_POST['id_status'];
+    $nama_status = $_POST['nama_status'];
 
-    if ($jabatan_id && $jabatan_nama) {
+    if ($id_status && $nama_status) {
         if ($op == 'edit') { //untuk update
-            $sql1 = "update jabatan set jabatan_nama='$jabatan_nama' where jabatan_id = '$jabatan_id'";
+            $sql1 = "update status_absen set nama_status='$nama_status' where id_status = '$id_status'";
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Data berhasil diupdate";
@@ -47,7 +49,7 @@ if (isset($_POST['simpan'])) { //untuk create
                 $error = "Data gagal diupdate";
             }
         } else { //untuk insert
-            $sql1 = "insert into jabatan(jabatan_id,jabatan_nama) values ('$jabatan_id','$jabatan_nama')";
+            $sql1 = "insert into status_absen(id_status,nama_status) values ('$id_status','$nama_status')";
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Berhasil memasukkan data baru";
@@ -86,7 +88,7 @@ if (isset($_POST['simpan'])) { //untuk create
         <!-- untuk memasukkan data -->
         <div class="card mb-3">
             <div class="card-header">
-                Edit jabatan
+                Edit status_absen
             </div>
             <div class="card-body">
             <?php
@@ -107,15 +109,15 @@ if (isset($_POST['simpan'])) { //untuk create
                 ?>
                 <form action="" method="POST">
                     <div class="mb-3 row">
-                        <label for="jabatan_id" class="col-sm-2 col-form-label">ID Jabatan</label>
+                        <label for="id_status" class="col-sm-2 col-form-label">ID Status</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="jabatan_id" name="jabatan_id" value="<?php echo $jabatan_id ?>" required>
+                            <input type="text" class="form-control" id="id_status" name="id_status" value="<?php echo $id_status ?>" required>
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="jabatan_nama" class="col-sm-2 col-form-label">Nama Jabatan</label>
+                        <label for="nama_status" class="col-sm-2 col-form-label">Nama Status</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="jabatan_nama" name="jabatan_nama" value="<?php echo $jabatan_nama ?>" required>
+                            <input type="text" class="form-control" id="nama_status" name="nama_status" value="<?php echo $nama_status ?>" required>
                         </div>
                     </div>
                         <div class="col-12">
@@ -135,34 +137,34 @@ if (isset($_POST['simpan'])) { //untuk create
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">ID Jabatan</th>
-                                <th scope="col">Nama Jabatan</th>
+                                <th scope="col">ID Status</th>
+                                <th scope="col">Nama Status</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                                    $sql2 = "SELECT * FROM jabatan";
+                                    $sql2 = "SELECT * FROM status_absen";
                                     $q2 = mysqli_query($conn, $sql2);
                                     $urut = 1;
                                     while ($r2 = mysqli_fetch_array($q2)) {
-                                        $jabatan_id = $r2['jabatan_id'];
-                                        $jabatan_nama  = $r2['jabatan_nama'];
+                                        $id_status = $r2['id_status'];
+                                        $nama_status  = $r2['nama_status'];
                                         ?>
                             <tr>
                                 <th scope="row">
                                     <?php echo $urut++ ?>
                                 </th>
                                 <td scope="row">
-                                    <?php echo $jabatan_id ?>
+                                    <?php echo $id_status ?>
                                 </td>
                                 <td scope="row">
-                                    <?php echo $jabatan_nama ?>
+                                    <?php echo $nama_status ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="crud4.php?op=edit&id=<?php echo $jabatan_id ?>"><button type="button"
+                                    <a href="crud3.php?op=edit&id=<?php echo $id_status ?>"><button type="button"
                                             class="btn btn-warning">Edit</button></a>
-                                    <a href="crud4.php?op=delete&id=<?php echo $jabatan_id ?>"
+                                    <a href="crud3.php?op=delete&id=<?php echo $id_status ?>"
                                         onclick="return confirm('Yakin mau delete data?')"><button type="button"
                                             class="btn btn-danger">Delete</button></a>
                                 </td>

@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 include_once 'main-admin.php';
 
 $id_jadwal = "";
@@ -45,7 +47,7 @@ if (isset($_POST['simpan'])) { //untuk create
 
     if ($id_jadwal && $nama_hari && $waktu_masuk && $waktu_pulang) {
         if ($op == 'edit') { //untuk update
-            $sql1 = "update jadwal set waktu_masuk='$waktu_masuk',waktu_pulang='$waktu_pulang' where id_jadwal = '$id_jadwal'";
+            $sql1 = "update jadwal set nama_hari='$nama_hari', waktu_masuk='$waktu_masuk',waktu_pulang='$waktu_pulang' where id_jadwal = '$id_jadwal'";
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Data berhasil diupdate";
@@ -53,7 +55,7 @@ if (isset($_POST['simpan'])) { //untuk create
                 $error = "Data gagal diupdate";
             }
         } else { //untuk insert
-            $sql1 = "insert into jadwal(id_jadwal,waktu_masuk,waktu_pulang) values ('$id_jadwal','$waktu_masuk','$waktu_pulang')";
+            $sql1 = "insert into jadwal(id_jadwal,nama_hari,waktu_masuk,waktu_pulang) values ('$id_jadwal','$nama_hari','$waktu_masuk','$waktu_pulang')";
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Berhasil memasukkan data baru";

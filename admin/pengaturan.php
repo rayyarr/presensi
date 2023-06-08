@@ -1,8 +1,12 @@
 <?php
+session_start();
+
 include_once 'main-admin.php';
 
-$id_status = "";
-$nama_status = "";
+$id = "";
+$jarak = "";
+$latitude = "";
+$longitude = "";
 $sukses = "";
 $error = "";
 
@@ -12,8 +16,8 @@ if (isset($_GET['op'])) {
     $op = "";
 }
 if ($op == 'delete') {
-    $id_status = $_GET['id'];
-    $sql1 = "delete from status_absen where id_status = '$id_status'";
+    $id = $_GET['id'];
+    $sql1 = "delete from pengaturan where id = '$id'";
     $q1 = mysqli_query($conn, $sql1);
     if ($q1) {
         $sukses = "Berhasil hapus data";
@@ -22,24 +26,28 @@ if ($op == 'delete') {
     }
 }
 if ($op == 'edit') {
-    $id_status = $_GET['id'];
-    $sqldef = "select * from status_absen where id_status = '$id_status'";
+    $id = $_GET['id'];
+    $sqldef = "select * from pengaturan where id = '$id'";
     $q1 = mysqli_query($conn, $sqldef);
     $r1 = mysqli_fetch_array($q1);
-    $id_status = $r1['id_status'];
-    $nama_status = $r1['nama_status'];
+    $id = $r1['id'];
+    $jarak = $r1['jarak'];
+    $latitude = $r1['latitude'];
+    $longitude = $r1['longitude'];
 
-    if ($id_status == '') {
+    if ($id == '') {
         $error = "Data tidak ditemukan";
     }
 }
 if (isset($_POST['simpan'])) { //untuk create
-    $id_status = $_POST['id_status'];
-    $nama_status = $_POST['nama_status'];
+    $id = $_POST['id'];
+    $jarak = $_POST['jarak'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
 
-    if ($id_status && $nama_status) {
+    if ($id && $jarak && $latitude && $longitude) {
         if ($op == 'edit') { //untuk update
-            $sql1 = "update status_absen set nama_status='$nama_status' where id_status = '$id_status'";
+            $sql1 = "update pengaturan set jarak='$jarak', latitude='$latitude', longitude='$longitude' where id = '$id'";
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Data berhasil diupdate";
@@ -47,7 +55,7 @@ if (isset($_POST['simpan'])) { //untuk create
                 $error = "Data gagal diupdate";
             }
         } else { //untuk insert
-            $sql1 = "insert into status_absen(id_status,nama_status) values ('$id_status','$nama_status')";
+            $sql1 = "insert into pengaturan(id,jarak,latitude,longitude) values ('$id','$jarak','$latitude','$longitude')";
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
                 $sukses = "Berhasil memasukkan data baru";
@@ -86,7 +94,7 @@ if (isset($_POST['simpan'])) { //untuk create
         <!-- untuk memasukkan data -->
         <div class="card mb-3">
             <div class="card-header">
-                Edit status_absen
+                Edit pengaturan
             </div>
             <div class="card-body">
             <?php
@@ -107,15 +115,27 @@ if (isset($_POST['simpan'])) { //untuk create
                 ?>
                 <form action="" method="POST">
                     <div class="mb-3 row">
-                        <label for="id_status" class="col-sm-2 col-form-label">ID Status</label>
+                        <label for="id" class="col-sm-2 col-form-label">ID</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="id_status" name="id_status" value="<?php echo $id_status ?>" required>
+                            <input type="text" class="form-control" id="id" name="id" value="<?php echo $id ?>" required>
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="nama_status" class="col-sm-2 col-form-label">Nama Status</label>
+                        <label for="jarak" class="col-sm-2 col-form-label">Jarak</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="nama_status" name="nama_status" value="<?php echo $nama_status ?>" required>
+                            <input type="text" class="form-control" id="jarak" name="jarak" value="<?php echo $jarak ?>" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="latitude" class="col-sm-2 col-form-label">Latitude</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="latitude" name="latitude" value="<?php echo $latitude ?>" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="longitude" class="col-sm-2 col-form-label">Longitude</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="longitude" name="longitude" value="<?php echo $longitude ?>" required>
                         </div>
                     </div>
                         <div class="col-12">
@@ -135,34 +155,44 @@ if (isset($_POST['simpan'])) { //untuk create
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">ID Status</th>
-                                <th scope="col">Nama Status</th>
+                                <th scope="col">ID </th>
+                                <th scope="col">Jarak</th>
+                                <th scope="col">Latitude</th>
+                                <th scope="col">Longitude</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                                    $sql2 = "SELECT * FROM status_absen";
+                                    $sql2 = "SELECT * FROM pengaturan";
                                     $q2 = mysqli_query($conn, $sql2);
                                     $urut = 1;
                                     while ($r2 = mysqli_fetch_array($q2)) {
-                                        $id_status = $r2['id_status'];
-                                        $nama_status  = $r2['nama_status'];
+                                        $id = $r2['id'];
+                                        $jarak  = $r2['jarak'];
+                                        $latitude  = $r2['latitude'];
+                                        $longitude  = $r2['longitude'];
                                         ?>
                             <tr>
                                 <th scope="row">
                                     <?php echo $urut++ ?>
                                 </th>
                                 <td scope="row">
-                                    <?php echo $id_status ?>
+                                    <?php echo $id ?>
                                 </td>
                                 <td scope="row">
-                                    <?php echo $nama_status ?>
+                                    <?php echo $jarak ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="crud3.php?op=edit&id=<?php echo $id_status ?>"><button type="button"
+                                    <?php echo $latitude ?>
+                                </td>
+                                <td scope="row">
+                                    <?php echo $longitude ?>
+                                </td>
+                                <td scope="row">
+                                    <a href="crud5.php?op=edit&id=<?php echo $id ?>"><button type="button"
                                             class="btn btn-warning">Edit</button></a>
-                                    <a href="crud3.php?op=delete&id=<?php echo $id_status ?>"
+                                    <a href="crud5.php?op=delete&id=<?php echo $id ?>"
                                         onclick="return confirm('Yakin mau delete data?')"><button type="button"
                                             class="btn btn-danger">Delete</button></a>
                                 </td>
