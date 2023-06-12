@@ -105,7 +105,7 @@ echo'
   <!--CSS-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"/>
-  <link rel="stylesheet" href="header/style.css">
+  <link rel="stylesheet" href="header/style.css?key=1">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   
 </head>
@@ -176,7 +176,7 @@ Beranda
 </a>
 </li>
 <li class="leftC dr br">
-<details>
+<details open>
 <summary class="a flex noWrap op i20">
 <svg class="line" viewBox="0 0 24 24"><path d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"></path><path d="M8 2H17C19 2 20 3 20 5V6.38"></path></svg>
 <span class="flexIn center grow text">
@@ -186,35 +186,21 @@ Beranda
 </summary>
 <ul class="n">
 <li itemprop="name">
-<a href="#" itemprop="url">
-<span>Sub-menu 01</span>
+<a href="absensi" itemprop="url">
+<span>Absensi</span>
 </a>
 </li>
 <li itemprop="name">
-<a href="#" itemprop="url">
-<span>Sub-menu 02</span>
+<a href="profil" itemprop="url">
+<span>Profil</span>
 </a>
 </li>
 <li class="m" data-text="Mini heading" itemprop="name">
-<a href="#" itemprop="url">
-<span>Sub-menu 03</span>
+<a href="riwayat" itemprop="url">
+<span>Riwayat</span>
 </a>
-</li>
-<li itemprop="name">
-<a href="#" itemprop="url">
-<span>Sub-menu 04</span>
-</a>
-</li>
 </ul>
 </details>
-</li>
-<li class="leftC">
-<a aria-label="About" class="a flex op i20" href="profil.php" itemprop="url">
-<svg class="line" viewBox="0 0 24 24"><path d="M9.16006 10.87C9.06006 10.86 8.94006 10.86 8.83006 10.87C6.45006 10.79 4.56006 8.84 4.56006 6.44C4.56006 3.99 6.54006 2 9.00006 2C11.4501 2 13.4401 3.99 13.4401 6.44C13.4301 8.84 11.5401 10.79 9.16006 10.87Z"></path><path d="M16.41 4C18.35 4 19.91 5.57 19.91 7.5C19.91 9.39 18.41 10.93 16.54 11C16.46 10.99 16.37 10.99 16.28 11"></path><path d="M4.15997 14.56C1.73997 16.18 1.73997 18.82 4.15997 20.43C6.90997 22.27 11.42 22.27 14.17 20.43C16.59 18.81 16.59 16.17 14.17 14.56C11.43 12.73 6.91997 12.73 4.15997 14.56Z"></path><path d="M18.3401 20C19.0601 19.85 19.7401 19.56 20.3001 19.13C21.8601 17.96 21.8601 16.03 20.3001 14.86C19.7501 14.44 19.0801 14.16 18.3701 14"></path></svg>
-<div class="n text">
-<span itemprop="name">Profil</span>
-</div>
-</a>
 </li>
 <li class="leftC br">
 <a aria-label="Logout" class="a flex op i20" href="logout.php" itemprop="url">

@@ -1,6 +1,12 @@
 <?php
+session_start();
 
-include_once 'cfgdb.php';
+include_once '../cfgdb.php';
+
+if(!isset($_SESSION['username'])){
+    header("Location: index");
+    exit();
+}
 
 // Ambil data pengguna sesuai dengan parameter
 $userid = '';
@@ -15,7 +21,7 @@ date_default_timezone_set('Asia/Jakarta');
 $tahun = isset($_GET['tahun']) ? $_GET['tahun'] : date('Y');
 $bulan = isset($_GET['bulan']) ? $_GET['bulan'] : date('m');
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;

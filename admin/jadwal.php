@@ -34,6 +34,27 @@ if ($op == 'simpan') {
         $error = "Silakan masukkan semua data";
     }
 }
+
+if ($error) {
+    ?>
+    <script>
+    Swal.fire({
+        title: "<?php echo $error ?>",
+        icon: "error",
+    })
+    </script>
+    <?php
+}
+if ($sukses) {
+    ?>
+    <script>
+    Swal.fire({
+        title: "<?php echo $sukses ?>",
+        icon: "success",
+    })
+    </script>
+    <?php
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

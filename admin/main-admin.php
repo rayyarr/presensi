@@ -32,10 +32,9 @@ echo '
   <!--CSS-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"/>
-  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-
+  <link rel="stylesheet" href="style.css?key=1">
 </head>
 <style>
 .btn{border-radius:18px !important;}
@@ -46,8 +45,8 @@ echo '
 
 <!-- Konten -->
 
-<div class="kolomkanan">
 
+<div class="mx-auto">
 <header class="l-header">
 <nav class="iniheader navbar p-3 navbar-dark justify-content-start" style="">
 <button class="btn" style="border:0;background:none" type="button" data-toggle="collapse" data-target="#offcanvas" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +59,8 @@ echo '
 <a href="beranda" style="margin-left:8px;color:black;text-decoration:none">Presensi Guru berbasis Web</a>
 </nav>
 </header>
+
+
 
 </div>
     
@@ -91,15 +92,15 @@ echo '">
             </a>
         </li>
         <li class="list';
-if ($current_page == "status.php") {
+if ($current_page == "jabatan.php") {
     echo " active";
 }
 echo '">
             <b></b>
             <b></b>
-            <a href="status" data-text="Status Absen">
-                <span class="icon"><i class="bi bi-list-check"></i></span>
-                <span class="title">Status Absen</span>
+            <a href="jabatan" data-text="Jabatan">
+                <span class="icon"><i class="bi bi-person-badge"></i></span>
+                <span class="title">Jabatan</span>
             </a>
         </li>
         <li class="list';
@@ -115,6 +116,18 @@ echo '">
             </a>
         </li>
         <li class="list';
+if ($current_page == "status.php") {
+    echo " active";
+}
+echo '">
+            <b></b>
+            <b></b>
+            <a href="status" data-text="Status Absen">
+                <span class="icon"><i class="bi bi-list-check"></i></span>
+                <span class="title">Status</span>
+            </a>
+        </li>
+        <li class="list';
 if ($current_page == "rekap.php" || $current_page == "hasil_rekap.php" || $current_page == "rekap_harian.php") {
     echo " active";
 }
@@ -124,18 +137,6 @@ echo '">
             <a href="rekap" data-text="Rekap">
                 <span class="icon"><i class="bi bi-journals"></i></span>
                 <span class="title">Rekap</span>
-            </a>
-        </li>
-        <li class="list';
-if ($current_page == "jabatan.php") {
-    echo " active";
-}
-echo '">
-            <b></b>
-            <b></b>
-            <a href="jabatan" data-text="Jabatan">
-                <span class="icon"><i class="bi bi-person-badge"></i></span>
-                <span class="title">Jabatan</span>
             </a>
         </li>
         <li class="list';

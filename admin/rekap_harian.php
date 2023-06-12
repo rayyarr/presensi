@@ -3,6 +3,8 @@ session_start();
 
 include_once 'main-admin.php';
 
+$error = '';
+$sukses = '';
 
 // set default timezone
 date_default_timezone_set('Asia/Jakarta');
@@ -47,9 +49,11 @@ if ($op == 'hapus') {
     if ($sqlfotoabsen->num_rows > 0) {
         $row = $sqlfotoabsen->fetch_assoc();
         $fotoAbsen = $row["foto_absen"];
-        $fotoPath = '../hasil_absen/' . $fotoAbsen;
-        if (file_exists($fotoPath)) {
-            unlink($fotoPath);
+        if (!empty($fotoAbsen)) {
+            $fotoPath = '../hasil_absen/' . $fotoAbsen;
+            if (file_exists($fotoPath)) {
+                unlink($fotoPath);
+            }
         }
     }
 
@@ -60,6 +64,27 @@ if ($op == 'hapus') {
     } else {
         $error = "Gagal melakukan delete data";
     }
+}
+
+if ($error) {
+    ?>
+    <script>
+        Swal.fire({
+            title: "<?php echo $error ?>",
+            icon: "error",
+        })
+    </script>
+    <?php
+}
+if ($sukses) {
+    ?>
+    <script>
+        Swal.fire({
+            title: "<?php echo $sukses ?>",
+            icon: "success",
+        })
+    </script>
+    <?php
 }
 ?>
 <!DOCTYPE html>
@@ -175,27 +200,27 @@ if ($op == 'hapus') {
                                 <?php
                                 $bg_color = ($nama_hari == 'Minggu') ? 'bg-warning' : '';
 
-                                   $query = "SELECT absen.id_absen, absen.nip, pengguna.nama, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen, absen.latlong 
+                                $query = "SELECT absen.id_absen, absen.nip, pengguna.nama, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen, absen.latlong 
     FROM absen 
     JOIN status_absen ON absen.id_status = status_absen.id_status
     JOIN pengguna ON absen.nip = pengguna.nip
     WHERE tanggal_absen = '$tanggal'
     ORDER BY absen.jam_masuk DESC";
-                                   $result = mysqli_query($conn, $query);
+                                $result = mysqli_query($conn, $query);
 
-                                   if (mysqli_num_rows($result) > 0) {
-                                       while ($data_absen = mysqli_fetch_assoc($result)) {
-                                           $id = $data_absen['id_absen'];
-                                           $nip = $data_absen['nip'];
-                                           $nama = $data_absen['nama'];
-                                           $jam_masuk = $data_absen['jam_masuk'];
-                                           $jam_keluar = $data_absen['jam_keluar'];
-                                           $status = $data_absen['nama_status'];
-                                           $keterangan = $data_absen['keterangan'];
-                                           $fotoAbsen = $data_absen['foto_absen'];
-                                           $latlong = $data_absen['latlong'];
+                                if (mysqli_num_rows($result) > 0) {
+                                    while ($data_absen = mysqli_fetch_assoc($result)) {
+                                        $id = $data_absen['id_absen'];
+                                        $nip = $data_absen['nip'];
+                                        $nama = $data_absen['nama'];
+                                        $jam_masuk = $data_absen['jam_masuk'];
+                                        $jam_keluar = $data_absen['jam_keluar'];
+                                        $status = $data_absen['nama_status'];
+                                        $keterangan = $data_absen['keterangan'];
+                                        $fotoAbsen = $data_absen['foto_absen'];
+                                        $latlong = $data_absen['latlong'];
 
-                                           ?>
+                                        ?>
                                         <tr class="<?php echo $bg_color; ?>">
                                             <td>
                                                 <?php echo $nip; ?>
@@ -236,29 +261,30 @@ if ($op == 'hapus') {
                                             <?php endif; ?>
 
                                             <td class="text-center">
-                                                <button type='button' onclick='return confirmDelete(`<?php echo $id ?>`)' class='btn btn-danger btn-sm'>Hapus</button>
+                                                <button type='button' onclick='return confirmDelete(`<?php echo $id ?>`)'
+                                                    class='btn btn-danger btn-sm'>Hapus</button>
                                             </td>
                                         </tr>
                                         <?php
-                                       }
-                                   } else {
-                                       $nip = '';
-                                       $nama = '';
-                                       $jam_masuk = '';
-                                       $jam_keluar = '';
-                                       $status = '';
-                                       $keterangan = '-';
-                                       $fotoAbsen = '';
-                                       $latlong = '';
-                                       $tombolHapus = '';
+                                    }
+                                } else {
+                                    $nip = '';
+                                    $nama = '';
+                                    $jam_masuk = '';
+                                    $jam_keluar = '';
+                                    $status = '';
+                                    $keterangan = '-';
+                                    $fotoAbsen = '';
+                                    $latlong = '';
+                                    $tombolHapus = '';
 
-                                       if ($nama_hari == 'Minggu') {
-                                           $keterangan = 'Libur Akhir Pekan';
-                                       } else {
-                                           $keterangan = '';
-                                       }
+                                    if ($nama_hari == 'Minggu') {
+                                        $keterangan = 'Libur Akhir Pekan';
+                                    } else {
+                                        $keterangan = '';
+                                    }
 
-                                       ?>
+                                    ?>
                                     <tr class="<?php echo $bg_color; ?>">
                                         <td>
                                             <?php echo $nip; ?>
@@ -283,8 +309,8 @@ if ($op == 'hapus') {
                                         <td></td>
                                     </tr>
                                     <?php
-                                   }
-                                   ?>
+                                }
+                                ?>
                             </tbody>
                         </table>
                         <script>
@@ -293,7 +319,7 @@ if ($op == 'hapus') {
                             });
                         </script>
                         <script>
-                            function showFoto(fotoAbsen,nama) {
+                            function showFoto(fotoAbsen, nama) {
                                 swal.fire({
                                     title: 'Foto Absen: ' + nama,
                                     imageUrl: '../hasil_absen/' + fotoAbsen,
@@ -323,7 +349,7 @@ if ($op == 'hapus') {
                             $('#mapModal').on('hidden.bs.modal', function () {
                                 mymap.remove();
                             });
-                            function showModalMap(latlong,nama) {
+                            function showModalMap(latlong, nama) {
                                 $('#mapModal').modal('show');
                                 $('#mapModal').on('shown.bs.modal', function () {
                                     var mapContainer = document.getElementById('mapid');

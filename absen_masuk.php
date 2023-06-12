@@ -2,7 +2,7 @@
 session_start(); // Mulai session
 require_once('cfgall.php');
 
-$jarak_ideal = mysqli_fetch_array(mysqli_query($conn, "SELECT jarak FROM pengaturan WHERE id = 1"))['jarak'];
+$jarak_ideal = mysqli_fetch_array(mysqli_query($conn, "SELECT jarak FROM pengaturan WHERE id_pengaturan = 1"))['jarak'];
 
 $result = mysqli_query($conn, "SELECT id_jadwal, status FROM jadwal WHERE nama_hari = '$hari_ini'");
 $row = mysqli_fetch_array($result);
