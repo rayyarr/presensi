@@ -265,6 +265,14 @@ Beranda
                 <span class="title">Riwayat</span>
             </a>
         </li>
+        <li class="list">
+            <b></b>
+            <b></b>
+            <a href="logout" data-text="Logout">
+                <span class="icon"><i class="bi bi-door-open"></i></span>
+                <span class="title">Logout</span>
+            </a>
+        </li>
     </ul>
 </div>
 </div>

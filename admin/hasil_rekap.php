@@ -6,19 +6,45 @@ include_once 'main-admin.php';
 $userid = '';
 
 if (isset($_GET['nip'])) {
-        $userid = $_GET['nip'];
+    $userid = $_GET['nip'];
+}
+
+if (isset($_GET['op'])) {
+    $op = $_GET['op'];
+} else {
+    $op = "";
+}
+if ($op == 'hapus') {
+    $id = $_GET['id'];
+    $sqlfotoabsen = $conn->query("SELECT foto_absen FROM absen WHERE id_absen = '$id'");
+    if ($sqlfotoabsen->num_rows > 0) {
+        $row = $sqlfotoabsen->fetch_assoc();
+        $fotoAbsen = $row["foto_absen"];
+        $fotoPath = '../hasil_absen/' . $fotoAbsen;
+        if (file_exists($fotoPath)) {
+            unlink($fotoPath);
+        }
+    }
+
+    $sql1 = "DELETE FROM absen WHERE id_absen = '$id'";
+    $q1 = mysqli_query($conn, $sql1);
+    if ($q1) {
+        $sukses = "Berhasil hapus data";
+    } else {
+        $error = "Gagal melakukan delete data";
+    }
 }
 
 $sql = "SELECT pengguna.nama, jabatan.jabatan_nama FROM pengguna INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id WHERE nip=$userid";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-  $row = $result->fetch_assoc();
-  $nama_pengguna = $row["nama"];
-  $nama_jabatan = $row["jabatan_nama"];
+    $row = $result->fetch_assoc();
+    $nama_pengguna = $row["nama"];
+    $nama_jabatan = $row["jabatan_nama"];
 } else {
-  $nama_pengguna = 0;
-  $nama_jabatan = 0;
+    $nama_pengguna = 0;
+    $nama_jabatan = 0;
 }
 ?>
 <!DOCTYPE html>
@@ -41,8 +67,11 @@ if ($result->num_rows > 0) {
     .table>tbody {
         font-size: 14px
     }
-    td.text-center{vertical-align: middle;}
-    
+
+    td.text-center {
+        vertical-align: middle;
+    }
+
     .ftabsen,
     .swal2-image {
         border-radius: 8px
@@ -105,7 +134,10 @@ if ($result->num_rows > 0) {
                     }
                 }
                 ?>
-                <h4 class="mb-3">Tabel Absen: <?php echo $nama_pengguna ?> - <?php echo $nama_jabatan ?></h4>
+                <h4 class="mb-3">Tabel Absen:
+                    <?php echo $nama_pengguna ?> -
+                    <?php echo $nama_jabatan ?>
+                </h4>
                 <form method="get" action="">
                     <input type="text" style="display:none" name="nip" value="<?php echo $userid; ?>">
                     <div class="form-group row mb-3">
@@ -132,7 +164,8 @@ if ($result->num_rows > 0) {
                     </div>
                     <button type="submit" class="btn btn-primary">Tampilkan</button>
                     <a class="btn btn-success"
-                        href="ekspor_rekap?nip=<?php echo $userid; ?>&tahun=<?php echo $tahun; ?>&bulan=<?php echo $bulan; ?>">Ekspor EXCEL</a>
+                        href="ekspor_rekap?nip=<?php echo $userid; ?>&tahun=<?php echo $tahun; ?>&bulan=<?php echo $bulan; ?>">Ekspor
+                        EXCEL</a>
                 </form>
                 <br>
                 <div class="table-responsive">
@@ -146,6 +179,7 @@ if ($result->num_rows > 0) {
                                 <th width="180">Keterangan</th>
                                 <th width="50">Foto</th>
                                 <th>Lokasi</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,12 +225,15 @@ if ($result->num_rows > 0) {
                                 if (mysqli_num_rows($result) > 0) {
                                     // jika data absen ditemukan, tampilkan status dan keterangan
                                     $data_absen = mysqli_fetch_assoc($result);
+                                    $id = $data_absen['id_absen'];
+                                    $nip = $data_absen['nip'];
                                     $jam_masuk = $data_absen['jam_masuk'];
                                     $jam_keluar = $data_absen['jam_keluar'];
                                     $status = $data_absen['nama_status'];
                                     $keterangan = $data_absen['keterangan'];
                                     $fotoAbsen = $data_absen['foto_absen'];
                                     $latlong = $data_absen['latlong'];
+                                    $tombolHapus = "<button type='button' onclick='return confirmDelete(`$nip`,`$id`)' class='btn btn-danger btn-sm'>Hapus</button>";
                                 } else {
                                     // jika data absen tidak ditemukan, tampilkan status kosong dan keterangan kosong
                                     $jam_masuk = '';
@@ -205,6 +242,7 @@ if ($result->num_rows > 0) {
                                     $keterangan = '-';
                                     $fotoAbsen = '';
                                     $latlong = '';
+                                    $tombolHapus = '';
                                     // tambahkan keterangan untuk hari Minggu
                                     if ($nama_hari == 'Minggu') {
                                         $keterangan = 'Libur Akhir Pekan';
@@ -229,6 +267,7 @@ if ($result->num_rows > 0) {
                                 } else {
                                     echo '<td></td>';
                                 }
+                                echo '<td class="text-center">' . $tombolHapus . '</td>';
                                 echo '</tr>';
                             }
                             ?>
@@ -240,6 +279,25 @@ if ($result->num_rows > 0) {
                                     imageUrl: '../hasil_absen/' + fotoAbsen,
                                     imageWidth: 300,
                                 });
+                            }
+                            function confirmDelete(nip,id) {
+                                // Menggunakan SweetAlert untuk konfirmasi penghapusan
+                                Swal.fire({
+                                    title: "Konfirmasi",
+                                    text: "Apakah Anda yakin ingin menghapus absensi ini?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Ya, Hapus",
+                                    cancelButtonText: "Batal"
+                                }).then((result) => {
+                                    // Jika pengguna mengklik "Ya, Hapus", redirect ke URL hapus
+                                    if (result.isConfirmed) {
+                                        window.location.href = "?nip=" + nip + "&op=hapus&id=" + id;
+                                    }
+                                });
+
+                                // Mengembalikan false untuk mencegah tindakan default dari tautan
+                                return false;
                             }
                             var mymap;
                             $('#mapModal').on('hidden.bs.modal', function () {
@@ -279,7 +337,7 @@ if ($result->num_rows > 0) {
                                         fillOpacity: 0.5
                                     }).addTo(mymap).bindPopup("<?php echo $nama_pengguna; ?>").openPopup();
                                     var popup = L.popup();
-                                    function onMapClick(e) {
+                                        function onMapClick(e) {
                                         popup
                                             .setLatLng(e.latlng)
                                             .setContent("" + e.latlng.toString())

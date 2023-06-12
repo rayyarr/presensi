@@ -3,8 +3,6 @@ session_start();
 
 include_once 'main-admin.php';
 
-$id_status = "";
-$nama_status = "";
 $sukses = "";
 $error = "";
 
@@ -13,53 +11,43 @@ if (isset($_GET['op'])) {
 } else {
     $op = "";
 }
-if ($op == 'delete') {
-    $id_status = $_GET['id'];
-    $sql1 = "delete from status_absen where id_status = '$id_status'";
-    $q1 = mysqli_query($conn, $sql1);
-    if ($q1) {
-        $sukses = "Berhasil hapus data";
-    } else {
-        $error = "Gagal melakukan delete data";
-    }
-}
-if ($op == 'edit') {
-    $id_status = $_GET['id'];
-    $sqldef = "select * from status_absen where id_status = '$id_status'";
-    $q1 = mysqli_query($conn, $sqldef);
-    $r1 = mysqli_fetch_array($q1);
-    $id_status = $r1['id_status'];
-    $nama_status = $r1['nama_status'];
 
-    if ($id_status == '') {
-        $error = "Data tidak ditemukan";
-    }
-}
-if (isset($_POST['simpan'])) { //untuk create
-    $id_status = $_POST['id_status'];
-    $nama_status = $_POST['nama_status'];
+if ($op == 'simpan') {
+    $id_status = $_POST['editId'];
+    $nama_status = $_POST['editNama'];
 
     if ($id_status && $nama_status) {
-        if ($op == 'edit') { //untuk update
-            $sql1 = "update status_absen set nama_status='$nama_status' where id_status = '$id_status'";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Data berhasil diupdate";
-            } else {
-                $error = "Data gagal diupdate";
-            }
-        } else { //untuk insert
-            $sql1 = "insert into status_absen(id_status,nama_status) values ('$id_status','$nama_status')";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Berhasil memasukkan data baru";
-            } else {
-                $error = "Gagal memasukkan data";
-            }
+        $sql1 = "update status_absen set nama_status='$nama_status' where id_status = '$id_status'";
+        $q1 = mysqli_query($conn, $sql1);
+        if ($q1) {
+            $sukses = "Data berhasil diupdate";
+        } else {
+            $error = "Data gagal diupdate";
         }
     } else {
         $error = "Silakan masukkan semua data";
     }
+}
+
+if ($error) {
+    ?>
+    <script>
+    Swal.fire({
+        title: "<?php echo $error ?>",
+        icon: "error",
+    })
+    </script>
+    <?php
+}
+if ($sukses) {
+    ?>
+    <script>
+    Swal.fire({
+        title: "<?php echo $sukses ?>",
+        icon: "success",
+    })
+    </script>
+    <?php
 }
 ?>
 <!DOCTYPE html>
@@ -69,7 +57,7 @@ if (isset($_POST['simpan'])) { //untuk create
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pengguna</title>
+    <title>Data Status Absen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <style>
@@ -85,76 +73,31 @@ if (isset($_POST['simpan'])) { //untuk create
 
 <body>
     <div class="mx-auto">
-        <!-- untuk memasukkan data -->
-        <div class="card mb-3">
+
+        <!-- untuk mengeluarkan data -->
+        <div class="card">
             <div class="card-header">
-                Edit status_absen
+                Data Status Absen
             </div>
             <div class="card-body">
-            <?php
-                if ($error) {
-                    ?>
-                    <script>Swal.fire("<?php echo $error ?>");</script>
-                    <?php
-                    
-                }
-                ?>
-                <?php
-                if ($sukses) {
-                    ?>
-                    <script>Swal.fire("<?php echo $sukses ?>");</script>
-                    <?php
-                    
-                }
-                ?>
-                <form action="" method="POST">
-                    <div class="mb-3 row">
-                        <label for="id_status" class="col-sm-2 col-form-label">ID Status</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="id_status" name="id_status" value="<?php echo $id_status ?>" required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="nama_status" class="col-sm-2 col-form-label">Nama Status</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="nama_status" name="nama_status" value="<?php echo $nama_status ?>" required>
-                        </div>
-                    </div>
-                        <div class="col-12">
-                            <input type="submit" name="simpan" value="Simpan Data" class="btn btn-primary" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- untuk mengeluarkan data -->
-            <div class="card">
-                <div class="card-header">
-                    Data Pengguna
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Keterangan Status</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql2 = "SELECT * FROM status_absen";
+                        $q2 = mysqli_query($conn, $sql2);
+                        $urut = 1;
+                        while ($r2 = mysqli_fetch_array($q2)) {
+                            $id_status = $r2['id_status'];
+                            $nama_status = $r2['nama_status'];
+                            ?>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">ID Status</th>
-                                <th scope="col">Nama Status</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                                    $sql2 = "SELECT * FROM status_absen";
-                                    $q2 = mysqli_query($conn, $sql2);
-                                    $urut = 1;
-                                    while ($r2 = mysqli_fetch_array($q2)) {
-                                        $id_status = $r2['id_status'];
-                                        $nama_status  = $r2['nama_status'];
-                                        ?>
-                            <tr>
-                                <th scope="row">
-                                    <?php echo $urut++ ?>
-                                </th>
                                 <td scope="row">
                                     <?php echo $id_status ?>
                                 </td>
@@ -162,21 +105,77 @@ if (isset($_POST['simpan'])) { //untuk create
                                     <?php echo $nama_status ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="crud3.php?op=edit&id=<?php echo $id_status ?>"><button type="button"
-                                            class="btn btn-warning">Edit</button></a>
-                                    <a href="crud3.php?op=delete&id=<?php echo $id_status ?>"
+                                    <?php if($id_status != 1){
+                                        ?><a data-bs-toggle="modal" data-bs-target="#editModal"
+                                        data-id="<?php echo $id_status ?>" data-nama="<?php echo $nama_status ?>">
+                                            <button type="button" class="btn btn-warning">Edit</button>
+                                        </a>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-warning" disabled>Edit</button>
+                                    <?php } ?>
+                                    <!--<a href="?op=delete&id=<?php echo $id_status ?>"
                                         onclick="return confirm('Yakin mau delete data?')"><button type="button"
-                                            class="btn btn-danger">Delete</button></a>
+                                            class="btn btn-danger">Delete</button></a>-->
                                 </td>
                             </tr>
                             <?php
-                                    }
-                                    ?>
+                        }
+                        ?>
                     </tbody>
 
                 </table>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var tables = document.querySelectorAll('.table');
+                        tables.forEach(function (table) {
+                            new DataTable(table);
+                        });
+                    });
+
+                    // Menangkap event klik tombol "Edit" pada setiap baris tabel
+                    var editButtons = document.querySelectorAll('a[data-bs-toggle="modal"]');
+                    editButtons.forEach(function (button) {
+                        button.addEventListener('click', function () {
+                            // Mendapatkan data dari atribut data-* pada tombol
+                            var id_status = this.getAttribute('data-id');
+                            var nama_status = this.getAttribute('data-nama');
+
+                            // Mengisi nilai input field di dalam modal dengan data yang diperoleh
+                            document.getElementById('editId').value = id_status;
+                            document.getElementById('editNama').value = nama_status;
+
+                            // Menampilkan modal edit
+                            editModal.show();
+                        });
+                    });
+                </script>
             </div>
         </div>
+
+        <!-- Modal Edit Status -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Status Absen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="?op=simpan" method="POST">
+                            <div class="mb-3">
+                                <label for="editNama" class="form-label">Keterangan Status</label>
+                                <input type="text" class="form-control" id="editNama" name="editNama" required>
+                            </div>
+
+                            <input type="hidden" id="editId" name="editId">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
+
 </html>

@@ -237,12 +237,14 @@ if (isset($_POST['daftar'])) {
       color: #fff !important;
     }
 
-    .form-control {
+    .form-select {
       color: #fff;
       background-color: rgb(255 255 255 / 8%);
       border: 0px solid #fff;
       font-size:14px;
     }
+
+    .form-select option{color:#000;}
 
     .social div,
     input {
@@ -398,19 +400,27 @@ if (isset($_POST['daftar'])) {
     <input type="text" placeholder="Nama Lengkap" id="nama" name="nama">
 
     </div>
+    <?php
+    // Mendapatkan data dari tabel jabatan
+    $sqljabatan = "SELECT * FROM jabatan";
+    $result = mysqli_query($conn, $sqljabatan);
+
+    $options = '';
+    while ($row = mysqli_fetch_assoc($result)) {
+        $options .= '<option value="' . $row['jabatan_id'] . '">' . $row['jabatan_nama'] . '</option>';
+    }
+    ?>
     <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label></label>
     <div>
-      <select class="form-control" name="jabatan_id" id="jabatan">
+      <select class="form-select" name="jabatan_id" id="jabatan">
         <option value="">- Pilih Jabatan -</option>
-        <option value="1">Guru</option>
-        <option value="2">Tata Usaha</option>
-        <option value="3">BPH</option>
+        <?php echo $options ?>
       </select>
     </div>
-    <label for="guru" class="col-sm-2 col-form-label">Guru</label>
+    <label for="guru" class="col-sm-2 col-form-label">Penempatan</label>
     <div>
-      <select class="form-control" name="guru" id="guru">
-        <option value="">- Pilih guru -</option>
+      <select class="form-select" name="guru" id="guru">
+        <option value="">- Pilih Penempatan -</option>
         <option value="SMP">SMP</option>
         <option value="SMA">SMA</option>
         <option value="SMP SMA">SMP SMA</option>

@@ -15,53 +15,20 @@ if (isset($_GET['op'])) {
 } else {
     $op = "";
 }
-if ($op == 'delete') {
-    $id_jadwal = $_GET['id'];
-    $sql1 = "delete from jadwal where id_jadwal= '$id_jadwal'";
-    $q1 = mysqli_query($conn, $sql1);
-    if ($q1) {
-        $sukses = "Berhasil hapus data";
-    } else {
-        $error = "Gagal melakukan delete data";
-    }
-}
-if ($op == 'edit') {
-    $id_jadwal = $_GET['id'];
-    $sqldef = "select * from jadwal where id_jadwal = '$id_jadwal'";
-    $q1 = mysqli_query($conn, $sqldef);
-    $r1 = mysqli_fetch_array($q1);
-    $id_jadwal = $r1['id_jadwal'];
-    $nama_hari = $r1['nama_hari'];
-    $waktu_masuk = $r1['waktu_masuk'];
-    $waktu_pulang = $r1['waktu_pulang'];
 
-    if ($id_jadwal == '') {
-        $error = "Data tidak ditemukan";
-    }
-}
-if (isset($_POST['simpan'])) { //untuk create
-    $id_jadwal = $_POST['id_jadwal'];
-    $nama_hari = $_POST['nama_hari'];
-    $waktu_masuk = $_POST['waktu_masuk'];
-    $waktu_pulang = $_POST['waktu_pulang'];
+if ($op == 'simpan') {
+    $id_jadwal = $_POST['editId'];
+    $waktu_masuk = $_POST['editWaktumasuk'];
+    $waktu_pulang = $_POST['editWaktupulang'];
+    $status = $_POST['editStatus'];
 
-    if ($id_jadwal && $nama_hari && $waktu_masuk && $waktu_pulang) {
-        if ($op == 'edit') { //untuk update
-            $sql1 = "update jadwal set nama_hari='$nama_hari', waktu_masuk='$waktu_masuk',waktu_pulang='$waktu_pulang' where id_jadwal = '$id_jadwal'";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Data berhasil diupdate";
-            } else {
-                $error = "Data gagal diupdate";
-            }
-        } else { //untuk insert
-            $sql1 = "insert into jadwal(id_jadwal,nama_hari,waktu_masuk,waktu_pulang) values ('$id_jadwal','$nama_hari','$waktu_masuk','$waktu_pulang')";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Berhasil memasukkan data baru";
-            } else {
-                $error = "Gagal memasukkan data";
-            }
+    if ($id_jadwal && $waktu_masuk && $waktu_pulang) {
+        $sql1 = "update jadwal set waktu_masuk='$waktu_masuk',waktu_pulang='$waktu_pulang',status='$status' where id_jadwal = '$id_jadwal'";
+        $q1 = mysqli_query($conn, $sql1);
+        if ($q1) {
+            $sukses = "Data berhasil diupdate";
+        } else {
+            $error = "Data gagal diupdate";
         }
     } else {
         $error = "Silakan masukkan semua data";
@@ -75,7 +42,7 @@ if (isset($_POST['simpan'])) { //untuk create
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pengguna</title>
+    <title>Data Jadwal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <style>
@@ -91,68 +58,49 @@ if (isset($_POST['simpan'])) { //untuk create
 
 <body>
     <div class="mx-auto">
-        <!-- untuk memasukkan data -->
-        <div class="card mb-3">
-            <div class="card-header">
-                Edit Jadwal
-            </div>
-            <div class="card-body">
-                <?php
-                if ($error) {
-                    ?>
-                    <script>Swal.fire("<?php echo $error ?>");</script>
-                    <?php
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Jadwal</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="?op=simpan" method="POST">
+                            <div class="mb-3">
+                                <label for="editHari" class="form-label">Hari</label>
+                                <input type="text" class="form-control" id="editHari" name="editHari" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editWaktumasuk" class="form-label">Waktu Masuk</label>
+                                <input type="time" class="form-control" id="editWaktumasuk" name="editWaktumasuk"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editWaktupulang" class="form-label">Waktu Pulang</label>
+                                <input type="time" class="form-control" id="editWaktupulang" name="editWaktupulang"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStatus" class="form-label">Status</label>
+                                <select class="form-select" id="editStatus" name="editStatus" required>
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="Nonaktif">Nonaktif</option>
+                                </select>
+                            </div>
 
-                }
-                ?>
-                <?php
-                if ($sukses) {
-                    ?>
-                    <script>Swal.fire("<?php echo $sukses ?>");</script>
-                    <?php
-
-                }
-                ?>
-                <form action="" method="POST">
-                    <div class="mb-3 row">
-                        <label for="id_jadwal" class="col-sm-2 col-form-label">ID Jadwal</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="id_jadwal" name="id_jadwal"
-                                value="<?php echo $id_jadwal ?>" required>
-                        </div>
+                            <input type="hidden" id="editId" name="editId">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </form>
                     </div>
-                    <div class="mb-3 row">
-                        <label for="nama_hari" class="col-sm-2 col-form-label">Hari</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="nama_hari" name="nama_hari"
-                                value="<?php echo $nama_hari ?>" required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="waktu_masuk" class="col-sm-2 col-form-label">Waktu Masuk</label>
-                        <div class="col-sm-10">
-                            <input type="time" class="form-control" id="waktu_masuk" name="waktu_masuk"
-                                value="<?php echo $waktu_masuk ?>" required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="waktu_pulang" class="col-sm-2 col-form-label">Waktu Pulang</label>
-                        <div class="col-sm-10">
-                            <input type="time" class="form-control" id="waktu_pulang" name="waktu_pulang"
-                                value="<?php echo $waktu_pulang ?>" required>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <input type="submit" name="simpan" value="Simpan Data" class="btn btn-primary" />
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
 
         <!-- untuk mengeluarkan data -->
         <div class="card">
             <div class="card-header">
-                Data Pengguna
+                Data Jadwal
             </div>
             <div class="card-body">
                 <table class="table">
@@ -162,6 +110,7 @@ if (isset($_POST['simpan'])) { //untuk create
                             <th scope="col">Hari</th>
                             <th scope="col">Waktu Masuk</th>
                             <th scope="col">Waktu Pulang</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
@@ -175,6 +124,7 @@ if (isset($_POST['simpan'])) { //untuk create
                             $nama_hari = $r2['nama_hari'];
                             $waktu_masuk = $r2['waktu_masuk'];
                             $waktu_pulang = $r2['waktu_pulang'];
+                            $status = $r2['status'];
                             ?>
                             <tr>
                                 <td scope="row">
@@ -190,11 +140,20 @@ if (isset($_POST['simpan'])) { //untuk create
                                     <?php echo $waktu_pulang ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="crud2.php?op=edit&id=<?php echo $id_jadwal ?>"><button type="button"
-                                            class="btn btn-warning">Edit</button></a>
-                                    <a href="crud2.php?op=delete&id=<?php echo $id_jadwal ?>"
-                                        onclick="return confirm('Yakin mau delete data?')"><button type="button"
-                                            class="btn btn-danger">Delete</button></a>
+                                    <?php if($status == "Nonaktif"){
+                                        ?><span class='text-danger'><?php echo $status ?></span><?php
+                                    } else {
+                                        ?><span><?php echo $status ?></span><?php
+                                    }
+                                    ?>
+                                </td>
+                                <td scope="row">
+                                    <a data-bs-toggle="modal" data-bs-target="#editModal"
+                                        data-jadwal="<?php echo $id_jadwal ?>" data-namahari="<?php echo $nama_hari ?>"
+                                        data-waktumasuk="<?php echo $waktu_masuk ?>"
+                                        data-waktupulang="<?php echo $waktu_pulang ?>" data-status="<?php echo $status ?>">
+                                        <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                                    </a>
                                 </td>
                             </tr>
                             <?php
@@ -205,8 +164,51 @@ if (isset($_POST['simpan'])) { //untuk create
                 </table>
             </div>
         </div>
-        
+
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tables = document.querySelectorAll('.table');
+            tables.forEach(function (table) {
+                new DataTable(table);
+            });
+        });
+
+        var editModal = new bootstrap.Modal(document.getElementById('editModal'), {
+            keyboard: false
+        });
+
+        // Menangkap event klik tombol "Edit" pada setiap baris tabel
+        var editButtons = document.querySelectorAll('a[data-bs-toggle="modal"]');
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Mendapatkan data dari atribut data-* pada tombol
+                var id_jadwal = this.getAttribute('data-jadwal');
+                var namahari = this.getAttribute('data-namahari');
+                var waktu_masuk = this.getAttribute('data-waktumasuk');
+                var waktu_pulang = this.getAttribute('data-waktupulang');
+                var status = this.getAttribute('data-status');
+
+                // Mengisi nilai input field di dalam modal dengan data yang diperoleh
+                document.getElementById('editId').value = id_jadwal;
+                document.getElementById('editHari').value = namahari;
+                document.getElementById('editWaktumasuk').value = waktu_masuk;
+                document.getElementById('editWaktupulang').value = waktu_pulang;
+                var editStatusSelect = document.getElementById('editStatus');
+                // Loop melalui setiap opsi dan membandingkannya
+                for (var i = 0; i < editStatusSelect.options.length; i++) {
+                    if (editStatusSelect.options[i].value === status) {
+                        // Jika nilai opsi sama, atur opsi tersebut sebagai terpilih
+                        editStatusSelect.options[i].selected = true;
+                        break;
+                    }
+                }
+
+                // Menampilkan modal edit
+                editModal.show();
+            });
+        });
+    </script>
 </body>
 
 </html>

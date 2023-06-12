@@ -260,50 +260,10 @@ if (isset($_POST['login'])) {
     .social i {
       margin-right: 4px
     }
-
-    .back-button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  padding: 10px;
-  border-radius: 50%;
-  background-color: #ffffff17;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
-}
-
-.back-button:hover {
-  opacity:.7;
-}
-
-.line {
-  stroke-width: 2;
-  stroke: #fff;
-  fill: none;
-}
-
   </style>
-  <!--<div class="background">
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-    
-    -->
   <div class="bg-image"></div>
   <form method="POST" action="" id="form-login">
-    <a href="./" class="back-button">
-      <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-        <g
-          transform='translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.500000)'>
-          <path d='M14,0 C14,0 9.856,7 7,7 C4.145,7 0,0 0,0'></path>
-        </g>
-      </svg>
-    </a>
-    <h3>Login</h3>
-    <p>Silakan masuk</p>
+    <h3>Login Admin</h3>
     <?php if ($error_message): ?>
       <div class="alert alert-danger text-center" role="alert">
         <?php echo $error_message; ?>
@@ -311,7 +271,7 @@ if (isset($_POST['login'])) {
     <?php endif; ?>
 
     <label for="username">Username</label>
-    <input type="text" placeholder="Username" id="username" name="username" required>
+    <input type="text" placeholder="Masukkan Username" id="username" name="username" required>
 
     <label for="password">Password</label>
     <input type="password" placeholder="Kata Sandi" id="password" name="password" required>

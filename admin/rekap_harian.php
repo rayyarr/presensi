@@ -35,6 +35,32 @@ $nama_bulan_arr = array(
 $tanggal = isset($_GET['tanggal']) ? $_GET['tanggal'] : date('Y-m-d');
 $nama_hari = $nama_hari_arr[date('N', strtotime($tanggal))];
 $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
+
+if (isset($_GET['op'])) {
+    $op = $_GET['op'];
+} else {
+    $op = "";
+}
+if ($op == 'hapus') {
+    $id = $_GET['id'];
+    $sqlfotoabsen = $conn->query("SELECT foto_absen FROM absen WHERE id_absen = '$id'");
+    if ($sqlfotoabsen->num_rows > 0) {
+        $row = $sqlfotoabsen->fetch_assoc();
+        $fotoAbsen = $row["foto_absen"];
+        $fotoPath = '../hasil_absen/' . $fotoAbsen;
+        if (file_exists($fotoPath)) {
+            unlink($fotoPath);
+        }
+    }
+
+    $sql1 = "DELETE FROM absen WHERE id_absen = '$id'";
+    $q1 = mysqli_query($conn, $sql1);
+    if ($q1) {
+        $sukses = "Berhasil hapus data";
+    } else {
+        $error = "Gagal melakukan delete data";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -142,6 +168,7 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
                                     <th width="180">Keterangan</th>
                                     <th width="50">Foto</th>
                                     <th>Lokasi</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,6 +185,7 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
 
                                    if (mysqli_num_rows($result) > 0) {
                                        while ($data_absen = mysqli_fetch_assoc($result)) {
+                                           $id = $data_absen['id_absen'];
                                            $nip = $data_absen['nip'];
                                            $nama = $data_absen['nama'];
                                            $jam_masuk = $data_absen['jam_masuk'];
@@ -206,6 +234,10 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
                                             <?php else: ?>
                                                 <td></td>
                                             <?php endif; ?>
+
+                                            <td class="text-center">
+                                                <button type='button' onclick='return confirmDelete(`<?php echo $id ?>`)' class='btn btn-danger btn-sm'>Hapus</button>
+                                            </td>
                                         </tr>
                                         <?php
                                        }
@@ -218,6 +250,7 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
                                        $keterangan = '-';
                                        $fotoAbsen = '';
                                        $latlong = '';
+                                       $tombolHapus = '';
 
                                        if ($nama_hari == 'Minggu') {
                                            $keterangan = 'Libur Akhir Pekan';
@@ -247,6 +280,7 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
                                         </td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                     </tr>
                                     <?php
                                    }
@@ -265,6 +299,25 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
                                     imageUrl: '../hasil_absen/' + fotoAbsen,
                                     imageWidth: 300,
                                 });
+                            }
+                            function confirmDelete(id) {
+                                // Menggunakan SweetAlert untuk konfirmasi penghapusan
+                                Swal.fire({
+                                    title: "Konfirmasi",
+                                    text: "Apakah Anda yakin ingin menghapus absensi ini?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Ya, Hapus",
+                                    cancelButtonText: "Batal"
+                                }).then((result) => {
+                                    // Jika pengguna mengklik "Ya, Hapus", redirect ke URL hapus
+                                    if (result.isConfirmed) {
+                                        window.location.href = "?op=hapus&id=" + id;
+                                    }
+                                });
+
+                                // Mengembalikan false untuk mencegah tindakan default dari tautan
+                                return false;
                             }
                             var mymap;
                             $('#mapModal').on('hidden.bs.modal', function () {

@@ -190,9 +190,9 @@ if (isset($_POST['simpan'])) { //untuk create
                                     <?php echo $longitude ?>
                                 </td>
                                 <td scope="row">
-                                    <a href="crud5.php?op=edit&id=<?php echo $id ?>"><button type="button"
+                                    <a href="?op=edit&id=<?php echo $id ?>"><button type="button"
                                             class="btn btn-warning">Edit</button></a>
-                                    <a href="crud5.php?op=delete&id=<?php echo $id ?>"
+                                    <a href="?op=delete&id=<?php echo $id ?>"
                                         onclick="return confirm('Yakin mau delete data?')"><button type="button"
                                             class="btn btn-danger">Delete</button></a>
                                 </td>

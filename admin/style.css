@@ -106,9 +106,9 @@ svg{width: 24px;height: 24px;fill: currentColor;}
 .button-alt{font-size:12px;}
 
 .swal2-modal > *{font-size:16px;}
-.swal2-title{line-height:1.3em;font-size:17px;text-align:center;padding:15px 30px 0 30px;}
+.swal2-title{line-height:1.3em;font-size:18px;text-align:center;padding:15px 30px 0 30px;}
 .swal2-timer-progress-bar-container > *{opacity:.7;background:#00B6FF;margin:0 2px}
-.swal2-modal{background:#EAEAEA;box-shadow: 0 4px 30px rgba(255,255,255, 0.3);backdrop-filter: blur(2px);-webkit-backdrop-filter: blur(2px);border: 1px solid rgba(255, 255, 255, 0.3);border-radius: 8px;max-width:330px;top:-60px;}
+.swal2-modal{background:#EAEAEA;box-shadow: 0 4px 30px rgba(255,255,255, 0.3);backdrop-filter: blur(2px);-webkit-backdrop-filter: blur(2px);border: 1px solid rgba(255, 255, 255, 0.3);border-radius: 18px;max-width:330px;top:-60px;}
 .swal2-styled.swal2-confirm, .swal2-styled.swal2-cancel{position: relative;font-size:14px;color: #fff;border-radius:12px;z-index: 1;transition: all 0.2s;}
 
 /* */
@@ -159,7 +159,7 @@ svg{width: 24px;height: 24px;fill: currentColor;}
     display:none;
   }
   .mx-auto{margin-top:30px;margin-bottom: 120px;}
-  .card, .recentCustomers {
+  .card, .terakhirAbsen {
     margin-left: 1rem !important;
     margin-right: 1rem !important;
     border-radius: 18px;
@@ -264,7 +264,7 @@ svg{width: 24px;height: 24px;fill: currentColor;}
   color: #fff;
 }
 
-.recentCustomers {
+.terakhirAbsen {
   position: relative;
   display: grid;
   /*min-height: 500px;*/
@@ -274,7 +274,7 @@ svg{width: 24px;height: 24px;fill: currentColor;}
   border-radius: 30px;
 }
 
-.recentCustomers .imgBx {
+.terakhirAbsen .imgBx {
   position: relative;
   width: 40px;
   height: 40px;
@@ -282,7 +282,7 @@ svg{width: 24px;height: 24px;fill: currentColor;}
   overflow: hidden;
 }
 
-.recentCustomers .imgBx img {
+.terakhirAbsen .imgBx img {
   position: absolute;
   top: 0;
   left: 0;
@@ -291,27 +291,27 @@ svg{width: 24px;height: 24px;fill: currentColor;}
   object-fit: cover;
 }
 
-.recentCustomers table tr td {
+.terakhirAbsen table tr td {
   padding: 12px 10px;
 }
 
-.recentCustomers table tr td h4 {
+.terakhirAbsen table tr td h4 {
   font-size: 16px;
   font-weight: 500;
   line-height: 1.2rem;
 }
 
-.recentCustomers table tr td h4 span {
+.terakhirAbsen table tr td h4 span {
   font-size: 14px;
   color: var(--black2);
 }
 
-.recentCustomers table tr:hover {
+.terakhirAbsen table tr:hover {
   background: var(--blue);
   color: var(--white);
 }
 
-.recentCustomers table tr:hover td h4 span {
+.terakhirAbsen table tr:hover td h4 span {
   color: var(--white);
 }
 

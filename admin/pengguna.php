@@ -16,62 +16,42 @@ if (isset($_GET['op'])) {
 } else {
     $op = "";
 }
-if ($op == 'delete') {
+if ($op == 'hapus') {
     $id = $_GET['id'];
-    $sql1 = "delete from pengguna where id = '$id'";
+    $sql1 = "DELETE FROM pengguna WHERE id = '$id'";
     $q1 = mysqli_query($conn, $sql1);
     if ($q1) {
-        $sukses = "Berhasil hapus data";
+        $sukses = "Berhasil hapus pengguna";
     } else {
-        $error = "Gagal melakukan delete data";
+        $error = "Gagal melakukan hapus pengguna";
     }
 }
-if ($op == 'edit') {
-    $id = $_GET['id'];
-    $sqldef = "select * from pengguna where id = '$id'";
-    $sql1 = "SELECT pengguna.id where id = '$id', pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
-                                             FROM pengguna
-                                             INNER JOIN jabatan ON pengguna.jabatan_id where id = '$id' = jabatan.jabatan_id where id = '$id'
-                                             ORDER BY pengguna.id where id = '$id' DESC";
-    $q1 = mysqli_query($conn, $sqldef);
-    $r1 = mysqli_fetch_array($q1);
-    $nip = $r1['nip'];
-    $password = md5($r1['password']);
-    $nama = $r1['nama'];
-    $jabatan = $r1['jabatan_id'];
-    $guru = $r1['guru'];
+if ($op == 'tambah') {
+    $nip = $_POST['tambahNip'];
+    $nama = $_POST['tambahNama'];
+    $password = md5($_POST['tambahPassword']);
+    $jabatan = $_POST['tambahJabatan'];
+    $guru = $_POST['tambahPenempatan'];
 
-    if ($nip == '') {
-        $error = "Data tidak ditemukan";
-    }
-}
-if (isset($_POST['simpan'])) { //untuk create
-    $nip = $_POST['nip'];
-    $password = md5($_POST['password']);
-    $nama = $_POST['nama'];
-    $jabatan = $_POST['jabatan_id'];
-    $guru = $_POST['guru'];
+    $sql_cek_nip = "SELECT * FROM pengguna WHERE nip='$nip'";
+    $q_cek_nip = mysqli_query($conn, $sql_cek_nip);
+    $jml_cek_nip = mysqli_num_rows($q_cek_nip);
 
-    if ($nip && $password && $nama && $jabatan && $guru) {
-        if ($op == 'edit') { //untuk update
-            $sql1 = "update pengguna set nip = '$nip',password='$password',nama='$nama',jabatan_id = '$jabatan',guru='$guru' where id = '$id'";
+    if ($jml_cek_nip > 0) {
+        $error = "NIP sudah terdaftar!";
+    } else {
+        if ($nip && $password && $nama && $jabatan && $guru) {
+            $sql1 = "INSERT INTO pengguna (nip,nama,password,jabatan_id,guru) VALUES ('$nip','$nama','$password','$jabatan','$guru')";
+
             $q1 = mysqli_query($conn, $sql1);
             if ($q1) {
-                $sukses = "Data berhasil diupdate";
+                $sukses = "Berhasil menambah data pengguna: $nama";
             } else {
-                $error = "Data gagal diupdate";
+                $error = "Gagal menambah data pengguna";
             }
-        } else { //untuk insert
-            $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Berhasil memasukkan data baru";
-            } else {
-                $error = "Gagal memasukkan data";
-            }
+        } else {
+            $error = "Silakan masukkan semua data";
         }
-    } else {
-        $error = "Silakan masukkan semua data";
     }
 }
 
@@ -80,7 +60,7 @@ if ($op == 'simpan') {
     $nama = $_POST['editNama'];
     $password = md5($_POST['editPassword']);
     $jabatan = $_POST['editJabatan'];
-    $guru = $_POST['editGuru'];
+    $guru = $_POST['editPenempatan'];
 
     if ($password && $nama && $jabatan && $guru) {
         $sql1 = "update pengguna set nama='$nama', password='$password', jabatan_id = '$jabatan', guru='$guru' where nip = '$nip'";
@@ -94,6 +74,27 @@ if ($op == 'simpan') {
     } else {
         $error = "Silakan masukkan semua data";
     }
+}
+
+if ($error) {
+    ?>
+    <script>
+        Swal.fire({
+            title: "<?php echo $error ?>",
+            icon: "error",
+        })
+    </script>
+    <?php
+}
+if ($sukses) {
+    ?>
+    <script>
+        Swal.fire({
+            title: "<?php echo $sukses ?>",
+            icon: "success",
+        })
+    </script>
+    <?php
 }
 ?>
 <!DOCTYPE html>
@@ -118,192 +119,153 @@ if ($op == 'simpan') {
 </head>
 
 <body>
-    <div class="mx-auto mb-5">
+    <!-- Edit Data Pengguna -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Data Pengguna</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="?op=simpan" method="POST">
+                        <div class="mb-3 d-none">
+                            <label for="editNip" class="form-label">NIP</label>
+                            <input type="text" class="form-control" id="editNip" name="editNip">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editNama" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="editNama" name="editNama" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="editPassword" name="editPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <?php
+                            $sqljabatan = "SELECT * FROM jabatan";
+                            $result = mysqli_query($conn, $sqljabatan);
 
-        <div class="card mb-3">
-            <div class="card-header">
-                Tambah Pengguna
-            </div>
-            <div class="card-body">
-                <?php
-                if ($error) {
-                    ?>
-                    <script>Swal.fire("<?php echo $error ?>");</script>
-                    <?php
-
-                }
-                ?>
-                <?php
-                if ($sukses) {
-                    ?>
-                    <script>Swal.fire("<?php echo $sukses ?>");</script>
-                    <?php
-
-                }
-                ?>
-                <form action="" method="POST">
-                    <div class="mb-3 row">
-                        <label for="nip" class="col-sm-2 col-form-label">NIP</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="nip" name="nip" value="<?php echo $nip ?>"
-                                required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="password" class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" id="password" name="password"
-                                value="<?php echo $password ?>" required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="nama" class="col-sm-2 col-form-label">Nama</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $nama ?>"
-                                required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <!--<label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?php echo $jabatan ?>" required>
-                        </div>-->
-                        <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
-                        <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="jabatan_id" value="1"
-                                    id="jabatan_guru" <?php if ($jabatan == "1")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_guru">Guru</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="jabatan_id" value="2" id="jabatan_tu"
-                                    <?php if ($jabatan == "2")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_tu">Tata Usaha</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="jabatan_id" value="3"
-                                        id="jabatan_bph" <?php if ($jabatan == "3")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_bph">BPH</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label for="guru" class="col-sm-2 col-form-label">Guru</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" name="guru" id="guru">
-                                    <option value="">- Pilih guru -</option>
-                                    <option value="SMP" <?php if ($guru == "SMP")
-                                        echo "selected" ?>>SMP</option>
-                                    <option value="SMA" <?php if ($guru == "SMA")
-                                        echo "selected" ?>>SMA</option>
-                                    <option value="SMP SMA" <?php if ($guru == "SMP SMA")
-                                        echo "selected" ?>>SMP SMA</option>
+                            $options = '';
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $options .= '<option value="' . $row['jabatan_id'] . '">' . $row['jabatan_nama'] . '</option>';
+                            }
+                            ?>
+                            <label for="editJabatan" class="form-label">Jabatan</label>
+                            <div>
+                                <select class="form-select" name="editJabatan" id="editJabatan" required>
+                                    <option value="">- Pilih Jabatan -</option>
+                                    <?php echo $options ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
+                        <div class="mb-3">
+                            <label for="editPenempatan" class="form-label">Penempatan</label>
+                            <select class="form-select" id="editPenempatan" name="editPenempatan" required>
+                                <option value="">- Pilih Penempatan -</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="SMP SMA">SMP SMA</option>
+                            </select>
                         </div>
+
+                        <input type="hidden" id="editId" name="editId">
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel">Edit Data</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Tambah Data Pengguna -->
+    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tambahModalLabel">Tambah Data Pengguna</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="?op=tambah" method="POST">
+                        <div class="mb-3">
+                            <label for="tambahNip" class="form-label">NIP</label>
+                            <input type="text" class="form-control" id="tambahNip" name="tambahNip" required>
                         </div>
-                        <div class="modal-body">
-                            <!-- Tempatkan formulir edit di sini -->
-                            <form action="crud.php?op=simpan" method="POST">
-                                <!-- Tambahkan input field yang diperlukan untuk mengedit data -->
-                                <div class="mb-3 d-none">
-                                    <label for="editNip" class="form-label">NIP</label>
-                                    <input type="text" class="form-control" id="editNip" name="editNip">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editNama" class="form-label">Nama</label>
-                                    <input type="text" class="form-control" id="editNama" name="editNama" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="editPassword" name="editPassword">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editJabatan" class="form-label">Jabatan</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="editJabatan" value="1"
-                                            id="editJabatan_guru" required>
-                                        <label class="form-check-label" for="editJabatan_guru">Guru</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="editJabatan" value="2"
-                                            id="editJabatan_tu" required>
-                                        <label class="form-check-label" for="editJabatan_tu">Tata Usaha</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="editJabatan" value="3"
-                                            id="editJabatan_bph" required>
-                                        <label class="form-check-label" for="editJabatan_bph">BPH</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editGuru" class="form-label">Guru</label>
-                                    <select class="form-control" id="editGuru" name="editGuru" required>
-                                        <option value="">- Pilih guru -</option>
-                                        <option value="SMP">SMP</option>
-                                        <option value="SMA">SMA</option>
-                                        <option value="SMP SMA">SMP SMA</option>
-                                    </select>
-                                </div>
+                        <div class="mb-3">
+                            <label for="tambahNama" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="tambahNama" name="tambahNama" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tambahPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="tambahPassword" name="tambahPassword"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tambahJabatan" class="form-label">Jabatan</label>
+                            <div>
+                                <select class="form-select" name="tambahJabatan" id="tambahJabatan" required>
+                                    <option value="">- Pilih Jabatan -</option>
+                                    <?php echo $options ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tambahPenempatan" class="form-label">Penempatan</label>
+                            <select class="form-select" id="tambahPenempatan" name="tambahPenempatan" required>
+                                <option value="">- Pilih Penempatan -</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="SMP SMA">SMP SMA</option>
+                            </select>
+                        </div>
 
-                                <input type="hidden" id="editId" name="editId">
-                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                            </form>
-                        </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary">Tambah</button>
+                    </form>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- untuk mengeluarkan data -->
-            <div class="card">
-                <div class="card-header">
-                    Data Pengguna
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">NIP</th>
-                                <th scope="col">Nama</th>
-                                <th scope="col">Jabatan</th>
-                                <th scope="col">Guru</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                                    $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, pengguna.password, jabatan.jabatan_nama, pengguna.guru
+    <div class="mx-auto mb-5">
+        <!-- untuk mengeluarkan data -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="d-flex align-items-center">Data Pengguna</div>
+                <a data-bs-toggle="modal" data-bs-target="#tambahModal">
+                    <button type="button" class="btn btn-primary">Tambah Pengguna</button>
+                </a>
+            </div>
+
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">NIP</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Jabatan</th>
+                            <th scope="col">Penempatan</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, pengguna.password, jabatan.jabatan_id, jabatan.jabatan_nama, pengguna.guru
                                              FROM pengguna
                                              INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
                                              ORDER BY pengguna.nama ASC";
-                                    $q2 = mysqli_query($conn, $sql2);
-                                    $urut = 1;
-                                    while ($r2 = mysqli_fetch_array($q2)) {
-                                        $id = $r2['id'];
-                                        $nip = $r2['nip'];
-                                        $nama = $r2['nama'];
-                                        $password = md5($r2['password']);
-                                        $jabatan = $r2['jabatan_nama'];
-                                        $guru = $r2['guru'];
+                        $q2 = mysqli_query($conn, $sql2);
+                        $urut = 1;
+                        while ($r2 = mysqli_fetch_array($q2)) {
+                            $id = $r2['id'];
+                            $nip = $r2['nip'];
+                            $nama = $r2['nama'];
+                            $password = md5($r2['password']);
+                            $id_jabatan = $r2['jabatan_id'];
+                            $jabatan = $r2['jabatan_nama'];
+                            $guru = $r2['guru'];
 
-                                        ?>
+                            ?>
                             <tr>
                                 <th scope="row">
                                     <?php echo $urut++ ?>
@@ -321,37 +283,62 @@ if ($op == 'simpan') {
                                     <?php echo $guru ?>
                                 </td>
                                 <td scope="row">
-                                <a data-bs-toggle="modal" data-bs-target="#editModal"
+                                    <a id="iniEditModal" data-bs-toggle="modal" data-bs-target="#editModal"
                                         data-id="<?php echo $id ?>" data-nip="<?php echo $nip ?>"
-                                        data-nama="<?php echo $nama ?>" data-password="<?php echo $password ?>" data-jabatan="<?php echo $jabatan ?>"
-                                        data-guru="<?php echo $guru ?>">
+                                        data-nama="<?php echo $nama ?>" data-password="<?php echo $password ?>"
+                                        data-jabatan="<?php echo $id_jabatan ?>" data-guru="<?php echo $guru ?>">
                                         <button type="button" class="btn btn-warning">Edit</button>
                                     </a>
-                                    <a href="crud.php?op=delete&id=<?php echo $id ?>"
-                                        onclick="return confirm('Yakin mau hapus data?')"><button type="button"
-                                            class="btn btn-danger">Hapus</button></a>
+                                    <button type='button' onclick='return confirmDelete(`<?php echo $id ?>`,`<?php echo $nama ?>`)'
+                                        class='btn btn-danger'>Hapus</button>
                                 </td>
                             </tr>
                             <?php
-                                    }
-                                    ?>
+                        }
+                        ?>
                     </tbody>
 
                 </table>
             </div>
+        </div>
+
     </div>
+
+
     <script>
-        $(document).ready(function () {
-            $('.table').DataTable();
+        document.addEventListener('DOMContentLoaded', function () {
+            var tables = document.querySelectorAll('.table');
+            tables.forEach(function (table) {
+                new DataTable(table);
+            });
         });
-    </script>
-    <script>
+
+        function confirmDelete(id,nama) {
+            // Menggunakan SweetAlert untuk konfirmasi penghapusan
+            Swal.fire({
+                title: "Konfirmasi",
+                html: "Apakah Anda yakin ingin menghapus <b>`" + nama + "`</b>?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                // Jika pengguna mengklik "Ya, Hapus", redirect ke URL hapus
+                if (result.isConfirmed) {
+                    window.location.href = "?op=hapus&id=" + id;
+                }
+            });
+
+            // Mengembalikan false untuk mencegah tindakan default dari tautan
+            return false;
+        }
+
         var editModal = new bootstrap.Modal(document.getElementById('editModal'), {
             keyboard: false
         });
 
         // Menangkap event klik tombol "Edit" pada setiap baris tabel
-        var editButtons = document.querySelectorAll('a[data-bs-toggle="modal"]');
+        var editButtons = document.querySelectorAll('a[id="iniEditModal"]');
         editButtons.forEach(function (button) {
             button.addEventListener('click', function () {
                 // Mendapatkan data dari atribut data-* pada tombol
@@ -367,24 +354,23 @@ if ($op == 'simpan') {
                 document.getElementById('editNip').value = nip;
                 document.getElementById('editNama').value = nama;
                 document.getElementById('editPassword').value = password;
-                // Memilih radio button berdasarkan nilai jabatan
-                var jabatanRadioButtons = document.getElementsByName('editJabatan');
-                jabatanRadioButtons.forEach(function (radioButton) {
-                    if (jabatan === "Guru" && radioButton.value === "1") {
-                        radioButton.checked = true;
-                    } else if (jabatan === "Tata Usaha" && radioButton.value === "2") {
-                        radioButton.checked = true;
-                    } else if (jabatan === "BPH" && radioButton.value === "3") {
-                        radioButton.checked = true;
-                    }
-                });
 
-                var editGuruSelect = document.getElementById('editGuru');
+                var editJabatanSelect = document.getElementById('editJabatan');
                 // Loop melalui setiap opsi dan membandingkannya dengan nilai guru
-                for (var i = 0; i < editGuruSelect.options.length; i++) {
-                    if (editGuruSelect.options[i].value === guru) {
+                for (var i = 0; i < editJabatanSelect.options.length; i++) {
+                    if (editJabatanSelect.options[i].value === jabatan) {
                         // Jika nilai opsi sama dengan guru, atur opsi tersebut sebagai terpilih
-                        editGuruSelect.options[i].selected = true;
+                        editJabatanSelect.options[i].selected = true;
+                        break;
+                    }
+                }
+
+                var editPenempatanSelect = document.getElementById('editPenempatan');
+                // Loop melalui setiap opsi dan membandingkannya dengan nilai guru
+                for (var i = 0; i < editPenempatanSelect.options.length; i++) {
+                    if (editPenempatanSelect.options[i].value === guru) {
+                        // Jika nilai opsi sama dengan guru, atur opsi tersebut sebagai terpilih
+                        editPenempatanSelect.options[i].selected = true;
                         break;
                     }
                 }

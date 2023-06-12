@@ -14,7 +14,7 @@ if (isset($_POST['logout'])) {
 <html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dashboard | SMP SMA MKGR Kertasemaya</title>
+<title>Dashboard | SMP dan SMA Pesantren MKGR Kertasemaya</title>
 <style>
 	.mx-auto {
 		max-width: 800px !important
@@ -24,17 +24,9 @@ if (isset($_POST['logout'])) {
 		margin-top: 10px;
 	}
 </style>
-
 <body>
 	<div class="kolomkanan">
 		<div class="mx-auto">
-
-			<?php
-
-			?>
-			<!-- menampilkan gambar 
-		<img width="100" height="100" src="foto_profil/<?php echo $nama_file; ?>" alt="Gambar Pengguna">
-		-->
 			<div class="card mb-5 p-3">
 				<div class="leftP">
 					<div>
@@ -65,7 +57,7 @@ if (isset($_POST['logout'])) {
 					</div>
 				</div>
 
-				<div class="wallet-footer">
+				<div class="menu-beranda">
 					<div class="item">
 						<div class="sa">
 							<a href="./absensi">
@@ -110,27 +102,22 @@ if (isset($_POST['logout'])) {
 			</div>
 
 			<?php
-
-			// set nilai kurun waktu
 			$kurun_waktu = 7; // 7 hari terakhir absen
 			
 			// menghitung tanggal 7 hari yang lalu
 			$tanggal_kurang = date('Y-m-d', strtotime('-' . $kurun_waktu . ' days'));
 
-			// query untuk mengambil data absensi karyawan dengan nip tertentu dan kurun waktu tertentu
 			$query = "SELECT absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, status_absen.nama_status, absen.keterangan
 						  FROM absen 
 						  JOIN status_absen ON absen.id_status = status_absen.id_status 
 						  WHERE absen.nip = $userid AND absen.tanggal_absen >= '$tanggal_kurang'
 						  ORDER BY absen.tanggal_absen DESC";
-
-			// menjalankan query dan menyimpan hasilnya dalam variabel $result
 			$result = mysqli_query($conn, $query);
 
 			if (mysqli_num_rows($result) > 0) { ?>
 				<div class="card p-4 mb-5">
 					<div class="card-body" style="padding-left:0;padding-bottom:0">
-						<h5 class="card-title">Riwayat Absensi Terakhir</h5>
+						<h5 class="card-title">Absensi 7 Hari Terakhir</h5>
 					</div>
 					<div class="table-responsive">
 						<table class="table table-bordered table-striped mt-3">
@@ -145,9 +132,7 @@ if (isset($_POST['logout'])) {
 							</thead>
 							<tbody style="font-size:14px">
 								<?php
-								// loop untuk menampilkan data absensi karyawan
 								while ($row = mysqli_fetch_assoc($result)) {
-									// Format tanggal dalam bahasa Indonesia
 									$hari = array("Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu");
 									$bulan = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
 
@@ -155,7 +140,6 @@ if (isset($_POST['logout'])) {
 									$hari_tanggal = $hari[date_format($tanggal, "w")];
 									$tanggal_indo = $hari_tanggal . ", " . date_format($tanggal, "d") . " " . $bulan[date_format($tanggal, "m") - 1] . " " . date_format($tanggal, "Y");
 
-									// menampilkan data absensi karyawan dalam baris tabel
 									echo "<tr>";
 									echo "<td>" . $tanggal_indo . "</td>";
 									echo "<td>" . $row['jam_masuk'] . "</td>";
@@ -165,7 +149,6 @@ if (isset($_POST['logout'])) {
 									echo "</tr>";
 								}
 
-								// fungsi untuk mengubah angka bulan menjadi nama bulan dalam bahasa Indonesia
 								function bulan($angka_bulan)
 								{
 									$nama_bulan = array("", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
@@ -180,5 +163,4 @@ if (isset($_POST['logout'])) {
 		</div>
 	</div>
 </body>
-
 </html>

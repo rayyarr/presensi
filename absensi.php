@@ -77,6 +77,18 @@ if (isset($_POST['simpan'])) {
     </script>';
 }
 
+// Eksekusi untuk mengambil data latlong sekolah
+$sqlatlong = $conn->query("SELECT * FROM pengaturan");
+if ($sqlatlong->num_rows > 0) {
+    $row = $sqlatlong->fetch_assoc();
+    $jarakIdeal = $row["jarak"];
+    $latSekolah = $row["latitude"];
+    $longSekolah = $row["longitude"];
+} else {
+    $latSekolah = 0;
+    $longSekolah = 0;
+}
+
 // Eksekusi query dan mengambil isi jadwal masuk
 $sqlW = "SELECT * FROM jadwal WHERE nama_hari = '$hari_ini'";
 $hasilW = mysqli_query($conn, $sqlW);
@@ -175,7 +187,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     Sistem ini menggunakan akses lokasi agar dapat bekerja.
                 </div>-->
                 <div class="mb-3" style="align-items:center;margin-right:auto;margin-left:auto">
-                    <video id="video" width="280" height="200" style="transform: scaleX(-1);" autoplay></video>
+                    <video id="video" width="280" height="auto" style="transform: scaleX(-1);border-radius: 18px;" autoplay></video>
                 </div>
 
                 <!-- -->
@@ -196,7 +208,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 </div>
                 <div class="mb-3">
                     <div class="d-block">
-                        <span>Jarak Anda: <b id="our-distance">belum terdeteksi</b></span>
+                        <span>Jarak Anda dari Sekolah: <b id="our-distance">belum terdeteksi</b> <b>(Maksimal: <?php echo $jarakIdeal ?> km)</b></span>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -215,7 +227,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 <!--< button id = "allow-location-button" type = "button" class="btn btn-primary" >
                         Izinkan akses lokasi saya
             </button > -->
-                <div class="wallet-footer" style="flex-wrap:wrap;justify-content:space-between">
+                <div class="menu-beranda" style="flex-wrap:wrap;justify-content:space-between">
                     <div class="item">
                         <label id="captureButton">
                             <div class="button-container btn-outline-biru">
@@ -323,7 +335,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Absen Sakit / Izin</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Izin Kehadiran</h5>
                     </div>
                     <div class="modal-body">
                         <form action="" method="POST" enctype="multipart/form-data">
@@ -444,8 +456,8 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             const yourLongitude = document.querySelector("#your-longitude");
             const yourLocation = document.querySelector("#your-location");
 
-            const myLat = "-6.5005329587694884"; // Latitude SMP SMA MKGR Kertasemaya
-            const myLon = "108.36078998178328"; // Longitude SMP SMA MKGR Kertasemaya
+            const latSekolah = <?php echo $latSekolah ?>; // Latitude SMP SMA MKGR Kertasemaya
+            const longSekolah = <?php echo $longSekolah ?>; // Longitude SMP SMA MKGR Kertasemaya
             myLocation.innerText = "Kertasemaya, Jawa Barat, Indonesia";
             jarak = 1000; // Jarak Default
 
@@ -563,9 +575,9 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             function calculateDistance(userLat, userLon) {
                 const R = 6371e3; // metres
                 const φ1 = (userLat * Math.PI) / 180; // φ, λ in radians
-                const φ2 = (myLat * Math.PI) / 180;
-                const Δφ = ((myLat - userLat) * Math.PI) / 180;
-                const Δλ = ((myLon - userLon) * Math.PI) / 180;
+                const φ2 = (latSekolah * Math.PI) / 180;
+                const Δφ = ((latSekolah - userLat) * Math.PI) / 180;
+                const Δλ = ((longSekolah - userLon) * Math.PI) / 180;
 
                 const a =
                     Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
@@ -583,7 +595,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
 
                 console.log(Intl.NumberFormat().format(distanceInKm) + " kilometer");
 
-                ourDistance.innerText = jarak + " kilometer";
+                ourDistance.innerText = jarak + " km";
             }
 
             // Tombol Absen Masuk

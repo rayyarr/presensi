@@ -2,7 +2,8 @@
 // Aini
 
 session_start();
-session_destroy();
+unset($_SESSION['nip']);
+//session_destroy();
  
 header("Location: login");
  

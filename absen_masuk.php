@@ -1,28 +1,22 @@
 <?php
 session_start(); // Mulai session
 require_once('cfgall.php');
-$sql1 = "SELECT jarak FROM pengaturan WHERE id = 1";
-$result = $conn->query($sql1);
-if($result->num_rows > 0){
-	$row = $result->fetch_assoc();
-	$jarak_ideal = $row["jarak"];
-} else {
-	$jarak_ideal = 0;
-}
-$sql = "SELECT id_jadwal FROM jadwal WHERE nama_hari = '$hari_ini'";
-$hasil = $conn->query($sql);
 
-if($hasil->num_rows > 0){
-	$row = $hasil->fetch_assoc();
-	$id_jadwal = $row ["id_jadwal"];
+$jarak_ideal = mysqli_fetch_array(mysqli_query($conn, "SELECT jarak FROM pengaturan WHERE id = 1"))['jarak'];
+
+$result = mysqli_query($conn, "SELECT id_jadwal, status FROM jadwal WHERE nama_hari = '$hari_ini'");
+$row = mysqli_fetch_array($result);
+$id_jadwal = $row['id_jadwal'];
+$status = $row['status'];
+
+if ($status == 'Aktif'){
 	if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
 		$jarak = $_POST['jarak'];
 		$compressedPhoto = $_POST['photo'];
 		$latlong = $_POST['latlong'];
-	
-		# kita cek dulu apakah dia sudah absen sebelumnya
+
+		# Cek apakah dia sudah absen sebelumnya
 		if ($obj->cek_Absenmasuk($userid)) {
-			//jika sudah absen sebelumnya arahkan ke login.php
 			echo
 				'
 					<script> 
@@ -32,7 +26,7 @@ if($hasil->num_rows > 0){
 							icon: "error",
 						}).then((result) => {
 							setTimeout(function () {
-								window.location.href = "login";
+								window.location.href = "beranda";
 							 }, 300);
 						})
 					</script>
@@ -44,20 +38,20 @@ if($hasil->num_rows > 0){
 				$id_status = 1; // 1 yaitu masuk
 				$tanggal_absen = date('Y-m-d');
 				$jam_masuk = date('H:i:s');
-	
+
 				// Mendekode data gambar yang dikirim sebagai base64
 				$decodedPhoto = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $compressedPhoto));
-	
+
 				// Menentukan direktori penyimpanan gambar
 				$targetDirectory = "hasil_absen/";
 				$file_foto = $userid . "_" . date('Y-m-d') . ".png";
 				$targetPath = $targetDirectory . $file_foto;
 				file_put_contents($targetPath, $decodedPhoto);
-	
+
 				// Eksekusi query dan mengambil isi jadwal masuk
 				$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = $id_jadwal";
 				$hasilW = mysqli_query($conn, $sqlW);
-	
+
 				// Cek apakah query berhasil dijalankan
 				if (mysqli_num_rows($hasilW) > 0) {
 					// Looping untuk membaca nilai waktu_masuk dari setiap baris data
@@ -67,11 +61,11 @@ if($hasil->num_rows > 0){
 				} else {
 					$waktu_masuk = date('H:i:s');
 				}
-	
+
 				// menghitung selisih waktu dengan waktu yang ditentukan (07:15:00)
 				$tanggal_waktu_target = date('Y-m-d') . $waktu_masuk;
 				$selisih_waktu = strtotime($jam_masuk) - strtotime($tanggal_waktu_target);
-	
+
 				// jika selisih waktu lebih dari 0 (artinya terlambat)
 				if ($selisih_waktu > 0) {
 					if ($selisih_waktu < 3600) {
@@ -113,7 +107,7 @@ if($hasil->num_rows > 0){
 						})
 					</script>
 					';
-	
+
 				} else {
 					echo
 						'
@@ -129,7 +123,7 @@ if($hasil->num_rows > 0){
 						})
 					</script>
 					';
-	
+
 				}
 			} else {
 				echo '
@@ -162,7 +156,6 @@ if($hasil->num_rows > 0){
 		';
 	}
 } else {
-	$id_jadwal = 'Minggu';  
 	echo '
 		<script>
 			swal.fire({

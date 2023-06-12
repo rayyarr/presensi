@@ -44,7 +44,7 @@ if ($op == 'show') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pengguna</title>
+    <title>Rekapitulasi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <style>
@@ -64,7 +64,7 @@ if ($op == 'show') {
         <!-- untuk mengeluarkan data -->
         <div class="card mb-3">
             <div class="card-header">
-                Data Pengguna
+                Rekapitulasi
             </div>
             <div class="card-body">
                 <table class="table">
@@ -74,7 +74,7 @@ if ($op == 'show') {
                             <th scope="col">NIP</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Jabatan</th>
-                            <th scope="col">Guru</th>
+                            <th scope="col">Penempatan</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
