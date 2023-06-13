@@ -271,7 +271,7 @@ if (isset($_POST['login'])) {
     <?php endif; ?>
 
     <label for="username">Username</label>
-    <input type="text" placeholder="Masukkan Username" id="username" name="username" required>
+    <input type="text" placeholder="Username" id="username" name="username" required>
 
     <label for="password">Password</label>
     <input type="password" placeholder="Kata Sandi" id="password" name="password" required>
