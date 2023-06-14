@@ -1,5 +1,5 @@
 <?php
-session_start(); // Mulai session
+session_start();
 include_once 'cfgall.php';
 ?>
 <!DOCTYPE html>
@@ -107,25 +107,20 @@ include_once 'cfgall.php';
             </form>-->
 
                 <?php
-                // set default timezone
                 date_default_timezone_set('Asia/Jakarta');
 
-                // ambil tahun dan bulan dari parameter GET, atau gunakan tanggal hari ini
                 $tahun = isset($_GET['tahun']) ? $_GET['tahun'] : date('Y');
                 $bulan = isset($_GET['bulan']) ? $_GET['bulan'] : date('m');
 
-                // ambil jumlah hari pada bulan ini
                 $jumlah_hari = date('t', strtotime($tahun . '-' . $bulan . '-01'));
 
                 // buat array kosong untuk absen
                 $absen = array();
 
-                // ambil data absen dari database
                 $sql = "SELECT tanggal_absen, nip, keterangan FROM absen WHERE YEAR(tanggal_absen) = '$tahun' AND MONTH(tanggal_absen) = '$bulan'";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        // tambahkan data absen ke array
                         $tanggal = date('j', strtotime($row['tanggal_absen']));
                         $absen[$row['nip']][$tanggal] = $row['keterangan'];
                     }
@@ -193,7 +188,6 @@ include_once 'cfgall.php';
                                 'Desember'
                             );
 
-                            // looping tanggal dari 1 sampai jumlah hari pada bulan ini
                             for ($i = 1; $i <= $jumlah_hari; $i++) {
                                 // ambil nama hari dalam bahasa Indonesia
                                 $nama_hari = $nama_hari_arr[date('N', strtotime($tahun . '-' . $bulan . '-' . $i))];
@@ -205,7 +199,6 @@ include_once 'cfgall.php';
                                 echo '<tr class="' . $bg_color . '">';
                                 echo '<td>' . $nama_hari . ', ' . str_pad($i, 2, '0', STR_PAD_LEFT) . ' ' . $nama_bulan . ' ' . $tahun . '</td>';
 
-                                // ambil data absen dari database berdasarkan tanggal dan nip
                                 $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen, absen.latlong 
                         FROM absen 
                         JOIN status_absen ON absen.id_status = status_absen.id_status 
@@ -214,7 +207,6 @@ include_once 'cfgall.php';
                                 $result = mysqli_query($conn, $query);
 
                                 if (mysqli_num_rows($result) > 0) {
-                                    // jika data absen ditemukan, tampilkan status dan keterangan
                                     $data_absen = mysqli_fetch_assoc($result);
                                     $jam_masuk = $data_absen['jam_masuk'];
                                     $jam_keluar = $data_absen['jam_keluar'];
@@ -223,14 +215,12 @@ include_once 'cfgall.php';
                                     $fotoAbsen = $data_absen['foto_absen'];
                                     $latlong = $data_absen['latlong'];
                                 } else {
-                                    // jika data absen tidak ditemukan, tampilkan status kosong dan keterangan kosong
                                     $jam_masuk = '';
                                     $jam_keluar = '';
                                     $status = '';
                                     $keterangan = '-';
                                     $fotoAbsen = '';
                                     $latlong = '';
-                                    // tambahkan keterangan untuk hari Minggu
                                     if ($nama_hari == 'Minggu') {
                                         $keterangan = 'Libur Akhir Pekan';
                                     } else {
@@ -275,7 +265,7 @@ include_once 'cfgall.php';
                                 $('#mapModal').on('shown.bs.modal', function () {
                                     var mapContainer = document.getElementById('mapid');
 
-                                    // Hapus peta yang ada jika sudah diinisialisasi sebelumnya
+                                    // Hapus map jika sudah diinisialisasi sebelumnya
                                     if (mapContainer && mapContainer._leaflet_id) {
                                         mapContainer._leaflet_id = null;
                                     }
@@ -285,7 +275,6 @@ include_once 'cfgall.php';
                                     var latitude = parseFloat(coordinates[0]);
                                     var longitude = parseFloat(coordinates[1]);
 
-                                    // Gunakan nilai latitude dan longitude dalam setView()
                                     mymap = L.map('mapid').setView([latitude, longitude], 13);
 
                                     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -322,5 +311,4 @@ include_once 'cfgall.php';
         </div>
     </div>
 </body>
-
 </html>

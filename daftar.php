@@ -2,9 +2,8 @@
 // Aini
 include_once 'cfgdb.php';
 
-session_start(); // Mulai session
+session_start();
 
-// Jika user sudah login, alihkan ke halaman dashboard
 if (isset($_SESSION['nip'])) {
   header("Location: beranda");
   exit();
@@ -64,9 +63,9 @@ if (isset($_POST['daftar'])) {
   $q_cek_nip = mysqli_query($conn, $sql_cek_nip);
   $jml_cek_nip = mysqli_num_rows($q_cek_nip);
 
-  if ($jml_cek_nip > 0) { // Jika NIP sudah terdaftar, tampilkan pesan error
+  if ($jml_cek_nip > 0) {
     $error = "Mohon maaf, NIP sudah terdaftar!";
-  } else { // Jika NIP belum terdaftar, tambahkan data pengguna baru ke database
+  } else {
     if ($nip && $password && $nama && $jabatan && $guru) {
       $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
       $q1 = mysqli_query($conn, $sql1);
@@ -115,7 +114,6 @@ if (isset($_POST['daftar'])) {
       background-position: center;
       background-repeat: no-repeat;
       z-index: -1;
-      /* agar elemen ini berada di bawah konten */
       animation-name: zoom;
       animation-duration: 1s;
       animation-timing-function: ease-in-out;
@@ -429,11 +427,7 @@ if (isset($_POST['daftar'])) {
     <button type="submit" name="daftar">Daftar</button>
 
     <span style="margin-top:15px;color:#fff;font-size:14px">Sudah punya akun? <a href="login">Login</a></span>
-
-    <!--<div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div>-->
+    
   </form>
 </body>
 </html>

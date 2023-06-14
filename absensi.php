@@ -9,7 +9,6 @@ if (isset($_POST['simpan'])) {
     $id_status = $_POST['id_status'];
     $keterangan = $_POST['keterangan'];
 
-    // Mengambil informasi file yang diunggah
     $nama_file = $_FILES['lampiran']['name'];
     $image_ext = explode('.', $nama_file);
     $file_ext = strtolower(end($image_ext));
@@ -20,33 +19,28 @@ if (isset($_POST['simpan'])) {
     $ku = "SELECT * FROM absen WHERE nip='$userid' AND tanggal_absen='$tanggal_absen'";
     $hsl = mysqli_query($conn, $ku);
     if (mysqli_num_rows($hsl) > 0) {
-        // Jika data sudah ada, berikan pesan error dan hentikan proses
+        // Jika sudah absen
         echo '<script>
         popupJudul = "Gagal!";
         popupText = "Kamu sudah absen hari ini!";
         popupIcon = "error";
         </script>';
     } else {
-        // Memeriksa apakah file telah diunggah
         if (!empty($nama_file)) {
-            // Memeriksa jenis file yang diunggah
             $allowed_types = array('image/jpeg', 'image/jpg', 'image/png');
             if (!in_array($tipe_file, $allowed_types)) {
-                // Jika jenis file tidak diizinkan, berikan pesan error
                 echo '<script>
             popupJudul = "Gagal!";
             popupText = "Jenis file yang diunggah tidak diizinkan. Hanya file JPEG, JPG, dan PNG yang diperbolehkan.";
             popupIcon = "error";
             </script>';
             } elseif ($ukuran_file > 500000) {
-                // Jika ukuran file melebihi batas, berikan pesan error
                 echo '<script>
             popupJudul = "Gagal!";
             popupText = "Ukuran file terlalu besar. Maksimal ukuran file yang diizinkan adalah 500KB.";
             popupIcon = "error";
             </script>';
             } else {
-                // Memindahkan file ke lokasi yang diinginkan
                 $nama_file = $userid . "_" . date('Y-m-d') . "." . $file_ext;
                 $tujuan_file = "hasil_absen/" . $nama_file;
                 move_uploaded_file($tmp_file, $tujuan_file);
@@ -77,7 +71,7 @@ if (isset($_POST['simpan'])) {
     </script>';
 }
 
-// Eksekusi untuk mengambil data latlong sekolah
+// Eksekusi mengambil data latlong sekolah
 $sqlatlong = $conn->query("SELECT * FROM pengaturan");
 if ($sqlatlong->num_rows > 0) {
     $row = $sqlatlong->fetch_assoc();
@@ -89,13 +83,11 @@ if ($sqlatlong->num_rows > 0) {
     $longSekolah = 0;
 }
 
-// Eksekusi query dan mengambil isi jadwal masuk
+// Eksekusi mengambil isi jadwal masuk
 $sqlW = "SELECT * FROM jadwal WHERE nama_hari = '$hari_ini'";
 $hasilW = mysqli_query($conn, $sqlW);
 
-// Cek apakah query berhasil dijalankan
 if (mysqli_num_rows($hasilW) > 0) {
-    // Looping untuk membaca nilai waktu_masuk dari setiap baris data
     while ($row = mysqli_fetch_assoc($hasilW)) {
         $id_jadwal = $row["id_jadwal"];
         $hari_ini = $row["nama_hari"];
@@ -184,13 +176,11 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
 
             <div class="card p-3 mb-5 text-center">
                 <!--<div class="alert alert-info" role="alert">
-                    Sistem ini menggunakan akses lokasi agar dapat bekerja.
+                    Gunakan akses lokasi agar dapat berjalan.
                 </div>-->
                 <div class="mb-3" style="align-items:center;margin-right:auto;margin-left:auto">
                     <video id="video" width="280" height="auto" style="transform: scaleX(-1);border-radius: 18px;" autoplay></video>
                 </div>
-
-                <!-- -->
 
                 <div class="mb-3">
                     <span class="d-block"><i class="bi-geo-alt text-success"></i> <a class="text-success"
@@ -201,8 +191,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     <span class="d-block">
                         Lokasi Anda: <b id="your-location">belum terdeteksi</b></span>
                     <span class="d-block">Lat: <b id="your-latitude">belum terdeteksi</b> - | - Long: <b
-                            id="your-longitude">belum terdeteksi</b> - | - <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary btn-sm" onclick="showModalMap()">
+                            id="your-longitude">belum terdeteksi</b> - | - <button type="button" class="btn btn-primary btn-sm" onclick="showModalMap()">
                             Tampilkan Peta
                         </button></span>
                 </div>
@@ -326,8 +315,6 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
         </div>
         -->
         </div>
-        <!--< script src="lokasi.js">
-        </script> -->
 
         <!--Modal Izin-->
         <div class="modal fade" id="absenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -424,7 +411,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                 var keterangan = document.getElementById("keteranganTextarea").value;
                 console.log(userid);
 
-                // Mengirim data absen ke PHP menggunakan Ajax
+                // Mengirim data absen menggunakan AJAX
                 $.ajax({
                     url: "",
                     type: "POST",
@@ -476,7 +463,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                             // Jika pengguna belum memberikan izin akses lokasi, minta izin akses lokasi
                             navigator.geolocation.getCurrentPosition(isSupportLocation, showError);
                         } else if (result.state == 'denied') {
-                            // Jika pengguna telah memblokir izin akses lokasi, tampilkan pesan kesalahan
+                            // Jika pengguna telah memblokir izin akses lokasi, tampilkan alert
                             swal.fire({
                                 title: "Gagal Mendeteksi!",
                                 html: "Anda telah memblokir akses lokasi. Harap izinkan akses lokasi pada pengaturan browser Anda.",
@@ -707,7 +694,6 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
         // Fungsi untuk menampilkan pesan kesalahan
         function showError(error) {
             console.log(error);
-            // Tambahkan logika tambahan jika diperlukan untuk menangani kesalahan akses kamera
         }
 
         // Panggil fungsi untuk meminta izin akses kamera
@@ -774,15 +760,13 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         });
                     },
                 }).then((result) => {
-                    // Jika tombol "Absen Masuk" pada SweetAlert2 diklik
+                    // Jika tombol "Absen Masuk" diklik
                     if (result.isConfirmed) {
-                        // Buat formulir dinamis
                         const form = document.createElement("form");
                         form.action = "absen_masuk.php";
                         form.method = "POST";
                         form.style.display = "none";
 
-                        // Tambahkan input jarak ke dalam formulir
                         const jarakInput = document.createElement("input");
                         jarakInput.type = "hidden";
                         jarakInput.name = "jarak";
@@ -795,17 +779,14 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                         inputlatlong.value = latlong;
                         form.appendChild(inputlatlong);
 
-                        // Tambahkan input foto ke dalam formulir
                         const photoInput = document.createElement("input");
                         photoInput.type = "hidden";
                         photoInput.name = "photo";
                         photoInput.value = photo;
                         form.appendChild(photoInput);
 
-                        // Tambahkan formulir ke dalam dokumen
                         document.body.appendChild(form);
 
-                        // Submit formulir
                         form.submit();
                     }
                 });
@@ -814,9 +795,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
             }
         }
 
-
-
-        // untuk jam saat ini
+        // Jam saat ini
         var myVar = setInterval(myTimer, 1000);
 
         function myTimer() {
@@ -827,5 +806,4 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
         } myTimer();
     </script>
 </body>
-
 </html>

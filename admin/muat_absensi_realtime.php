@@ -1,12 +1,10 @@
 <?php
 include_once '../cfgdb.php';
 
-// set default timezone
 date_default_timezone_set('Asia/Jakarta');
 
 $tanggal = date('Y-m-d');
 
-// ambil jumlah hari pada bulan dan tahun yang dipilih
 $jumlah_hari = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
 $nama_hari_arr = array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu');
 $nama_bulan_arr = array(
@@ -34,10 +32,8 @@ $query = "SELECT absen.id_absen, absen.nip, pengguna.nama, pengguna.foto_profil,
       ORDER BY absen.jam_masuk DESC";
 $result = mysqli_query($conn, $query);
 
-// Mendapatkan waktu saat ini
-$current_time = time();
+$saat_ini = time();
 
-// Memproses setiap baris hasil query
 if (mysqli_num_rows($result) > 0) {
     while ($data_absen = mysqli_fetch_assoc($result)) {
         $nip = $data_absen['nip'];
@@ -49,25 +45,20 @@ if (mysqli_num_rows($result) > 0) {
         $fotoAbsen = $data_absen['foto_absen'];
         $latlong = $data_absen['latlong'];
 
-        // Mendapatkan waktu absensi
         $absensi_time = strtotime($data_absen['jam_masuk']);
 
         // Menghitung selisih waktu antara waktu absensi dan waktu saat ini
-        $time_diff = $current_time - $absensi_time;
+        $time_diff = $saat_ini - $absensi_time;
 
         // Konversi selisih waktu menjadi menit
         $minutes_diff = round($time_diff / 60);
 
-        // Tampilkan data absensi dalam format HTML
         if ($data_absen['foto_profil'] == NULL) {
-            // Jika tidak ada data gambar yang tersimpan di database, gunakan gambar default
             $nama_file = "default.png";
         } else {
-            // Jika ada data gambar yang tersimpan di database, tampilkan gambar tersebut
             $nama_file = $data_absen['foto_profil'];
             $path_to_file = "../foto_profil/" . $nama_file;
             if (!file_exists($path_to_file)) {
-                // Jika file tidak ada, gunakan gambar default
                 $nama_file = "default.png";
             }
         }
@@ -90,7 +81,7 @@ if (mysqli_num_rows($result) > 0) {
   <?php
 }
 
-// Fungsi untuk mengatur format waktu
+// Mngatur format waktu
 function formatWaktu($minutes_diff) {
     if ($minutes_diff < 1) {
       return "baru saja";
@@ -106,6 +97,5 @@ function formatWaktu($minutes_diff) {
   }
   
 
-// Tutup koneksi database
 mysqli_close($conn);
 ?>

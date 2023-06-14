@@ -211,7 +211,6 @@ if ($sukses) {
                     });
 
                     function confirmDelete(jabatan_id) {
-                        // Menggunakan SweetAlert untuk konfirmasi penghapusan
                         Swal.fire({
                             title: "Konfirmasi",
                             html: "Apakah Anda yakin ingin menghapus?",
@@ -220,13 +219,11 @@ if ($sukses) {
                             confirmButtonText: "Ya, Hapus",
                             cancelButtonText: "Batal"
                         }).then((result) => {
-                            // Jika pengguna mengklik "Ya, Hapus", redirect ke URL hapus
                             if (result.isConfirmed) {
                                 window.location.href = "?op=hapus&id=" + jabatan_id;
                             }
                         });
 
-                        // Mengembalikan false untuk mencegah tindakan default dari tautan
                         return false;
                     }
 
@@ -234,19 +231,15 @@ if ($sukses) {
                         keyboard: false
                     });
 
-                    // Menangkap event klik tombol "Edit" pada setiap baris tabel
                     var editButtons = document.querySelectorAll('a[id="iniEditModal"]');
                     editButtons.forEach(function (button) {
                         button.addEventListener('click', function () {
-                            // Mendapatkan data dari atribut data-* pada tombol
                             var id = this.getAttribute('data-id');
                             var jabatan = this.getAttribute('data-jabatan');
 
-                            // Mengisi nilai input field di dalam modal dengan data yang diperoleh
                             document.getElementById('editId').value = id;
                             document.getElementById('editNama').value = jabatan;
 
-                            // Menampilkan modal edit
                             editModal.show();
                         });
                     });

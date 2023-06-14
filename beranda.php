@@ -3,10 +3,9 @@
 session_start();
 include_once 'cfgall.php';
 
-// Jika tombol logout ditekan
 if (isset($_POST['logout'])) {
-	session_destroy(); // Hapus session
-	header("Location: login"); // Alihkan ke halaman login setelah logout berhasil
+	session_destroy();
+	header("Location: login");
 	exit();
 }
 ?>
@@ -104,7 +103,6 @@ if (isset($_POST['logout'])) {
 			<?php
 			$kurun_waktu = 7; // 7 hari terakhir absen
 			
-			// menghitung tanggal 7 hari yang lalu
 			$tanggal_kurang = date('Y-m-d', strtotime('-' . $kurun_waktu . ' days'));
 
 			$query = "SELECT absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, status_absen.nama_status, absen.keterangan

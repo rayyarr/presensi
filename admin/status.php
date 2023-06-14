@@ -132,19 +132,15 @@ if ($sukses) {
                         });
                     });
 
-                    // Menangkap event klik tombol "Edit" pada setiap baris tabel
                     var editButtons = document.querySelectorAll('a[data-bs-toggle="modal"]');
                     editButtons.forEach(function (button) {
                         button.addEventListener('click', function () {
-                            // Mendapatkan data dari atribut data-* pada tombol
                             var id_status = this.getAttribute('data-id');
                             var nama_status = this.getAttribute('data-nama');
 
-                            // Mengisi nilai input field di dalam modal dengan data yang diperoleh
                             document.getElementById('editId').value = id_status;
                             document.getElementById('editNama').value = nama_status;
 
-                            // Menampilkan modal edit
                             editModal.show();
                         });
                     });

@@ -1,5 +1,5 @@
 <?php
-session_start(); // Mulai session
+session_start();
 require_once('cfgall.php');
 
 $jarak_ideal = mysqli_fetch_array(mysqli_query($conn, "SELECT jarak FROM pengaturan WHERE id_pengaturan = 1"))['jarak'];
@@ -16,7 +16,6 @@ $waktu_masuk = $row['waktu_masuk'];
 
 $waktu_masuk = strtotime($waktu_masuk);
 $jam_masuk = strtotime($jam_masuk);
-// Menghitung selisih waktu masuk dan waktu pengguna dalam menit
 $selisih_menit = round(($jam_masuk - $waktu_masuk) / 60);
 
 if ($status == 'Aktif') {
@@ -46,24 +45,19 @@ if ($status == 'Aktif') {
 				$jarak = floatval($jarak);
 				$jarak_konv = floor($jarak);
 				if ($jarak_konv < $jarak_ideal) { // jarak maksimal (km) agar bisa masuk
-					$id_status = 1; // 1 yaitu masuk
+					$id_status = 1; // 1 yaitu MASUK
 
-					// Mendekode data gambar yang dikirim sebagai base64
 					$decodedPhoto = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $compressedPhoto));
-
-					// Menentukan direktori penyimpanan gambar
 					$targetDirectory = "hasil_absen/";
 					$file_foto = $userid . "_" . date('Y-m-d') . ".png";
 					$targetPath = $targetDirectory . $file_foto;
 					file_put_contents($targetPath, $decodedPhoto);
 
-					// Eksekusi query dan mengambil isi jadwal masuk
+					// mengambil isi jadwal masuk
 					$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = $id_jadwal";
 					$hasilW = mysqli_query($conn, $sqlW);
 
-					// Cek apakah query berhasil dijalankan
 					if (mysqli_num_rows($hasilW) > 0) {
-						// Looping untuk membaca nilai waktu_masuk dari setiap baris data
 						while ($row = mysqli_fetch_assoc($hasilW)) {
 							$waktu_masuk = $row["waktu_masuk"];
 						}
@@ -73,11 +67,11 @@ if ($status == 'Aktif') {
 
 					$jam_masuk = date('H:i:s');
 
-					// menghitung selisih waktu dengan waktu yang ditentukan (07:15:00)
+					// menghitung selisih waktu
 					$tanggal_waktu_target = date('Y-m-d') . $waktu_masuk;
 					$selisih_waktu = strtotime($jam_masuk) - strtotime($tanggal_waktu_target);
 
-					// jika selisih waktu lebih dari 0 (artinya terlambat)
+					// jika selisih waktu lebih dari 0 (terlambat)
 					if ($selisih_waktu > 0) {
 						if ($selisih_waktu < 3600) {
 							$menit_terlambat = ceil($selisih_waktu / 60); // menghitung selisih waktu dalam menit
@@ -102,7 +96,7 @@ if ($status == 'Aktif') {
 					} else {
 						$keterangan = $jarak . ' kilometer';
 					}
-					// eksekusi
+					// eksekusi absen masuk
 					if ($obj->insert_Absenmasuk($userid, $id_status, $id_jadwal, $tanggal_absen, $jam_masuk, $keterangan, $file_foto, $latlong)) {
 						echo
 							'

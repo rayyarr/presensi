@@ -1,5 +1,5 @@
 <?php
-session_start(); // Mulai session
+session_start();
 require_once('cfgall.php');
 
 $result = mysqli_query($conn, "SELECT * FROM jadwal WHERE nama_hari = '$hari_ini'");
@@ -16,7 +16,7 @@ if ($waktu_sekarang > $waktu_pulang) {
 	if (isset($_POST['jarak'])) {
 		$jarak = $_POST['jarak'];
 
-		//jika variabel bernilai kosong maka kita kembalikan
+		// jika variabel bernilai kosong maka redirect ke login
 		if (empty($obj->get_idabsen($userid))) {
 			echo
 				'
@@ -33,9 +33,8 @@ if ($waktu_sekarang > $waktu_pulang) {
 					</script>
 					';
 		} else {
-			//Selanjutnya kita cek dulu apakah dia sudah melakukan absen keluar sebelumnya
+			//Selanjutnya cek apakah sudah absen keluar sebelumnya
 			if ($obj->cek_Absenkeluar($userid)) {
-				//jika sudah absen sebelumnya arahkan ke index.php
 				echo
 					'
 				<script> 
@@ -51,10 +50,7 @@ if ($waktu_sekarang > $waktu_pulang) {
 				</script>
 				';
 			} else {
-				//tapi jika belum, kita lakukan query ke id user untuk mendapatkan id absen berdasarkan tgl masuk
-				//jika dia belum melakukan absen masuk maka dia akan dikembalikan ke halaman utama
 				if ($jarak <= 99) {
-					//format tanggal akan dibuat seperti format di mysql
 					$tgl_keluar = date('Y-m-d');
 					$jam_keluar = date('H:i:s');
 

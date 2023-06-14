@@ -17,7 +17,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 :root { 
-  --big-font-size: 2rem;
   --h2-font-size: 1.25rem;
   --normal-font-size: .938rem;
   --smaller-font-size: .75rem;
@@ -25,7 +24,6 @@
 
 @media screen and (min-width: 968px) {
   :root {
-    --big-font-size: 3.5rem;
     --h2-font-size: 2rem;
     --normal-font-size: 1rem;
     --smaller-font-size: .875rem;
@@ -81,7 +79,7 @@ img {max-width: 100%;height: auto;display: block;}
 
 .show {right: 0;}
 
-section.homes{/*background: #022475;background-repeat: no-repeat;background-position: 0 -30px;*/padding-block:2rem 6rem;width:100%;}
+section.homes{padding-block:2rem 6rem;width:100%;}
 
 .mainL{margin-inline: auto;margin-top:50px;padding-inline: 22px;max-width: 1024px;align-items: center;justify-content: center;}
 
@@ -96,52 +94,6 @@ h1.t{font-size: 40px;margin-bottom: 30px;}
 .homeR img:nth-child(1){animation:componentAnim 15s ease infinite} 
 .homeR img:nth-child(2){animation:componentAnim 13s ease infinite reverse; margin-top:70px} 
 .homeR img:nth-child(3){animation:componentAnim 18s ease infinite}
-
-.home {
-  position: relative;
-  row-gap: 5rem;
-  padding: 4rem 0 5rem;
-}
-
-.home__title {
-  font-size: var(--big-font-size);
-  margin-bottom: 2.5rem;
-}
-
-.home__title-color {
-  color: #243763;
-}
-
-.home__social {
-  display: flex;
-  flex-direction: column;
-}
-
-.home__social-icon {
-  width: max-content;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: hsl(224, 56%, 12%);
-}
-
-.home__social-icon:hover {
-  color: #243763;
-}
-
-.home__img {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 260px;
-}
-
-.home__blob {
-  fill: #243763;
-}
-
-.home__blob-img {
-  width: 400px;
-}
 
 .button {
   display: inline-block;
@@ -204,7 +156,6 @@ h1.t{font-size: 40px;margin-bottom: 30px;}
   font-weight: 400;
 }
 
-/* ===== MEDIA QUERIES=====*/
 @media screen and (max-width: 320px) {
   .homeR img{height:130px;}
 }
@@ -245,24 +196,10 @@ h1.t{font-size: 40px;margin-bottom: 30px;}
   .homeR img{height:260px;}
 }
 
-/* Button */ .button{position: relative;z-index: 1;transition: all 0.2s;display:inline-flex;align-items:center;cursor:pointer; margin:10px 0;padding:12px 15px;outline:0;border:0; border-radius:8px;line-height:20px; font-size:14px;font-family:var(--fontB); white-space:nowrap;overflow:hidden;max-width:320px} .button.ln{color:inherit;background:transparent; border:1px solid #989b9f} 
+.button{position: relative;z-index: 1;transition: all 0.2s;display:inline-flex;align-items:center;cursor:pointer; margin:10px 0;padding:12px 15px;outline:0;border:0; border-radius:8px;line-height:20px; font-size:14px;font-family:var(--fontB); white-space:nowrap;overflow:hidden;max-width:320px} .button.ln{color:inherit;background:transparent; border:1px solid #989b9f} 
 .button.ln:hover{border-color:#fff;box-shadow:0 0 0 1px #243763; inset} .btnF{display:flex;justify-content:center; margin:10px 0;width:calc(100% + 12px);left:-6px;right:-6px;position:relative} .btnF >*{margin:0 6px} .button.ln:after, .button.ln:before{background:transparent;}
 .button.alt{margin-left:18px;background:#fff;border:2px solid #243763;color:#243763}
-
-/* Download btn */ 
-.dlBox{max-width:640px;box-shadow:0px 4px 25px rgb(14 36 49 / 15%);border-radius:10px;padding:12px;display:flex;align-items:center; font-size:18px;line-height:1.4em} 
-.dlBox .fT{flex-shrink:0;display:flex;align-items:center;justify-content:center; width:90px;height:160px; padding:0px; background:rgba(0,0,0,.1);border-radius:5px} .dlBox .fT::before{content:attr(data-text);opacity:.7} .dlBox .fT img{border-radius:5px;width:90x;height:160px}.dlBox a{flex-shrink:0;margin:0;padding:10px;font-size:13px} .dlBox a::after{content:attr(aria-label)} .dlBox .fN{flex-grow:1; width:calc(100% - 200px);padding:0 15px} .dlBox .fN >*{display:block;} .dlBox .fS{line-height:16px;font-size:14px;margin-top:10px;opacity:.9} 
-
-  .dlBox{font-size:18px;font-weight:700}
-  .dlBox a{flex-shrink:unset;font-weight:400}
-  .dlBox .fN >*{display:block;} .dlBox .fN h2{font-size:18px;}
-  .dlBox .fS{font-weight:400}
-  .dlBox .fN{flex-grow:1;padding:0 15px}
-  .dlBox .fN .buttonInfo{display:inline-flex;margin-top:30px;position:relative}
-  .dlBox .fN .buttonInfo a{margin-right:10px}
-  .lity-iframe-container{height:600px}
-
-/* Icon btn */ .icon{flex-shrink:0;display:inline-flex} .icon::before{content:'';width:18px;height:18px;background-size:18px;background-repeat:no-repeat;background-position:center} .icon::after{content:'';padding:0 6px} .icon.dl::before, .drK .button.ln .icon.dl::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'><polyline points='8 17 12 21 16 17'/><line x1='12' y1='12' x2='12' y2='21'/><path d='M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29'/></svg>")} .icon.demo::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'><path d='M7.39999 6.32003L15.89 3.49003C19.7 2.22003 21.77 4.30003 20.51 8.11003L17.68 16.6C15.78 22.31 12.66 22.31 10.76 16.6L9.91999 14.08L7.39999 13.24C1.68999 11.34 1.68999 8.23003 7.39999 6.32003Z'/><path d='M10.11 13.6501L13.69 10.0601'/></svg>")} .button.ln .icon.dl::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2308102b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'><polyline points='8 17 12 21 16 17'/><line x1='12' y1='12' x2='12' y2='21'/><path d='M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29'/></svg>")}
+.icon{flex-shrink:0;display:inline-flex} .icon::before{content:'';width:18px;height:18px;background-size:18px;background-repeat:no-repeat;background-position:center} .icon::after{content:'';padding:0 6px} .icon.dl::before, .drK .button.ln .icon.dl::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'><polyline points='8 17 12 21 16 17'/><line x1='12' y1='12' x2='12' y2='21'/><path d='M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29'/></svg>")} .icon.demo::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'><path d='M7.39999 6.32003L15.89 3.49003C19.7 2.22003 21.77 4.30003 20.51 8.11003L17.68 16.6C15.78 22.31 12.66 22.31 10.76 16.6L9.91999 14.08L7.39999 13.24C1.68999 11.34 1.68999 8.23003 7.39999 6.32003Z'/><path d='M10.11 13.6501L13.69 10.0601'/></svg>")} .button.ln .icon.dl::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2308102b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'><polyline points='8 17 12 21 16 17'/><line x1='12' y1='12' x2='12' y2='21'/><path d='M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29'/></svg>")}
 
 .icn{flex-shrink:0;display:inline-flex}
 .icn::before{content:'';width:24px;height:24px;}
@@ -347,29 +284,13 @@ svg{width:24px;height:24px; fill:#000} svg.line, svg .line{fill:none; stroke:cur
             </div>
         </section>
 
-        <!--===== ABOUT =====-->
-        <!--<section class="about section " id="Tentang" style="display: none;">
-            <h2 class="section-title">Tentang</h2>
-
-            <div class="about__container bd-grid">
-                <div class="about__img">
-                    <img src="img/mkgr1.jpg" alt="">
-                </div>
-                
-                <div>
-                    <h2 class="about__subtitle">Contoh Judul</h2>
-                    <p class="about__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique, sem vel blandit imperdiet, arcu erat aliquet dui, non suscipit libero orci venenatis massa. Nunc finibus nisi pellentesque lacus vehicula consequat.</p>           
-                </div>                                   
-            </div>
-        </section>-->
-
         <section class="camera section" id="Camera">
             <h2 class="section-title">Camera</h2>
             <div class="about__container bd-grid">
                 <div class="text-center" id="my_camera"></div>
                 <div class="about__text">
                     <p style="text-align:justify;margin-bottom: 10px;">Kami menghadirkan terobosan inovasi terbaru
-                        mengenai pengembangan teknologi sistem presensi untuk sekolah <b>SMP SMA MKGR KERTASEMAYA</b>
+                        mengenai pengembangan teknologi sistem presensi untuk sekolah <b>SMP dan SMA Pesantren MKGR KERTASEMAYA</b>
                         dengan mewajibkan pengguna berswafoto (selfie) sebagai tanda bukti yang membuat data absensi
                         semakin akurat dan meminimalisir kecurangan.</p>
                     <a class="button ln" onClick="ambil_gambar();"><svg class='line' xmlns='http://www.w3.org/2000/svg'
@@ -471,7 +392,7 @@ svg{width:24px;height:24px; fill:#000} svg.line, svg .line{fill:none; stroke:cur
         }
         window.addEventListener('scroll', scrollActive)
 
-        // Animasi Teks
+        // Animasi
 
         const sr = ScrollReveal({
             origin: 'top',
@@ -481,10 +402,8 @@ svg{width:24px;height:24px; fill:#000} svg.line, svg .line{fill:none; stroke:cur
             reset: true
         });
 
-        sr.reveal('.homeL, .about__img, .skills__subtitle, .skills__text', {});
-        sr.reveal('.homeR, .about__subtitle, .about__text, .skills__img, video', { delay: 200 });
-        sr.reveal('.home__social-icon', { interval: 200 });
-        sr.reveal('.skills__data, .work__img, .contact__input, .dlBox', { interval: 200 });
+        sr.reveal('.homeL', {});
+        sr.reveal('.homeR, .about__text, .skills__img, video', {});
 
     </script>
 </body>

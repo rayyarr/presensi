@@ -2,12 +2,10 @@
 
 include_once '../cfgdb.php';
 
-if(!isset($_SESSION['username'])){
+if (!isset($_SESSION['username'])) {
     header("Location: index");
     exit();
 }
-
-header("Cache-Control: no-cache, must-revalidate");
 
 $current_page = basename($_SERVER['PHP_SELF']);
 $today = date("Y-m-d");
@@ -34,7 +32,7 @@ echo '
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"/>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css?key=1">
+  <link rel="stylesheet" href="style.css?key=2">
 </head>
 <style>
 .btn{border-radius:18px !important;}
@@ -44,7 +42,6 @@ echo '
 <body>
 
 <!-- Konten -->
-
 
 <div class="mx-auto">
 <header class="l-header">
@@ -59,9 +56,6 @@ echo '
 <a href="beranda" style="margin-left:8px;color:black;text-decoration:none">Presensi Guru berbasis Web</a>
 </nav>
 </header>
-
-
-
 </div>
     
     <div class="kolomkiri">
@@ -222,8 +216,8 @@ echo '">
         }
     }
 
-    function hello() {
+    /*function hello() {
         navigation.classList.toggle('active')
     }
-//setTimeout(hello,1000);
+    setTimeout(hello,1000);*/
 </script>

@@ -9,12 +9,11 @@ if (!isset($_SESSION['nip'])) {
 } else {
 header("Cache-Control: no-cache, must-revalidate");
 
-// Ambil data pengguna sesuai dengan sesi
 $userid = $_SESSION['nip'];
 
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Eksekusi query dan mengambil isi
+// Eksekusi query dan mengambil isi umum
 $sqlUtama = "SELECT id, nip, nama, jabatan_id, guru FROM pengguna WHERE nip = '$userid'";
 $result = $conn->query($sqlUtama);
 $hasil = mysqli_query($conn, $sqlUtama);
@@ -38,14 +37,11 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 if ($hasiljoin['foto_profil'] == NULL) {
-  //jika tidak ada data gambar yang tersimpan di database, gunakan gambar default
   $nama_file = "default.png";
 } else {
-  //jika ada data gambar yang tersimpan di database, tampilkan gambar tersebut
   $nama_file = $hasiljoin['foto_profil'];
   $path_to_file = "foto_profil/".$nama_file;
   if (!file_exists($path_to_file)) {
-    //jika file tidak ada, gunakan gambar default
     $nama_file = "default.png";
   }
 }

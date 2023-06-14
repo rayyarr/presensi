@@ -6,13 +6,8 @@
       .l-header{width: 100%;position:relative;top: 0;left: 0;z-index: 99;}
       .iniheader{max-width:1080px;font-size: 1.5em;}
       
-      /* ---------------------------------------------------
-          OFFCANVAS ESSENTIALS
-      ----------------------------------------------------- */
-      
       .offcanvas-start {width: 250px;}
       
-      /* Desktop view */
       @media (min-width: 576px) {.container {padding-left: 250px;margin-left: inherit;}
       
       #sidebarCollapse {width: 40px;height: 40px;position: relative;margin: auto;-webkit-transform: rotate(0deg);-moz-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);-webkit-transition: .5s ease-in-out;-moz-transition: .5s ease-in-out;-o-transition: .5s ease-in-out;transition: .5s ease-in-out;cursor: pointer;background: none;box-shadow: none;outline: none !important;border: none;}
@@ -22,9 +17,6 @@
       #sidebarCollapse span:first-child{top:0}#sidebarCollapse span:nth-child(2),#sidebarCollapse span:nth-child(3){top:15px}#sidebarCollapse span:nth-child(4){top:30px}#sidebarCollapse.active span:first-child,#sidebarCollapse.active span:nth-child(4){top:15px;width:0%;left:50%}#sidebarCollapse.active span:nth-child(2){-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);transform:rotate(45deg)}#sidebarCollapse.active span:nth-child(3){-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-o-transform:rotate(-45deg);transform:rotate(-45deg)}
       
       }
-      /* ---------------------------------------------------
-          SIDEBAR STYLES
-      ----------------------------------------------------- */
       
       .bi {vertical-align: -.125em;pointer-events: none;fill: currentColor;}
       
@@ -211,7 +203,6 @@ svg{width: 24px;height: 24px;fill: currentColor;}
   .l-header{margin-left:auto !important;margin-right:auto !important;}
 }
 
-/* ======================= Cards ====================== */
 .cardBox {
   position: relative;
   width: 100%;

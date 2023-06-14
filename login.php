@@ -2,9 +2,8 @@
 // Aini
 include_once 'cfgdb.php';
 
-session_start(); // Mulai session
+session_start();
 
-// Jika user sudah login, alihkan ke halaman dashboard
 if (isset($_SESSION['nip'])) {
   header("Location: beranda");
   exit();
@@ -12,20 +11,18 @@ if (isset($_SESSION['nip'])) {
 
 $error_message = '';
 
-// Jika tombol login ditekan
 if (isset($_POST['login'])) {
   $nip = $_POST['nip'];
   $password = $_POST['password'];
   $password_hash = md5($password);
 
-  // Validasi login
   $sql = "SELECT nip FROM pengguna WHERE nip = '$nip' AND password = '$password_hash'";
   $result = $conn->query($sql);
 
   if ($result->num_rows == 1) {
     $row = $result->fetch_assoc();
     $_SESSION['nip'] = $row['nip'];
-    header("Location: beranda"); // Alihkan ke halaman dashboard setelah login berhasil
+    header("Location: beranda");
     exit();
   } else {
     $error_message = 'NIP atau password salah!';
@@ -66,7 +63,6 @@ if (isset($_POST['login'])) {
       background-position: center;
       background-repeat: no-repeat;
       z-index: -1;
-      /* agar elemen ini berada di bawah konten */
       animation-name: zoom;
       animation-duration: 1s;
       animation-timing-function: ease-in-out;
@@ -322,10 +318,6 @@ if (isset($_POST['login'])) {
 
     <span style="margin-top:15px;color:#fff;font-size:14px">Belum punya akun? <a href="daftar" style="color:#0d6efd">Daftar</a></span>
 
-    <!--<div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div>-->
   </form>
 </body>
 

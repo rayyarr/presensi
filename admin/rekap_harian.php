@@ -6,18 +6,14 @@ include_once 'main-admin.php';
 $error = '';
 $sukses = '';
 
-// set default timezone
 date_default_timezone_set('Asia/Jakarta');
 
-// ambil tahun dan bulan dari parameter GET, atau gunakan tanggal hari ini
 $tahun = isset($_GET['tahun']) ? $_GET['tahun'] : date('Y');
 $bulan = isset($_GET['bulan']) ? $_GET['bulan'] : date('m');
 
-// ambil jumlah hari pada bulan ini
 $jumlah_hari = date('t', strtotime($tahun . '-' . $bulan . '-01'));
 
 
-// ambil jumlah hari pada bulan dan tahun yang dipilih
 $jumlah_hari = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
 $nama_hari_arr = array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu');
 $nama_bulan_arr = array(
@@ -126,6 +122,7 @@ if ($sukses) {
 </style>
 
 <body>
+
     <!--Modal Map-->
     <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
         aria-hidden="true">
@@ -154,7 +151,6 @@ if ($sukses) {
                     <?php echo $nama_hari . ', ' . date('d', strtotime($tanggal)) . ' ' . $nama_bulan . ' ' . date('Y', strtotime($tanggal)) ?>
                 </h3>
 
-                <!-- Tampilkan form input kalender dan tombol cari -->
                 <form method="get">
                     <div class="form-group">
                         <label for="tanggal" class="col-sm-2 col-form-label">Input tanggal:</label>
@@ -180,7 +176,6 @@ if ($sukses) {
 
                 if ($totalAbsensi > 0) {
                     ?>
-                    <!-- Tampilkan tabel absensi -->
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -327,7 +322,6 @@ if ($sukses) {
                                 });
                             }
                             function confirmDelete(id) {
-                                // Menggunakan SweetAlert untuk konfirmasi penghapusan
                                 Swal.fire({
                                     title: "Konfirmasi",
                                     text: "Apakah Anda yakin ingin menghapus absensi ini?",
@@ -336,13 +330,11 @@ if ($sukses) {
                                     confirmButtonText: "Ya, Hapus",
                                     cancelButtonText: "Batal"
                                 }).then((result) => {
-                                    // Jika pengguna mengklik "Ya, Hapus", redirect ke URL hapus
                                     if (result.isConfirmed) {
                                         window.location.href = "?op=hapus&id=" + id;
                                     }
                                 });
 
-                                // Mengembalikan false untuk mencegah tindakan default dari tautan
                                 return false;
                             }
                             var mymap;
@@ -354,17 +346,14 @@ if ($sukses) {
                                 $('#mapModal').on('shown.bs.modal', function () {
                                     var mapContainer = document.getElementById('mapid');
 
-                                    // Hapus peta yang ada jika sudah diinisialisasi sebelumnya
                                     if (mapContainer && mapContainer._leaflet_id) {
                                         mapContainer._leaflet_id = null;
                                     }
 
-                                    // Split latlong menjadi latitude dan longitude
                                     var coordinates = latlong.split(',');
                                     var latitude = parseFloat(coordinates[0]);
                                     var longitude = parseFloat(coordinates[1]);
 
-                                    // Gunakan nilai latitude dan longitude dalam setView()
                                     mymap = L.map('mapid').setView([latitude, longitude], 13);
 
                                     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {

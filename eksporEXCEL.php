@@ -1,21 +1,17 @@
 <?php
-session_start(); // Mulai session
+session_start();
 
 include_once 'cfgdb.php';
 
-// Jika user belum login, alihkan ke halaman login
 if (!isset($_SESSION['nip'])) {
     header("Location: login");
     exit();
 }
 
-// Ambil data pengguna sesuai dengan sesi
 $userid = $_SESSION['nip'];
 
-// set default timezone
 date_default_timezone_set('Asia/Jakarta');
 
-// ambil tahun dan bulan dari parameter GET, atau gunakan tanggal hari ini
 $tahun = isset($_GET['tahun']) ? $_GET['tahun'] : date('Y');
 $bulan = isset($_GET['bulan']) ? $_GET['bulan'] : date('m');
 

@@ -58,12 +58,18 @@ if ($op == 'tambah') {
 if ($op == 'simpan') {
     $nip = $_POST['editNip'];
     $nama = $_POST['editNama'];
-    $password = md5($_POST['editPassword']);
+    $password = $_POST['editPassword'];
     $jabatan = $_POST['editJabatan'];
     $guru = $_POST['editPenempatan'];
 
-    if ($password && $nama && $jabatan && $guru) {
-        $sql1 = "update pengguna set nama='$nama', password='$password', jabatan_id = '$jabatan', guru='$guru' where nip = '$nip'";
+    if ($nama && $jabatan && $guru) {
+        if ($password && trim($password) !== '') {
+            $password = md5($password);
+            $sql1 = "UPDATE pengguna SET nama='$nama', password='$password', jabatan_id='$jabatan', guru='$guru' WHERE nip='$nip'";
+        } else {
+            // Jika password kosong atau hanya berisi spasi
+            $sql1 = "UPDATE pengguna SET nama='$nama', jabatan_id='$jabatan', guru='$guru' WHERE nip='$nip'";
+        }
 
         $q1 = mysqli_query($conn, $sql1);
         if ($q1) {
@@ -139,7 +145,8 @@ if ($sukses) {
                         </div>
                         <div class="mb-3">
                             <label for="editPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="editPassword" name="editPassword" required>
+                            <input type="password" class="form-control" id="editPassword" name="editPassword">
+                            <div class="form-text">Biarkan kosong jika tak ingin mengubahnya.</div>
                         </div>
                         <div class="mb-3">
                             <?php
@@ -240,8 +247,9 @@ if ($sukses) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">No</th>
+                            <!--<th scope="col">No</th>-->
                             <th scope="col">NIP</th>
+                            <th scope="col">Foto</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Jabatan</th>
                             <th scope="col">Penempatan</th>
@@ -250,28 +258,40 @@ if ($sukses) {
                     </thead>
                     <tbody>
                         <?php
-                        $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, pengguna.password, jabatan.jabatan_id, jabatan.jabatan_nama, pengguna.guru
+                        $sql2 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, pengguna.foto_profil, pengguna.password, jabatan.jabatan_id, jabatan.jabatan_nama, pengguna.guru
                                              FROM pengguna
                                              INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
-                                             ORDER BY pengguna.nama ASC";
+                                             ORDER BY pengguna.nip ASC";
                         $q2 = mysqli_query($conn, $sql2);
                         $urut = 1;
                         while ($r2 = mysqli_fetch_array($q2)) {
                             $id = $r2['id'];
                             $nip = $r2['nip'];
                             $nama = $r2['nama'];
-                            $password = md5($r2['password']);
+                            if ($r2['foto_profil'] == NULL) {
+                                $nama_file = "default.png";
+                            } else {
+                                $nama_file = $r2['foto_profil'];
+                                $path_to_file = "../foto_profil/" . $nama_file;
+                                if (!file_exists($path_to_file)) {
+                                    $nama_file = "default.png";
+                                }
+                            }
+                            $password = '';
                             $id_jabatan = $r2['jabatan_id'];
                             $jabatan = $r2['jabatan_nama'];
                             $guru = $r2['guru'];
 
                             ?>
                             <tr>
-                                <th scope="row">
+                                <!--<th scope="row">
                                     <?php echo $urut++ ?>
-                                </th>
+                                </th>-->
                                 <td scope="row">
-                                    <?php echo $nip ?>
+                                    <b><?php echo $nip ?></b>
+                                </td>
+                                <td scope="row">
+                                    <div style="imgBx"><img src="../foto_profil/<?php echo $nama_file; ?>" alt="" width="32" height="32" style="border-radius:50%"></div>
                                 </td>
                                 <td scope="row">
                                     <?php echo $nama ?>
@@ -287,10 +307,11 @@ if ($sukses) {
                                         data-id="<?php echo $id ?>" data-nip="<?php echo $nip ?>"
                                         data-nama="<?php echo $nama ?>" data-password="<?php echo $password ?>"
                                         data-jabatan="<?php echo $id_jabatan ?>" data-guru="<?php echo $guru ?>">
-                                        <button type="button" class="btn btn-warning">Edit</button>
+                                        <button type="button" class="btn btn-warning btn-sm">Edit</button>
                                     </a>
-                                    <button type='button' onclick='return confirmDelete(`<?php echo $id ?>`,`<?php echo $nama ?>`)'
-                                        class='btn btn-danger'>Hapus</button>
+                                    <button type='button'
+                                        onclick='return confirmDelete(`<?php echo $id ?>`,`<?php echo $nama ?>`)'
+                                        class='btn btn-danger btn-sm'>Hapus</button>
                                 </td>
                             </tr>
                             <?php
@@ -313,8 +334,7 @@ if ($sukses) {
             });
         });
 
-        function confirmDelete(id,nama) {
-            // Menggunakan SweetAlert untuk konfirmasi penghapusan
+        function confirmDelete(id, nama) {
             Swal.fire({
                 title: "Konfirmasi",
                 html: "Apakah Anda yakin ingin menghapus <b>`" + nama + "`</b>?",
@@ -323,13 +343,11 @@ if ($sukses) {
                 confirmButtonText: "Ya, Hapus",
                 cancelButtonText: "Batal"
             }).then((result) => {
-                // Jika pengguna mengklik "Ya, Hapus", redirect ke URL hapus
                 if (result.isConfirmed) {
                     window.location.href = "?op=hapus&id=" + id;
                 }
             });
 
-            // Mengembalikan false untuk mencegah tindakan default dari tautan
             return false;
         }
 
@@ -337,11 +355,9 @@ if ($sukses) {
             keyboard: false
         });
 
-        // Menangkap event klik tombol "Edit" pada setiap baris tabel
         var editButtons = document.querySelectorAll('a[id="iniEditModal"]');
         editButtons.forEach(function (button) {
             button.addEventListener('click', function () {
-                // Mendapatkan data dari atribut data-* pada tombol
                 var id = this.getAttribute('data-id');
                 var nip = this.getAttribute('data-nip');
                 var nama = this.getAttribute('data-nama');
@@ -349,33 +365,27 @@ if ($sukses) {
                 var jabatan = this.getAttribute('data-jabatan');
                 var guru = this.getAttribute('data-guru');
 
-                // Mengisi nilai input field di dalam modal dengan data yang diperoleh
                 document.getElementById('editId').value = id;
                 document.getElementById('editNip').value = nip;
                 document.getElementById('editNama').value = nama;
                 document.getElementById('editPassword').value = password;
 
                 var editJabatanSelect = document.getElementById('editJabatan');
-                // Loop melalui setiap opsi dan membandingkannya dengan nilai guru
                 for (var i = 0; i < editJabatanSelect.options.length; i++) {
                     if (editJabatanSelect.options[i].value === jabatan) {
-                        // Jika nilai opsi sama dengan guru, atur opsi tersebut sebagai terpilih
                         editJabatanSelect.options[i].selected = true;
                         break;
                     }
                 }
 
                 var editPenempatanSelect = document.getElementById('editPenempatan');
-                // Loop melalui setiap opsi dan membandingkannya dengan nilai guru
                 for (var i = 0; i < editPenempatanSelect.options.length; i++) {
                     if (editPenempatanSelect.options[i].value === guru) {
-                        // Jika nilai opsi sama dengan guru, atur opsi tersebut sebagai terpilih
                         editPenempatanSelect.options[i].selected = true;
                         break;
                     }
                 }
 
-                // Menampilkan modal edit
                 editModal.show();
             });
         });

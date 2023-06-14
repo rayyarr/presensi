@@ -1,5 +1,5 @@
 <?php
-session_start(); // Mulai session
+session_start();
 include_once 'cfgall.php';
 
 $nip = "";
@@ -23,7 +23,7 @@ if ($nip == '') {
     $error = "Data tidak ditemukan";
 }
 
-if (isset($_POST['simpan'])) { //untuk update
+if (isset($_POST['simpan'])) {
     $nama = $_POST['nama'];
     $jabatan_id = $_POST['jabatan_id'];
     $guru = $_POST['guru'];
@@ -75,10 +75,8 @@ if (isset($_FILES['image'])) {
             //membuat nama file baru dengan nilai nip dan uniqid
             $new_filename = $userid . "_" . uniqid() . "." . $file_ext;
 
-            //memindahkan file ke direktori tujuan dengan nama file baru
             move_uploaded_file($tmp_image, "foto_profil/" . $new_filename);
 
-            //memasukkan data gambar ke database dengan nama file baru
             $sql = "UPDATE pengguna SET foto_profil='$new_filename' WHERE nip='$userid'";
             mysqli_query($conn, $sql);
 
@@ -291,7 +289,7 @@ if (isset($_POST['submit'])) {
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="guru" class="col-sm-2 col-form-label">Guru</label>
+                            <label for="guru" class="col-sm-2 col-form-label">Penempatan</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="guru" id="guru">
                                     <option value="">- Pilih guru -</option>

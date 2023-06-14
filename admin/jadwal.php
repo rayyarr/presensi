@@ -199,33 +199,27 @@ if ($sukses) {
             keyboard: false
         });
 
-        // Menangkap event klik tombol "Edit" pada setiap baris tabel
         var editButtons = document.querySelectorAll('a[data-bs-toggle="modal"]');
         editButtons.forEach(function (button) {
             button.addEventListener('click', function () {
-                // Mendapatkan data dari atribut data-* pada tombol
                 var id_jadwal = this.getAttribute('data-jadwal');
                 var namahari = this.getAttribute('data-namahari');
                 var waktu_masuk = this.getAttribute('data-waktumasuk');
                 var waktu_pulang = this.getAttribute('data-waktupulang');
                 var status = this.getAttribute('data-status');
 
-                // Mengisi nilai input field di dalam modal dengan data yang diperoleh
                 document.getElementById('editId').value = id_jadwal;
                 document.getElementById('editHari').value = namahari;
                 document.getElementById('editWaktumasuk').value = waktu_masuk;
                 document.getElementById('editWaktupulang').value = waktu_pulang;
                 var editStatusSelect = document.getElementById('editStatus');
-                // Loop melalui setiap opsi dan membandingkannya
                 for (var i = 0; i < editStatusSelect.options.length; i++) {
                     if (editStatusSelect.options[i].value === status) {
-                        // Jika nilai opsi sama, atur opsi tersebut sebagai terpilih
                         editStatusSelect.options[i].selected = true;
                         break;
                     }
                 }
 
-                // Menampilkan modal edit
                 editModal.show();
             });
         });
