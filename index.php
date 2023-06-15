@@ -287,7 +287,7 @@ svg{width:24px;height:24px; fill:#000} svg.line, svg .line{fill:none; stroke:cur
         <section class="camera section" id="Camera">
             <h2 class="section-title">Camera</h2>
             <div class="about__container bd-grid">
-                <div class="text-center" id="my_camera"></div>
+                <div class="text-center" id="my_camera" style="border-radius: 18px;"></div>
                 <div class="about__text">
                     <p style="text-align:justify;margin-bottom: 10px;">Kami menghadirkan terobosan inovasi terbaru
                         mengenai pengembangan teknologi sistem presensi untuk sekolah <b>SMP dan SMA Pesantren MKGR KERTASEMAYA</b>

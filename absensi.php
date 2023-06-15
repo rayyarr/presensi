@@ -16,15 +16,18 @@ if (isset($_POST['simpan'])) {
     $tipe_file = $_FILES['lampiran']['type'];
     $tmp_file = $_FILES['lampiran']['tmp_name'];
 
-    $ku = "SELECT * FROM absen WHERE nip='$userid' AND tanggal_absen='$tanggal_absen'";
-    $hsl = mysqli_query($conn, $ku);
-    if (mysqli_num_rows($hsl) > 0) {
+    $stmt = $conn->prepare("SELECT * FROM absen WHERE nip=? AND tanggal_absen=?");
+    $stmt->bind_param("ss", $userid, $tanggal_absen);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
         // Jika sudah absen
         echo '<script>
-        popupJudul = "Gagal!";
-        popupText = "Kamu sudah absen hari ini!";
-        popupIcon = "error";
-        </script>';
+    popupJudul = "Gagal!";
+    popupText = "Kamu sudah absen hari ini!";
+    popupIcon = "error";
+    </script>';
     } else {
         if (!empty($nama_file)) {
             $allowed_types = array('image/jpeg', 'image/jpg', 'image/png');
@@ -49,13 +52,18 @@ if (isset($_POST['simpan'])) {
             $nama_file = NULL;
         }
 
-        $sqlabs = "INSERT INTO absen SET nip = '$userid',tanggal_absen='$tanggal_absen', jam_masuk='$jam_masuk', id_status='$id_status', tgl_keluar='$tanggal_absen', keterangan='$keterangan', foto_absen='$nama_file'";
-        $hslabs = mysqli_query($conn, $sqlabs);
+        $stmt = $conn->prepare("INSERT INTO absen (nip, tanggal_absen, jam_masuk, id_status, tgl_keluar, keterangan, foto_absen) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssss", $userid, $tanggal_absen, $jam_masuk, $id_status, $tanggal_absen, $keterangan, $nama_file);
+        $stmt->execute();
+
         echo '<script>
         popupJudul = "Berhasil!";
         popupText = "Kamu telah melakukan izin kehadiran.";
         popupIcon = "success";
         </script>';
+
+        $stmt->close();
+
     }
 
     echo '<script>
@@ -71,7 +79,7 @@ if (isset($_POST['simpan'])) {
     </script>';
 }
 
-// Eksekusi mengambil data latlong sekolah
+/* Eksekusi mengambil data latlong sekolah
 $sqlatlong = $conn->query("SELECT * FROM pengaturan");
 if ($sqlatlong->num_rows > 0) {
     $row = $sqlatlong->fetch_assoc();
@@ -81,9 +89,24 @@ if ($sqlatlong->num_rows > 0) {
 } else {
     $latSekolah = 0;
     $longSekolah = 0;
+} */
+
+// Eksekusi mengambil data latlong sekolah
+$stmt = $conn->prepare("SELECT jarak, latitude, longitude FROM pengaturan");
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    $stmt->bind_result($jarakIdeal, $latSekolah, $longSekolah);
+    $stmt->fetch();
+} else {
+    $latSekolah = 0;
+    $longSekolah = 0;
 }
 
-// Eksekusi mengambil isi jadwal masuk
+$stmt->close();
+
+/* Eksekusi mengambil isi jadwal masuk
 $sqlW = "SELECT * FROM jadwal WHERE nama_hari = '$hari_ini'";
 $hasilW = mysqli_query($conn, $sqlW);
 
@@ -97,7 +120,28 @@ if (mysqli_num_rows($hasilW) > 0) {
 } else {
     $jam_masuk = date('H:i:s');
     $jam_pulang = date('H:i:s');
+} */
+
+// Eksekusi mengambil isi jadwal masuk
+$stmt = $conn->prepare("SELECT id_jadwal, nama_hari, waktu_masuk, waktu_pulang FROM jadwal WHERE nama_hari = ?");
+$stmt->bind_param("s", $hari_ini);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $id_jadwal = $row["id_jadwal"];
+        $hari_ini = $row["nama_hari"];
+        $jam_masuk = $row["waktu_masuk"];
+        $jam_pulang = $row["waktu_pulang"];
+    }
+} else {
+    $jam_masuk = date('H:i:s');
+    $jam_pulang = date('H:i:s');
 }
+
+$stmt->close();
+
 $jam_masuk = date('H:i', strtotime($jam_masuk)); // mengubah format waktu
 $jam_masuk = $jam_masuk . " WIB"; // menambahkan "WIB" pada akhir string
 
@@ -179,7 +223,8 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     Gunakan akses lokasi agar dapat berjalan.
                 </div>-->
                 <div class="mb-3" style="align-items:center;margin-right:auto;margin-left:auto">
-                    <video id="video" width="280" height="auto" style="transform: scaleX(-1);border-radius: 18px;" autoplay></video>
+                    <video id="video" width="280" height="auto" style="transform: scaleX(-1);border-radius: 18px;"
+                        autoplay></video>
                 </div>
 
                 <div class="mb-3">
@@ -191,18 +236,23 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                     <span class="d-block">
                         Lokasi Anda: <b id="your-location">belum terdeteksi</b></span>
                     <span class="d-block">Lat: <b id="your-latitude">belum terdeteksi</b> - | - Long: <b
-                            id="your-longitude">belum terdeteksi</b> - | - <button type="button" class="btn btn-primary btn-sm" onclick="showModalMap()">
+                            id="your-longitude">belum terdeteksi</b> - | - <button type="button"
+                            class="btn btn-primary btn-sm" onclick="showModalMap()">
                             Tampilkan Peta
                         </button></span>
                 </div>
                 <div class="mb-3">
                     <div class="d-block">
-                        <span>Jarak Anda dari Sekolah: <b id="our-distance">belum terdeteksi</b> <b>(Maksimal: <?php echo $jarakIdeal ?> km)</b></span>
+                        <span>Jarak Anda dari Sekolah: <b id="our-distance">belum terdeteksi</b> <b>(Maksimal:
+                                <?php echo $jarakIdeal ?> km)
+                            </b></span>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="d-block">
-                        <span>Saat ini: <b id="jam">belum terdeteksi</b> <b>WIB (<?php echo $hari_ini . ', ' . date('d', strtotime($tanggal)) . ' ' . $nama_bulan . ' ' . date('Y', strtotime($tanggal)) ?>)</b></span>
+                        <span>Saat ini: <b id="jam">belum terdeteksi</b> <b>WIB (
+                                <?php echo $hari_ini . ', ' . date('d', strtotime($tanggal)) . ' ' . $nama_bulan . ' ' . date('Y', strtotime($tanggal)) ?>)
+                            </b></span>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -329,11 +379,15 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                             <div class="form-group">
                                 <label for="id_status">Jenis Absen</label>
                                 <?php
-                                $qstatus = "SELECT id_status, nama_status FROM status_absen WHERE id_status <> 1";
-                                $hasilstatus = $conn->query($qstatus);
-                                if ($hasilstatus->num_rows > 0) {
+                                $stmt = $conn->prepare("SELECT id_status, nama_status FROM status_absen WHERE id_status <> ?");
+                                $excludedId = 1;
+                                $stmt->bind_param("i", $excludedId);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+
+                                if ($result->num_rows > 0) {
                                     echo '<select class="form-control" id="absenSelect" name="id_status">';
-                                    while ($row = $hasilstatus->fetch_assoc()) {
+                                    while ($row = $result->fetch_assoc()) {
                                         $nama_status = $row["nama_status"];
                                         echo '<option value="' . $row["id_status"] . '">' . $nama_status . '</option>';
                                     }
@@ -341,6 +395,8 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                                 } else {
                                     echo "Tidak ada data yang ditemukan.";
                                 }
+
+                                $stmt->close();
                                 ?>
                             </div>
                             <div class="form-group">
@@ -806,4 +862,5 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
         } myTimer();
     </script>
 </body>
+
 </html>
