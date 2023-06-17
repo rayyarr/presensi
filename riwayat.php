@@ -22,8 +22,11 @@ include_once 'cfgall.php';
     .table>tbody {
         font-size: 14px
     }
-    td.text-center{vertical-align: middle;}
-    
+
+    td.text-center {
+        vertical-align: middle;
+    }
+
     .ftabsen,
     .swal2-image {
         border-radius: 8px
@@ -84,7 +87,7 @@ include_once 'cfgall.php';
                     </div>
                 </div>
             </div>
-            
+
             <div class="card p-3" style="margin-bottom:50px">
 
                 <!--<form method="post" action="">
@@ -117,14 +120,19 @@ include_once 'cfgall.php';
                 // buat array kosong untuk absen
                 $absen = array();
 
-                $sql = "SELECT tanggal_absen, nip, keterangan FROM absen WHERE YEAR(tanggal_absen) = '$tahun' AND MONTH(tanggal_absen) = '$bulan'";
-                $result = $conn->query($sql);
+                $sql = "SELECT tanggal_absen, nip, keterangan FROM absen WHERE YEAR(tanggal_absen) = ? AND MONTH(tanggal_absen) = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ss", $tahun, $bulan);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         $tanggal = date('j', strtotime($row['tanggal_absen']));
                         $absen[$row['nip']][$tanggal] = $row['keterangan'];
                     }
                 }
+
                 ?>
                 <h3 class="mb-3">Tabel Absen</h3>
                 <form method="get" action="">
@@ -195,19 +203,24 @@ include_once 'cfgall.php';
                                 // ambil nama bulan dalam bahasa Indonesia
                                 $nama_bulan = $nama_bulan_arr[intval($bulan) - 1];
                                 // tampilkan baris tabel
-                                $bg_color = ($nama_hari == 'Minggu') ? 'bg-warning' : '';
+                                $bg_color = ($nama_hari == 'Minggu') ? 'text-light bg-danger' : '';
                                 echo '<tr class="' . $bg_color . '">';
                                 echo '<td>' . $nama_hari . ', ' . str_pad($i, 2, '0', STR_PAD_LEFT) . ' ' . $nama_bulan . ' ' . $tahun . '</td>';
 
                                 $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen, absen.latlong 
-                        FROM absen 
-                        JOIN status_absen ON absen.id_status = status_absen.id_status 
-                        WHERE nip = $userid AND tanggal_absen = '$tahun-$bulan-" . str_pad($i, 2, '0', STR_PAD_LEFT) . "'
-                        ORDER BY absen.id_absen DESC";
-                                $result = mysqli_query($conn, $query);
+          FROM absen 
+          JOIN status_absen ON absen.id_status = status_absen.id_status 
+          WHERE nip = ? AND tanggal_absen = ?
+          ORDER BY absen.id_absen DESC";
+                                $tanggal_absen = $tahun . '-' . $bulan . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
 
-                                if (mysqli_num_rows($result) > 0) {
-                                    $data_absen = mysqli_fetch_assoc($result);
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param("ss", $userid, $tanggal_absen);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+
+                                if ($result->num_rows > 0) {
+                                    $data_absen = $result->fetch_assoc();
                                     $jam_masuk = $data_absen['jam_masuk'];
                                     $jam_keluar = $data_absen['jam_keluar'];
                                     $status = $data_absen['nama_status'];
@@ -311,4 +324,5 @@ include_once 'cfgall.php';
         </div>
     </div>
 </body>
+
 </html>

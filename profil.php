@@ -10,11 +10,15 @@ $guru = "";
 $sukses = "";
 $error = "";
 
-$sqldef = "select * from pengguna where nip = '$userid'";
-$q1 = mysqli_query($conn, $sqldef);
-$r1 = mysqli_fetch_array($q1);
+$sqldef = "SELECT * FROM pengguna WHERE nip = ?";
+$stmt1 = $conn->prepare($sqldef);
+$stmt1->bind_param("s", $userid);
+$stmt1->execute();
+$result1 = $stmt1->get_result();
+$r1 = $result1->fetch_assoc();
+
 $nip = $r1['nip'];
-$password = md5($r1['password']);
+//$password = md5($r1['password']);
 $nama = $r1['nama'];
 $jabatan_id = $r1['jabatan_id'];
 $guru = $r1['guru'];
@@ -28,10 +32,11 @@ if (isset($_POST['simpan'])) {
     $jabatan_id = $_POST['jabatan_id'];
     $guru = $_POST['guru'];
 
-    if ($nip && $password && $nama && $jabatan_id && $guru) {
-        $sql1 = "update pengguna set nama='$nama',jabatan_id = '$jabatan_id',guru='$guru' where nip = '$userid'";
-        $q1 = mysqli_query($conn, $sql1);
-        if ($q1) {
+    if ($nama && $jabatan_id && $guru) {
+        $sql1 = "UPDATE pengguna SET nama=?, jabatan_id=?, guru=? WHERE nip = ?";
+        $stmt2 = $conn->prepare($sql1);
+        $stmt2->bind_param("ssss", $nama, $jabatan_id, $guru, $userid);
+        if ($stmt2->execute()) {
             $sukses = "Data berhasil diupdate";
         } else {
             $error = "Data gagal diupdate";
@@ -59,9 +64,13 @@ if (isset($_FILES['image'])) {
 
         if ($file_size <= $max_file_size) {
             //memeriksa apakah pengguna sudah memiliki data gambar yang tersimpan di database
-            $sql_check = "SELECT foto_profil FROM pengguna WHERE nip='$userid'";
-            $result_check = mysqli_query($conn, $sql_check);
-            if (mysqli_num_rows($result_check) > 0) {
+            $sql_check = "SELECT foto_profil FROM pengguna WHERE nip=?";
+            $stmt_check = $conn->prepare($sql_check);
+            $stmt_check->bind_param("s", $userid);
+            $stmt_check->execute();
+            $result_check = $stmt_check->get_result();
+
+            if ($result_check->num_rows > 0) {
                 // Menghapus file yang lama berawalan $userid
                 $file_directory = "foto_profil/";
                 $files = glob($file_directory . $userid . "_*");
@@ -77,8 +86,10 @@ if (isset($_FILES['image'])) {
 
             move_uploaded_file($tmp_image, "foto_profil/" . $new_filename);
 
-            $sql = "UPDATE pengguna SET foto_profil='$new_filename' WHERE nip='$userid'";
-            mysqli_query($conn, $sql);
+            $sql = "UPDATE pengguna SET foto_profil=? WHERE nip=?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ss", $new_filename, $userid);
+            $stmt->execute();
 
             $script = "<script>
                 Swal.fire(
@@ -109,6 +120,7 @@ if (isset($_FILES['image'])) {
         echo $script;
     }
 }
+
 /////////////////////////////////////////////////////////////////
 
 // untuk ganti password
@@ -119,28 +131,58 @@ if (isset($_POST['submit'])) {
     $newpassword = md5($_POST['newpassword']);
     $confirmpassword = md5($_POST['confirmpassword']);
 
-    $query = "SELECT password FROM pengguna WHERE nip='$username'";
-    $result = mysqli_query($conn, $query);
+    $query = "SELECT password FROM pengguna WHERE nip=?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
         $oldpassword_db = $row['password'];
 
         if ($oldpassword == $oldpassword_db) {
             if ($newpassword == $confirmpassword) {
-                $query = "UPDATE pengguna SET password='$newpassword' WHERE nip='$username'";
-                mysqli_query($conn, $query);
-                echo "Password berhasil diubah";
+                $query = "UPDATE pengguna SET password=? WHERE nip=?";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("ss", $newpassword, $username);
+                $stmt->execute();
+                $script = "<script>
+            Swal.fire(
+                'Berhasil!',
+                'Password berhasil diubah.',
+                'success'
+            );</script>";
+                echo $script;
             } else {
-                echo "Password baru tidak cocok dengan konfirmasi password";
+                $script = "<script>
+            Swal.fire(
+                'Gagal!',
+                'Password baru tidak cocok dengan konfirmasi password.',
+                'error'
+            );</script>";
+                echo $script;
             }
         } else {
-            echo "Password lama salah";
+            $script = "<script>
+            Swal.fire(
+                'Gagal!',
+                'Password lama salah.',
+                'error'
+            );</script>";
+            echo $script;
         }
     } else {
-        echo "Tidak dapat menemukan pengguna dengan username tersebut";
+        $script = "<script>
+            Swal.fire(
+                'Gagal!',
+                'Tidak dapat menemukan pengguna dengan username tersebut.',
+                'error'
+            );</script>";
+        echo $script;
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -162,135 +204,117 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-<div class="kolomkanan">
-		<div class="mx-auto">
+    <div class="kolomkanan">
+        <div class="mx-auto">
 
-        <div class="card mb-3 p-3">
-            <div class="leftP">
-                <div class="profileIcon leftC flex solo">
-                    <label class="a flexIns fc" for="forProfile">
-                        <span class="avatar flex center">
-                            <img class="iniprofil" src="foto_profil/<?php echo $nama_file; ?>"
-                                alt="<?php echo $nama_file; ?>">
-                        </span>
-                        <span class="n flex column">
-                                <span class="fontS">
-                                            <h4>
-                                                <?php echo $nama ?>
-                                            </h4>
-                                        </span>
-                                        <p class="opacity" style="margin-bottom:0">
-                                            NIP
-                                            <?php echo $nip ?> -
-                                            <?php echo $jabatan ?> -
-                                            <?php echo $guru ?>
-                                        </p>
+            <div class="card mb-3 p-3">
+                <div class="leftP">
+                    <div class="profileIcon leftC flex solo">
+                        <label class="a flexIns fc" for="forProfile">
+                            <span class="avatar flex center">
+                                <img class="iniprofil" src="foto_profil/<?php echo $nama_file; ?>"
+                                    alt="<?php echo $nama_file; ?>">
                             </span>
-                    </label>
+                            <span class="n flex column">
+                                <span class="fontS">
+                                    <h4>
+                                        <?php echo $nama ?>
+                                    </h4>
+                                </span>
+                                <p class="opacity" style="margin-bottom:0">
+                                    NIP
+                                    <?php echo $nip ?> -
+                                    <?php echo $jabatan ?> -
+                                    <?php echo $guru ?>
+                                </p>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card-body">
+                        <p class="card-text"><small class="text-muted">Ubah foto profil - <i>Abaikan jika tak
+                                    perlu</i></small></p>
+
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="input-group mb-3">
+                                <input type="file" name="image" class="form-control" id="inputGroupFile02">
+                                <input type="submit" value="Upload" class="input-group-text" for="inputGroupFile02">
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="col">
+
+            <!-- untuk memasukkan data -->
+            <div class="card" style="margin-top:50px;margin-bottom:50px">
+                <div class="card-header" style="background:none">
+                    Form Edit Profil
+                </div>
                 <div class="card-body">
-                    <p class="card-text"><small class="text-muted">Ubah foto profil - <i>Abaikan jika tak perlu</i></small></p>
-
-                    <form method="post" enctype="multipart/form-data">
-                        <div class="input-group mb-3">
-                            <input type="file" name="image" class="form-control" id="inputGroupFile02">
-                            <input type="submit" value="Upload" class="input-group-text" for="inputGroupFile02">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- untuk memasukkan data -->
-        <div class="card" style="margin-top:50px;margin-bottom:50px">
-            <div class="card-header" style="background:none">
-                Form Edit Profil
-            </div>
-            <div class="card-body">
-                <?php
-                if ($error) {
-                    ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?php echo $error ?>
-                    </div>
                     <?php
-                }
-                ?>
-                <?php
-                if ($sukses) {
+                    if ($error) {
+                        ?>
+                        <script>
+                            Swal.fire({
+                                title: "<?php echo $error ?>",
+                                icon: "error",
+                            })
+                        </script>
+                        <?php
+                    }
+                    if ($sukses) {
+                        ?>
+                        <script>
+                            Swal.fire({
+                                title: "<?php echo $sukses ?>",
+                                icon: "success",
+                            })
+                        </script>
+                        <?php
+                    }
                     ?>
-                    <div class="alert alert-success" role="alert">
-                        <?php echo $sukses ?>
-                    </div>
-                    <?php
-                }
-                ?>
-                <form action="" method="POST">
-                    <div class="mb-3 row">
-                        <label for="nip" class="col-sm-2 col-form-label">NIP</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="nip" name="nip" value="<?php echo $nip ?>"
-                                disabled>
-                        </div>
-                    </div>
-                    <!--<div class="mb-3 row">
-                        <label for="password" class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" id="password" name="password"
-                                value="<?php echo $password ?>" required>
-                        </div>
-                    </div>-->
-                    <div class="mb-3 row">
-                        <label for="nama" class="col-sm-2 col-form-label">Nama</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $nama ?>"
-                                required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <!--<label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?php echo $jabatan_id ?>" required>
-                        </div>-->
-                        <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
-                        <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="jabatan_id" value="1"
-                                    id="jabatan_guru" <?php if ($jabatan_id == "1")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_guru">Guru</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="jabatan_id" value="2" id="jabatan_tu"
-                                    <?php if ($jabatan_id == "2")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_tu">Tata Usaha</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="jabatan_id" value="3"
-                                        id="jabatan_pdh" <?php if ($jabatan_id == "3")
-                                        echo "checked" ?>>
-                                    <label class="form-check-label" for="jabatan_pdh">PDH</label>
-                                </div>
-                                <!--<label class="label" for="select4">Jabatan</label>
-                                <select class="form-control custom-select" name="position_id">';
-                                      $query="SELECT * from position order by position_name ASC";
-                                      $result = $connection->query($query);
-                                      while($rowa = $result->fetch_assoc()) { 
-                                      if($rowa['position_id'] == $row_user['position_id']){
-                                        echo'<option value="'.$rowa['position_id'].'" selected>'.$rowa['position_name'].'</option>';
-                                      }else{
-                                        echo'<option value="'.$rowa['position_id'].'">'.$rowa['position_name'].'</option>';
-                                      }
-                                      }echo'
-                                </select>-->
+                    <form action="" method="POST">
+                        <div class="mb-3 row">
+                            <label for="nip" class="col-sm-2 col-form-label">NIP</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="nip" name="nip" value="<?php echo $nip ?>"
+                                    disabled>
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="guru" class="col-sm-2 col-form-label">Penempatan</label>
+                            <label for="nama" class="col-sm-2 col-form-label">Nama</label>
                             <div class="col-sm-10">
+                                <input type="text" class="form-control" id="nama" name="nama"
+                                    value="<?php echo $nama ?>" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
+                            <div class="col-sm-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="jabatan_id" value="1"
+                                        id="jabatan_guru" <?php if ($jabatan_id == "1")
+                                            echo "checked" ?>>
+                                        <label class="form-check-label" for="jabatan_guru">Guru</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="jabatan_id" value="2"
+                                            id="jabatan_tu" <?php if ($jabatan_id == "2")
+                                            echo "checked" ?>>
+                                        <label class="form-check-label" for="jabatan_tu">Tata Usaha</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="jabatan_id" value="3"
+                                            id="jabatan_pdh" <?php if ($jabatan_id == "3")
+                                            echo "checked" ?>>
+                                        <label class="form-check-label" for="jabatan_pdh">PDH</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="guru" class="col-sm-2 col-form-label">Penempatan</label>
+                                <div class="col-sm-10">
                                 <select class="form-control" name="guru" id="guru">
                                     <option value="">- Pilih guru -</option>
                                     <option value="SMP" <?php if ($guru == "SMP")
@@ -300,48 +324,51 @@ if (isset($_POST['submit'])) {
                                     <option value="SMP SMA" <?php if ($guru == "SMP SMA")
                                         echo "selected" ?>>SMP SMA</option>
                                 </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
-                        </div>
-                    </form>
+                            <div class="col-12">
+                                <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- untuk ganti password -->
-            <div class="card" style="margin-bottom:50px">
-                <div class="card-header" style="background:none">
-                    Form Ganti Password - <i>Abaikan jika tak perlu</i>
+                <!-- untuk ganti password -->
+                <div class="card" style="margin-bottom:50px">
+                    <div class="card-header" style="background:none">
+                        Form Ganti Password - <i>Abaikan jika tak perlu</i>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Password Lama</label>
+                                <input class="form-control" type="password" name="oldpassword" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Password Baru</label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input class="form-control" type="password" name="newpassword" id="password-input" required>
+                                <span class="input-group-text" onclick="togglePb()"><i id="eye-icon"
+                                        class="bi bi-eye-slash"></i></span>
+                            </div>
+                            <div>
+                                <label class="form-label">Konfirmasi Password</label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input class="form-control" type="password" name="confirmpassword"
+                                    id="confirm-password-input" required>
+                                <span class="input-group-text" onclick="toggleCp()"><i id="eye-icon2"
+                                        class="bi bi-eye-slash"></i></span>
+                            </div>
+                            <div class="col-12">
+                                <input type="submit" name="submit" value="Simpan" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="">
-                        <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Password Lama</label>
-                            <input class="form-control" type="password" name="oldpassword" required>
-                        </div>
-                        <div>
-                            <label class="form-label">Password Baru</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <input class="form-control" type="password" name="newpassword" id="password-input" required>
-                            <span class="input-group-text" onclick="togglePb()"><i id="eye-icon" class="bi bi-eye-slash"></i></span>
-                        </div>
-                        <div>
-                            <label class="form-label">Konfirmasi Password</label>
-                        </div>
-                        <div class="input-group mb-3">
-                        <input class="form-control" type="password" name="confirmpassword" id="confirm-password-input" required>
-                            <span class="input-group-text" onclick="toggleCp()"><i id="eye-icon2" class="bi bi-eye-slash"></i></span>
-                        </div>
-                        <div class="col-12">
-                            <input type="submit" name="submit" value="Simpan" class="btn btn-primary" />
-                        </div>
-                    </form>
-                </div>
-            </div>
 
-        </div>
+            </div>
         </div>
 
 

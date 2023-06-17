@@ -20,9 +20,11 @@ if ($op == 'hapus') {
     if ($sqlfotoabsen->num_rows > 0) {
         $row = $sqlfotoabsen->fetch_assoc();
         $fotoAbsen = $row["foto_absen"];
-        $fotoPath = '../hasil_absen/' . $fotoAbsen;
-        if (file_exists($fotoPath)) {
-            unlink($fotoPath);
+        if (!empty($fotoAbsen)) {
+            $fotoPath = '../hasil_absen/' . $fotoAbsen;
+            if (file_exists($fotoPath)) {
+                unlink($fotoPath);
+            }
         }
     }
 
@@ -203,7 +205,7 @@ if ($result->num_rows > 0) {
                                 // ambil nama bulan dalam bahasa Indonesia
                                 $nama_bulan = $nama_bulan_arr[intval($bulan) - 1];
 
-                                $bg_color = ($nama_hari == 'Minggu') ? 'bg-warning' : '';
+                                $bg_color = ($nama_hari == 'Minggu') ? 'text-light bg-danger' : '';
                                 echo '<tr class="' . $bg_color . '">';
                                 echo '<td>' . $nama_hari . ', ' . str_pad($i, 2, '0', STR_PAD_LEFT) . ' ' . $nama_bulan . ' ' . $tahun . '</td>';
 

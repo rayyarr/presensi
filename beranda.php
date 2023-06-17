@@ -23,6 +23,7 @@ if (isset($_POST['logout'])) {
 		margin-top: 10px;
 	}
 </style>
+
 <body>
 	<div class="kolomkanan">
 		<div class="mx-auto">
@@ -40,18 +41,18 @@ if (isset($_POST['logout'])) {
 									alt="<?php echo $nama_file; ?>">
 							</span>
 							<span class="n flex column">
-                                <span class="fontS">
-                                            <h4>
-                                                <?php echo $nama ?>
-                                            </h4>
-                                        </span>
-                                        <p class="opacity" style="margin-bottom:0">
-                                            NIP
-                                            <?php echo $nip ?> -
-                                            <?php echo $jabatan ?> -
-                                            <?php echo $guru ?>
-                                        </p>
-                            </span>
+								<span class="fontS">
+									<h4>
+										<?php echo $nama ?>
+									</h4>
+								</span>
+								<p class="opacity" style="margin-bottom:0">
+									NIP
+									<?php echo $nip ?> -
+									<?php echo $jabatan ?> -
+									<?php echo $guru ?>
+								</p>
+							</span>
 						</label>
 					</div>
 				</div>
@@ -106,13 +107,17 @@ if (isset($_POST['logout'])) {
 			$tanggal_kurang = date('Y-m-d', strtotime('-' . $kurun_waktu . ' days'));
 
 			$query = "SELECT absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, status_absen.nama_status, absen.keterangan
-						  FROM absen 
-						  JOIN status_absen ON absen.id_status = status_absen.id_status 
-						  WHERE absen.nip = $userid AND absen.tanggal_absen >= '$tanggal_kurang'
-						  ORDER BY absen.tanggal_absen DESC";
-			$result = mysqli_query($conn, $query);
+          FROM absen 
+          JOIN status_absen ON absen.id_status = status_absen.id_status 
+          WHERE absen.nip = ? AND absen.tanggal_absen >= ?
+          ORDER BY absen.tanggal_absen DESC";
 
-			if (mysqli_num_rows($result) > 0) { ?>
+			$stmt = $conn->prepare($query);
+			$stmt->bind_param("ss", $userid, $tanggal_kurang);
+			$stmt->execute();
+			$result = $stmt->get_result();
+
+			if ($result->num_rows > 0) { ?>
 				<div class="card p-4 mb-5">
 					<div class="card-body" style="padding-left:0;padding-bottom:0">
 						<h5 class="card-title">Absensi 7 Hari Terakhir</h5>
@@ -130,14 +135,14 @@ if (isset($_POST['logout'])) {
 							</thead>
 							<tbody style="font-size:14px">
 								<?php
-								while ($row = mysqli_fetch_assoc($result)) {
+								while ($row = $result->fetch_assoc()) {
 									$hari = array("Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu");
 									$bulan = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
-
+							
 									$tanggal = date_create($row['tanggal_absen']);
 									$hari_tanggal = $hari[date_format($tanggal, "w")];
 									$tanggal_indo = $hari_tanggal . ", " . date_format($tanggal, "d") . " " . $bulan[date_format($tanggal, "m") - 1] . " " . date_format($tanggal, "Y");
-
+							
 									echo "<tr>";
 									echo "<td>" . $tanggal_indo . "</td>";
 									echo "<td>" . $row['jam_masuk'] . "</td>";
@@ -161,4 +166,5 @@ if (isset($_POST['logout'])) {
 		</div>
 	</div>
 </body>
+
 </html>

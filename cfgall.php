@@ -13,7 +13,7 @@ $userid = $_SESSION['nip'];
 
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Eksekusi query dan mengambil isi umum
+/* Eksekusi query dan mengambil isi umum
 $sqlUtama = "SELECT id, nip, nama, jabatan_id, guru FROM pengguna WHERE nip = '$userid'";
 $result = $conn->query($sqlUtama);
 $hasil = mysqli_query($conn, $sqlUtama);
@@ -29,6 +29,34 @@ $jabatan = $hasiljoin['jabatan_nama'];
 
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
+        $nama = $row['nama'];
+        $nip = $row['nip'];
+        $jabatan = $hasiljoin['jabatan_nama'];
+        $guru = $row['guru'];
+    }
+}*/
+
+// Eksekusi query dan mengambil isi umum
+$sqlUtama = "SELECT id, nip, nama, jabatan_id, guru FROM pengguna WHERE nip = ?";
+$stmt = $conn->prepare($sqlUtama);
+$stmt->bind_param("s", $userid);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Khusus join tabel jabatan
+$sql3 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru, pengguna.foto_profil
+         FROM pengguna
+         INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
+         WHERE nip = ?";
+$stmt2 = $conn->prepare($sql3);
+$stmt2->bind_param("s", $userid);
+$stmt2->execute();
+$joinges = $stmt2->get_result();
+$hasiljoin = $joinges->fetch_assoc();
+$jabatan = $hasiljoin['jabatan_nama'];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
         $nama = $row['nama'];
         $nip = $row['nip'];
         $jabatan = $hasiljoin['jabatan_nama'];
@@ -141,7 +169,7 @@ echo'
 <span class="n flex column">
 <span class="fontS">
 <span class="name" style="font-size:17px">';
-if (mysqli_num_rows($hasil) > 0) {
+if ($hasil->num_rows > 0) {
     $row = mysqli_fetch_assoc($hasil);
     echo "" . $row["nama"];
     echo'</span>

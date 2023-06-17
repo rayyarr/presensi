@@ -2,21 +2,69 @@
 session_start();
 require_once('cfgall.php');
 
-$jarak_ideal = mysqli_fetch_array(mysqli_query($conn, "SELECT jarak FROM pengaturan WHERE id_pengaturan = 1"))['jarak'];
-$batas_telat = mysqli_fetch_array(mysqli_query($conn, "SELECT batas_telat FROM pengaturan WHERE id_pengaturan = 1"))['batas_telat'];
+function getJarakIdeal($conn) {
+    $stmt = $conn->prepare("SELECT jarak FROM pengaturan WHERE id_pengaturan = ?");
+    $id_pengaturan = 1;
+    $stmt->bind_param("i", $id_pengaturan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $jarak_ideal = $result->fetch_assoc()['jarak'];
+    $stmt->close();
+    
+    return $jarak_ideal;
+}
+
+function getBatasTelat($conn) {
+    $stmt = $conn->prepare("SELECT batas_telat FROM pengaturan WHERE id_pengaturan = ?");
+    $id_pengaturan = 1;
+    $stmt->bind_param("i", $id_pengaturan);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $batas_telat = $result->fetch_assoc()['batas_telat'];
+    $stmt->close();
+    
+    return $batas_telat;
+}
+
+function getJadwal($conn,$hari_ini) {
+    $stmt = $conn->prepare("SELECT id_jadwal, status, waktu_masuk FROM jadwal WHERE nama_hari = ?");
+    $stmt->bind_param("s", $hari_ini);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $id_jadwal = $row['id_jadwal'];
+    $status = $row['status'];
+    $waktu_masuk = $row['waktu_masuk'];
+    $stmt->close();
+    
+    return array(
+        'id_jadwal' => $id_jadwal,
+        'status' => $status,
+        'waktu_masuk' => $waktu_masuk
+    );
+}
+
+function hitungSelisihMenit($waktu_masuk, $jam_masuk) {
+    $waktu_masuk = strtotime($waktu_masuk);
+    $jam_masuk = strtotime($jam_masuk);
+    $selisih_menit = round(($jam_masuk - $waktu_masuk) / 60);
+    
+    return $selisih_menit;
+}
+
+// Pengambilan FUNGSI
+$jarak_ideal = getJarakIdeal($conn);
+$batas_telat = getBatasTelat($conn);
 
 $tanggal_absen = date('Y-m-d');
 $jam_masuk = date('H:i:s');
 
-$result = mysqli_query($conn, "SELECT id_jadwal, status, waktu_masuk FROM jadwal WHERE nama_hari = '$hari_ini'");
-$row = mysqli_fetch_array($result);
-$id_jadwal = $row['id_jadwal'];
-$status = $row['status'];
-$waktu_masuk = $row['waktu_masuk'];
+$jadwal = getJadwal($conn,$hari_ini);
+$id_jadwal = $jadwal['id_jadwal'];
+$status = $jadwal['status'];
+$waktu_masuk = $jadwal['waktu_masuk'];
 
-$waktu_masuk = strtotime($waktu_masuk);
-$jam_masuk = strtotime($jam_masuk);
-$selisih_menit = round(($jam_masuk - $waktu_masuk) / 60);
+$selisih_menit = hitungSelisihMenit($waktu_masuk, $jam_masuk);
 
 if ($status == 'Aktif') {
 	if (isset($_POST['photo'], $_POST['jarak'], $_POST['latlong'])) {
@@ -53,17 +101,21 @@ if ($status == 'Aktif') {
 					$targetPath = $targetDirectory . $file_foto;
 					file_put_contents($targetPath, $decodedPhoto);
 
-					// mengambil isi jadwal masuk
-					$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = $id_jadwal";
-					$hasilW = mysqli_query($conn, $sqlW);
+					$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = ?";
+					$stmtW = $conn->prepare($sqlW);
+					$stmtW->bind_param("i", $id_jadwal);
+					$stmtW->execute();
+					$resultW = $stmtW->get_result();
 
-					if (mysqli_num_rows($hasilW) > 0) {
-						while ($row = mysqli_fetch_assoc($hasilW)) {
+					if ($resultW->num_rows > 0) {
+						while ($row = $resultW->fetch_assoc()) {
 							$waktu_masuk = $row["waktu_masuk"];
 						}
 					} else {
 						$waktu_masuk = date('H:i:s');
 					}
+
+					$stmtW->close();
 
 					$jam_masuk = date('H:i:s');
 
