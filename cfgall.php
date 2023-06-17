@@ -1,7 +1,13 @@
 <?php
 // Rayya
 
-include_once 'cfgdb.php';
+//include_once 'cfgdb.php';
+
+// Mengambil Data Absensi
+require_once('database.php');
+$database = new Database();
+// Mengakses koneksi database
+$conn = $database->__construct();
 
 if (!isset($_SESSION['nip'])) {
 	header("Location: login");
@@ -39,9 +45,9 @@ if (mysqli_num_rows($result) > 0) {
 // Eksekusi query dan mengambil isi umum
 $sqlUtama = "SELECT id, nip, nama, jabatan_id, guru FROM pengguna WHERE nip = ?";
 $stmt = $conn->prepare($sqlUtama);
-$stmt->bind_param("s", $userid);
+$stmt->bindParam(1, $userid);
 $stmt->execute();
-$result = $stmt->get_result();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Khusus join tabel jabatan
 $sql3 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru, pengguna.foto_profil
@@ -49,14 +55,14 @@ $sql3 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, 
          INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
          WHERE nip = ?";
 $stmt2 = $conn->prepare($sql3);
-$stmt2->bind_param("s", $userid);
+$stmt2->bindParam(1, $userid);
 $stmt2->execute();
-$joinges = $stmt2->get_result();
-$hasiljoin = $joinges->fetch_assoc();
+$joinges = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+$hasiljoin = $joinges[0];
 $jabatan = $hasiljoin['jabatan_nama'];
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+if (count($result) > 0) {
+    foreach ($result as $row) {
         $nama = $row['nama'];
         $nip = $row['nip'];
         $jabatan = $hasiljoin['jabatan_nama'];
@@ -74,11 +80,10 @@ if ($hasiljoin['foto_profil'] == NULL) {
   }
 }
 
-// Mengambil Data Absensi
-require_once('database.php');
 require_once('absenclass.php');
 $obj = new Absensiswa;
 $d = $obj->data_Absen($userid);
+
 // Mendapatkan hari saat ini dalam bahasa Indonesia
 $hari = date("l");
 $hari_ini = "";
@@ -169,15 +174,12 @@ echo'
 <span class="n flex column">
 <span class="fontS">
 <span class="name" style="font-size:17px">';
-if ($hasil->num_rows > 0) {
-    $row = mysqli_fetch_assoc($hasil);
-    echo "" . $row["nama"];
+    echo "" . $nama;
     echo'</span>
     </span>
     <span class="opacity" style="font-size:14px">';
-    echo "NIP " . $row["nip"];
+    echo "NIP " . $nip;
     echo'</span>';
-}
 echo'
 </span>
 </label>
