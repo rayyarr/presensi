@@ -10,13 +10,14 @@ $longitude = "";
 $sukses = "";
 $error = "";
 
-$sqldef = "select * from pengaturan";
-$q1 = mysqli_query($conn, $sqldef);
-$r1 = mysqli_fetch_array($q1);
-$batas_telat = $r1['batas_telat'];
-$jarak = $r1['jarak'];
-$latitude = $r1['latitude'];
-$longitude = $r1['longitude'];
+$sql = "SELECT * FROM pengaturan";
+$stmt = $conn->query($sql);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$batas_telat = $result['batas_telat'];
+$jarak = $result['jarak'];
+$latitude = $result['latitude'];
+$longitude = $result['longitude'];
 
 if (isset($_POST['simpan'])) {
     $batas_telat = $_POST['batas_telat'];
@@ -25,13 +26,15 @@ if (isset($_POST['simpan'])) {
     $longitude = $_POST['longitude'];
 
     if ($batas_telat && $jarak && $latitude && $longitude) {
-        $sql1 = "update pengaturan set batas_telat='$batas_telat', jarak='$jarak', latitude='$latitude', longitude='$longitude' where id_pengaturan=1";
-        $q1 = mysqli_query($conn, $sql1);
-        if ($q1) {
-            $sukses = "Data berhasil diupdate";
-        } else {
-            $error = "Data gagal diupdate";
-        }
+        $sql = "UPDATE pengaturan SET batas_telat = :batas_telat, jarak = :jarak, latitude = :latitude, longitude = :longitude WHERE id_pengaturan = 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':batas_telat', $batas_telat);
+        $stmt->bindParam(':jarak', $jarak);
+        $stmt->bindParam(':latitude', $latitude);
+        $stmt->bindParam(':longitude', $longitude);
+        $stmt->execute();
+        
+        $sukses = "Data berhasil diupdate";
     } else {
         $error = "Silakan masukkan semua data";
     }

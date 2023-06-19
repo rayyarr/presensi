@@ -6,22 +6,18 @@ $nip = "";
 $password = "";
 $nama = "";
 $jabatan_id = "";
-$guru = "";
 $sukses = "";
 $error = "";
 
 $sqldef = "SELECT * FROM pengguna WHERE nip = ?";
 $stmt1 = $conn->prepare($sqldef);
-$stmt1->bind_param("s", $userid);
-$stmt1->execute();
-$result1 = $stmt1->get_result();
-$r1 = $result1->fetch_assoc();
+$stmt1->execute([$userid]);
+$result1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
-$nip = $r1['nip'];
-//$password = md5($r1['password']);
-$nama = $r1['nama'];
-$jabatan_id = $r1['jabatan_id'];
-$guru = $r1['guru'];
+$nip = $result1['nip'];
+$nama = $result1['nama'];
+$jabatan_id = $result1['jabatan_id'];
+$penempatan_id = $result1['penempatan_id'];
 
 if ($nip == '') {
     $error = "Data tidak ditemukan";
@@ -30,13 +26,13 @@ if ($nip == '') {
 if (isset($_POST['simpan'])) {
     $nama = $_POST['nama'];
     $jabatan_id = $_POST['jabatan_id'];
-    $guru = $_POST['guru'];
+    $penempatan_id = $_POST['penempatan_id'];
 
-    if ($nama && $jabatan_id && $guru) {
-        $sql1 = "UPDATE pengguna SET nama=?, jabatan_id=?, guru=? WHERE nip = ?";
-        $stmt2 = $conn->prepare($sql1);
-        $stmt2->bind_param("ssss", $nama, $jabatan_id, $guru, $userid);
-        if ($stmt2->execute()) {
+    if ($nama && $jabatan_id && $penempatan_id) {
+        $sqlup = "UPDATE pengguna SET nama=?, jabatan_id=?, penempatan_id=? WHERE nip = ?";
+        $stmt2 = $conn->prepare($sqlup);
+        $stmt2->execute([$nama, $jabatan_id, $penempatan_id, $userid]);
+        if ($stmt2->rowCount() > 0) {
             $sukses = "Data berhasil diupdate";
         } else {
             $error = "Data gagal diupdate";
@@ -53,24 +49,23 @@ if (isset($_FILES['image'])) {
     $image_ext = explode('.', $image);
     $file_ext = strtolower(end($image_ext));
 
-    //membuat array untuk ekstensi file yang diperbolehkan
+    // Membuat array untuk ekstensi file yang diperbolehkan
     $allowed_ext = array('jpg', 'jpeg', 'png');
 
-    //memeriksa apakah ekstensi file diizinkan
+    // Memeriksa apakah ekstensi file diizinkan
     if (in_array($file_ext, $allowed_ext)) {
-        //memeriksa ukuran file
+        // Memeriksa ukuran file
         $file_size = $_FILES['image']['size']; // ukuran file dalam bytes
         $max_file_size = 500 * 1024; // 500 KB
 
         if ($file_size <= $max_file_size) {
-            //memeriksa apakah pengguna sudah memiliki data gambar yang tersimpan di database
+            // Memeriksa apakah pengguna sudah memiliki data gambar yang tersimpan di database
             $sql_check = "SELECT foto_profil FROM pengguna WHERE nip=?";
             $stmt_check = $conn->prepare($sql_check);
-            $stmt_check->bind_param("s", $userid);
-            $stmt_check->execute();
-            $result_check = $stmt_check->get_result();
+            $stmt_check->execute([$userid]);
+            $result_check = $stmt_check->fetchAll();
 
-            if ($result_check->num_rows > 0) {
+            if (count($result_check) > 0) {
                 // Menghapus file yang lama berawalan $userid
                 $file_directory = "foto_profil/";
                 $files = glob($file_directory . $userid . "_*");
@@ -81,15 +76,14 @@ if (isset($_FILES['image'])) {
                 }
             }
 
-            //membuat nama file baru dengan nilai nip dan uniqid
+            // Membuat nama file baru dengan nilai nip dan uniqid
             $new_filename = $userid . "_" . uniqid() . "." . $file_ext;
 
             move_uploaded_file($tmp_image, "foto_profil/" . $new_filename);
 
             $sql = "UPDATE pengguna SET foto_profil=? WHERE nip=?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ss", $new_filename, $userid);
-            $stmt->execute();
+            $stmt->execute([$new_filename, $userid]);
 
             $script = "<script>
                 Swal.fire(
@@ -98,7 +92,6 @@ if (isset($_FILES['image'])) {
                     'success'
                 )
             </script>";
-            echo $script;
         } else {
             $script = "<script>
                 Swal.fire(
@@ -107,7 +100,6 @@ if (isset($_FILES['image'])) {
                     'error'
                 );
             </script>";
-            echo $script;
         }
     } else {
         $script = "<script>
@@ -117,14 +109,13 @@ if (isset($_FILES['image'])) {
                 'error'
             );
         </script>";
-        echo $script;
     }
+    echo $script;
 }
 
 /////////////////////////////////////////////////////////////////
 
 // untuk ganti password
-
 if (isset($_POST['submit'])) {
     $username = $_SESSION['nip'];
     $oldpassword = md5($_POST['oldpassword']);
@@ -133,20 +124,18 @@ if (isset($_POST['submit'])) {
 
     $query = "SELECT password FROM pengguna WHERE nip=?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->execute([$username]);
+    $result = $stmt->fetchAll();
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+    if (count($result) > 0) {
+        $row = $result[0];
         $oldpassword_db = $row['password'];
 
         if ($oldpassword == $oldpassword_db) {
             if ($newpassword == $confirmpassword) {
                 $query = "UPDATE pengguna SET password=? WHERE nip=?";
                 $stmt = $conn->prepare($query);
-                $stmt->bind_param("ss", $newpassword, $username);
-                $stmt->execute();
+                $stmt->execute([$newpassword, $username]);
                 $script = "<script>
             Swal.fire(
                 'Berhasil!',
@@ -225,7 +214,7 @@ if (isset($_POST['submit'])) {
                                     NIP
                                     <?php echo $nip ?> -
                                     <?php echo $jabatan ?> -
-                                    <?php echo $guru ?>
+                                    <?php echo $penempatan ?>
                                 </p>
                             </span>
                         </label>
@@ -248,9 +237,7 @@ if (isset($_POST['submit'])) {
 
             <!-- untuk memasukkan data -->
             <div class="card" style="margin-top:50px;margin-bottom:50px">
-                <div class="card-header" style="background:none">
-                    Form Edit Profil
-                </div>
+                <div class="card-header" style="background:none">Form Edit Profil</div>
                 <div class="card-body">
                     <?php
                     if ($error) {
@@ -273,6 +260,35 @@ if (isset($_POST['submit'])) {
                         </script>
                         <?php
                     }
+                    // Mendapatkan data dari tabel jabatan
+                    $sqljabatan = "SELECT * FROM jabatan";
+                    $stmt = $conn->prepare($sqljabatan);
+                    $stmt->execute();
+                    $result = $stmt->fetchAll();
+
+                    $option_jabatan = '';
+                    foreach ($result as $row) {
+                        $option_jabatan .= '<option value="' . $row['jabatan_id'] . '"';
+                        if ($jabatan_id == $row['jabatan_id']) {
+                            $option_jabatan .= ' selected';
+                        }
+                        $option_jabatan .= '>' . $row['jabatan_nama'] . '</option>';
+                    }
+
+                    // Mendapatkan data dari tabel penempatan
+                    $sqlpenempatan = "SELECT * FROM penempatan";
+                    $stmt = $conn->prepare($sqlpenempatan);
+                    $stmt->execute();
+                    $result = $stmt->fetchAll();
+
+                    $option_penempatan = '';
+                    foreach ($result as $row) {
+                        $option_penempatan .= '<option value="' . $row['penempatan_id'] . '"';
+                        if ($penempatan_id == $row['penempatan_id']) {
+                            $option_penempatan .= ' selected';
+                        }
+                        $option_penempatan .= '>' . $row['penempatan_nama'] . '</option>';
+                    }
                     ?>
                     <form action="" method="POST">
                         <div class="mb-3 row">
@@ -292,115 +308,96 @@ if (isset($_POST['submit'])) {
                         <div class="mb-3 row">
                             <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label>
                             <div class="col-sm-10">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="jabatan_id" value="1"
-                                        id="jabatan_guru" <?php if ($jabatan_id == "1")
-                                            echo "checked" ?>>
-                                        <label class="form-check-label" for="jabatan_guru">Guru</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jabatan_id" value="2"
-                                            id="jabatan_tu" <?php if ($jabatan_id == "2")
-                                            echo "checked" ?>>
-                                        <label class="form-check-label" for="jabatan_tu">Tata Usaha</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jabatan_id" value="3"
-                                            id="jabatan_pdh" <?php if ($jabatan_id == "3")
-                                            echo "checked" ?>>
-                                        <label class="form-check-label" for="jabatan_pdh">PDH</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label for="guru" class="col-sm-2 col-form-label">Penempatan</label>
-                                <div class="col-sm-10">
-                                <select class="form-control" name="guru" id="guru">
-                                    <option value="">- Pilih guru -</option>
-                                    <option value="SMP" <?php if ($guru == "SMP")
-                                        echo "selected" ?>>SMP</option>
-                                    <option value="SMA" <?php if ($guru == "SMA")
-                                        echo "selected" ?>>SMA</option>
-                                    <option value="SMP SMA" <?php if ($guru == "SMP SMA")
-                                        echo "selected" ?>>SMP SMA</option>
+                                <select class="form-select" name="jabatan_id" id="jabatan">
+                                    <option value="">- Pilih Jabatan -</option>
+                                    <?php echo $option_jabatan ?>
                                 </select>
-                                </div>
                             </div>
-                            <div class="col-12">
-                                <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="penempatan" class="col-sm-2 col-form-label">Penempatan</label>
+                            <div class="col-sm-10">
+                                <select class="form-select" name="penempatan_id" id="penempatan">
+                                    <option value="">- Pilih Penempatan -</option>
+                                    <?php echo $option_penempatan ?>
+                                </select>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="col-12">
+                            <input type="submit" name="simpan" value="Simpan" class="btn btn-primary" />
+                        </div>
+                    </form>
                 </div>
-
-                <!-- untuk ganti password -->
-                <div class="card" style="margin-bottom:50px">
-                    <div class="card-header" style="background:none">
-                        Form Ganti Password - <i>Abaikan jika tak perlu</i>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Password Lama</label>
-                                <input class="form-control" type="password" name="oldpassword" required>
-                            </div>
-                            <div>
-                                <label class="form-label">Password Baru</label>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input class="form-control" type="password" name="newpassword" id="password-input" required>
-                                <span class="input-group-text" onclick="togglePb()"><i id="eye-icon"
-                                        class="bi bi-eye-slash"></i></span>
-                            </div>
-                            <div>
-                                <label class="form-label">Konfirmasi Password</label>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input class="form-control" type="password" name="confirmpassword"
-                                    id="confirm-password-input" required>
-                                <span class="input-group-text" onclick="toggleCp()"><i id="eye-icon2"
-                                        class="bi bi-eye-slash"></i></span>
-                            </div>
-                            <div class="col-12">
-                                <input type="submit" name="submit" value="Simpan" class="btn btn-primary" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- untuk ganti password -->
+            <div class="card" style="margin-bottom:50px">
+                <div class="card-header" style="background:none">
+                    Form Ganti Password - <i>Abaikan jika tak perlu</i>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Password Lama</label>
+                            <input class="form-control" type="password" name="oldpassword" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Password Baru</label>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="password" name="newpassword" id="password-input" required>
+                            <span class="input-group-text" onclick="togglePb()"><i id="eye-icon"
+                                    class="bi bi-eye-slash"></i></span>
+                        </div>
+                        <div>
+                            <label class="form-label">Konfirmasi Password</label>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="password" name="confirmpassword"
+                                id="confirm-password-input" required>
+                            <span class="input-group-text" onclick="toggleCp()"><i id="eye-icon2"
+                                    class="bi bi-eye-slash"></i></span>
+                        </div>
+                        <div class="col-12">
+                            <input type="submit" name="submit" value="Simpan" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
+    </div>
 
 
-        </div>
-        <script>
-            function togglePb() {
-                var passwordInput = document.getElementById("password-input");
-                var eyeIcon = document.getElementById("eye-icon");
-                if (passwordInput.type === "password") {
-                    passwordInput.type = "text";
-                    eyeIcon.classList.remove("bi-eye-slash");
-                    eyeIcon.classList.add("bi-eye");
-                } else {
-                    passwordInput.type = "password";
-                    eyeIcon.classList.remove("bi-eye");
-                    eyeIcon.classList.add("bi-eye-slash");
-                }
+    </div>
+    <script>
+        function togglePb() {
+            var passwordInput = document.getElementById("password-input");
+            var eyeIcon = document.getElementById("eye-icon");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("bi-eye-slash");
+                eyeIcon.classList.add("bi-eye");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("bi-eye");
+                eyeIcon.classList.add("bi-eye-slash");
             }
-            function toggleCp() {
-                var conpasswordInput = document.getElementById("confirm-password-input");
-                var eyeIcon = document.getElementById("eye-icon2");
-                if (conpasswordInput.type === "password") {
-                    conpasswordInput.type = "text";
-                    eyeIcon.classList.remove("bi-eye-slash");
-                    eyeIcon.classList.add("bi-eye");
-                } else {
-                    conpasswordInput.type = "password";
-                    eyeIcon.classList.remove("bi-eye");
-                    eyeIcon.classList.add("bi-eye-slash");
-                }
+        }
+        function toggleCp() {
+            var conpasswordInput = document.getElementById("confirm-password-input");
+            var eyeIcon = document.getElementById("eye-icon2");
+            if (conpasswordInput.type === "password") {
+                conpasswordInput.type = "text";
+                eyeIcon.classList.remove("bi-eye-slash");
+                eyeIcon.classList.add("bi-eye");
+            } else {
+                conpasswordInput.type = "password";
+                eyeIcon.classList.remove("bi-eye");
+                eyeIcon.classList.add("bi-eye-slash");
             }
-        </script>
-    </body>
+        }
+    </script>
+</body>
 
-    </html>
+</html>

@@ -2,9 +2,18 @@
 session_start();
 require_once('cfgall.php');
 
-$result = mysqli_query($conn, "SELECT * FROM jadwal WHERE nama_hari = '$hari_ini'");
-$row = mysqli_fetch_array($result);
-$waktu_pulang = $row['waktu_pulang'];
+$stmt = $conn->prepare("SELECT * FROM jadwal WHERE nama_hari = ?");
+$stmt->bindParam(1, $hari_ini);
+$stmt->execute();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($result) {
+    $row = $result[0];
+    $waktu_pulang = $row['waktu_pulang'];
+} else {
+    $waktu_pulang = date('H:i:s');
+}
+
 $waktu_pulang = date('H:i', strtotime($waktu_pulang)); // mengubah format waktu
 $waktu_pulang = $waktu_pulang . " WIB"; // menambahkan "WIB" pada akhir string
 $waktu_sekarang = date('H:i:s');

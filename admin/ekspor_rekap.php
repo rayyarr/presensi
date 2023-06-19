@@ -3,7 +3,7 @@ session_start();
 
 include_once '../cfgdb.php';
 
-if(!isset($_SESSION['username'])){
+if (!isset($_SESSION['username'])) {
     header("Location: index");
     exit();
 }
@@ -97,13 +97,19 @@ for ($i = 1; $i <= $jumlah_hari; $i++) {
     $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan 
     FROM absen 
     JOIN status_absen ON absen.id_status = status_absen.id_status 
-    WHERE nip = $userid AND tanggal_absen = '$tahun-$bulan-" . str_pad($i, 2, '0', STR_PAD_LEFT) . "'
+    WHERE nip = ? AND tanggal_absen = ?
     ORDER BY absen.id_absen DESC";
-    $result = mysqli_query($conn, $query);
+    
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(1, $userid);
+    $tanggal_absen = $tahun . '-' . $bulan . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+    $stmt->bindParam(2, $tanggal_absen);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if (mysqli_num_rows($result) > 0) {
+    if (count($result) > 0) {
         // jika data absen ditemukan, tampilkan status dan keterangan
-        $data_absen = mysqli_fetch_assoc($result);
+        $data_absen = $result[0];
         $jam_masuk = $data_absen['jam_masuk'];
         $jam_keluar = $data_absen['jam_keluar'];
         $status = $data_absen['nama_status'];
@@ -150,7 +156,7 @@ $sheet->getColumnDimension('E')->setWidth(45);
 // Menambahkan garis tepi pada setiap baris dan kolom pada tabel, dimulai dari baris ke-2 dan kolom A sampai E
 $lastRow = $sheet->getHighestRow();
 $lastColumn = $sheet->getHighestColumn();
-$range = 'A1:'.$lastColumn.$lastRow;
+$range = 'A1:' . $lastColumn . $lastRow;
 $styleBorder = [
     'borders' => [
         'allBorders' => [
@@ -174,7 +180,7 @@ $sheet->setCellValue('B' . ($jumlah_hari + 5), $jumlah_sakit);
 $sheet->setCellValue('B' . ($jumlah_hari + 6), $total);
 
 // tambahkan garis tepi pada sel-sel yang diinginkan
-$sheet->getStyle('A' . ($jumlah_hari+3) . ':B' . ($jumlah_hari+6))->applyFromArray($styleBorder);
+$sheet->getStyle('A' . ($jumlah_hari + 3) . ':B' . ($jumlah_hari + 6))->applyFromArray($styleBorder);
 
 // simpan file spreadsheet ke folder
 $writer = new Xlsx($spreadsheet);

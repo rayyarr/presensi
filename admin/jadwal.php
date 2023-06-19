@@ -23,13 +23,15 @@ if ($op == 'simpan') {
     $status = $_POST['editStatus'];
 
     if ($id_jadwal && $waktu_masuk && $waktu_pulang) {
-        $sql1 = "update jadwal set waktu_masuk='$waktu_masuk',waktu_pulang='$waktu_pulang',status='$status' where id_jadwal = '$id_jadwal'";
-        $q1 = mysqli_query($conn, $sql1);
-        if ($q1) {
-            $sukses = "Data berhasil diupdate";
-        } else {
-            $error = "Data gagal diupdate";
-        }
+        $sql = "UPDATE jadwal SET waktu_masuk = :waktu_masuk, waktu_pulang = :waktu_pulang, status = :status WHERE id_jadwal = :id_jadwal";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':waktu_masuk', $waktu_masuk);
+        $stmt->bindParam(':waktu_pulang', $waktu_pulang);
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':id_jadwal', $id_jadwal);
+        $stmt->execute();
+        
+        $sukses = "Data berhasil diupdate";
     } else {
         $error = "Silakan masukkan semua data";
     }
@@ -137,15 +139,18 @@ if ($sukses) {
                     </thead>
                     <tbody>
                         <?php
-                        $sql2 = "SELECT * FROM jadwal";
-                        $q2 = mysqli_query($conn, $sql2);
+                        $sql = "SELECT * FROM jadwal";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->execute();
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         $urut = 1;
-                        while ($r2 = mysqli_fetch_array($q2)) {
-                            $id_jadwal = $r2['id_jadwal'];
-                            $nama_hari = $r2['nama_hari'];
-                            $waktu_masuk = $r2['waktu_masuk'];
-                            $waktu_pulang = $r2['waktu_pulang'];
-                            $status = $r2['status'];
+                        
+                        foreach ($result as $row) {
+                            $id_jadwal = $row['id_jadwal'];
+                            $nama_hari = $row['nama_hari'];
+                            $waktu_masuk = $row['waktu_masuk'];
+                            $waktu_pulang = $row['waktu_pulang'];
+                            $status = $row['status'];
                             ?>
                             <tr>
                                 <td scope="row">
@@ -161,12 +166,11 @@ if ($sukses) {
                                     <?php echo $waktu_pulang ?>
                                 </td>
                                 <td scope="row">
-                                    <?php if($status == "Nonaktif"){
-                                        ?><span class='text-danger'><?php echo $status ?></span><?php
-                                    } else {
-                                        ?><span><?php echo $status ?></span><?php
-                                    }
-                                    ?>
+                                    <?php if ($status == "Nonaktif") { ?>
+                                        <span class='text-danger'><?php echo $status ?></span>
+                                    <?php } else { ?>
+                                        <span><?php echo $status ?></span>
+                                    <?php } ?>
                                 </td>
                                 <td scope="row">
                                     <a data-bs-toggle="modal" data-bs-target="#editModal"
@@ -178,7 +182,7 @@ if ($sukses) {
                                 </td>
                             </tr>
                             <?php
-                        }
+                        }                        
                         ?>
                     </tbody>
 

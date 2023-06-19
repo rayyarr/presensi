@@ -80,7 +80,7 @@ include_once 'cfgall.php';
                                     NIP
                                     <?php echo $nip ?> -
                                     <?php echo $jabatan ?> -
-                                    <?php echo $guru ?>
+                                    <?php echo $penempatan ?>
                                 </p>
                             </span>
                         </label>
@@ -122,12 +122,15 @@ include_once 'cfgall.php';
 
                 $sql = "SELECT tanggal_absen, nip, keterangan FROM absen WHERE YEAR(tanggal_absen) = ? AND MONTH(tanggal_absen) = ?";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ss", $tahun, $bulan);
+                $stmt->bindParam(1, $tahun);
+                $stmt->bindParam(2, $bulan);
                 $stmt->execute();
-                $result = $stmt->get_result();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
+                $absen = array();
+
+                if ($result) {
+                    foreach ($result as $row) {
                         $tanggal = date('j', strtotime($row['tanggal_absen']));
                         $absen[$row['nip']][$tanggal] = $row['keterangan'];
                     }
@@ -212,15 +215,17 @@ include_once 'cfgall.php';
           JOIN status_absen ON absen.id_status = status_absen.id_status 
           WHERE nip = ? AND tanggal_absen = ?
           ORDER BY absen.id_absen DESC";
+
                                 $tanggal_absen = $tahun . '-' . $bulan . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
 
                                 $stmt = $conn->prepare($query);
-                                $stmt->bind_param("ss", $userid, $tanggal_absen);
+                                $stmt->bindParam(1, $userid);
+                                $stmt->bindParam(2, $tanggal_absen);
                                 $stmt->execute();
-                                $result = $stmt->get_result();
+                                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                if ($result->num_rows > 0) {
-                                    $data_absen = $result->fetch_assoc();
+                                if ($result) {
+                                    $data_absen = $result[0];
                                     $jam_masuk = $data_absen['jam_masuk'];
                                     $jam_keluar = $data_absen['jam_keluar'];
                                     $status = $data_absen['nama_status'];

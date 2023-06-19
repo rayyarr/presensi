@@ -2,54 +2,57 @@
 session_start();
 require_once('cfgall.php');
 
-function getJarakIdeal($conn) {
-    $stmt = $conn->prepare("SELECT jarak FROM pengaturan WHERE id_pengaturan = ?");
-    $id_pengaturan = 1;
-    $stmt->bind_param("i", $id_pengaturan);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $jarak_ideal = $result->fetch_assoc()['jarak'];
-    $stmt->close();
-    
-    return $jarak_ideal;
+function getJarakIdeal($conn)
+{
+	$stmt = $conn->prepare("SELECT jarak FROM pengaturan WHERE id_pengaturan = ?");
+	$id_pengaturan = 1;
+	$stmt->bindParam(1, $id_pengaturan);
+	$stmt->execute();
+	$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	$jarak_ideal = $result['jarak'];
+	$stmt->closeCursor();
+
+	return $jarak_ideal;
 }
 
-function getBatasTelat($conn) {
-    $stmt = $conn->prepare("SELECT batas_telat FROM pengaturan WHERE id_pengaturan = ?");
-    $id_pengaturan = 1;
-    $stmt->bind_param("i", $id_pengaturan);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $batas_telat = $result->fetch_assoc()['batas_telat'];
-    $stmt->close();
-    
-    return $batas_telat;
+function getBatasTelat($conn)
+{
+	$stmt = $conn->prepare("SELECT batas_telat FROM pengaturan WHERE id_pengaturan = ?");
+	$id_pengaturan = 1;
+	$stmt->bindParam(1, $id_pengaturan);
+	$stmt->execute();
+	$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	$batas_telat = $result['batas_telat'];
+	$stmt->closeCursor();
+
+	return $batas_telat;
 }
 
-function getJadwal($conn,$hari_ini) {
-    $stmt = $conn->prepare("SELECT id_jadwal, status, waktu_masuk FROM jadwal WHERE nama_hari = ?");
-    $stmt->bind_param("s", $hari_ini);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $id_jadwal = $row['id_jadwal'];
-    $status = $row['status'];
-    $waktu_masuk = $row['waktu_masuk'];
-    $stmt->close();
-    
-    return array(
-        'id_jadwal' => $id_jadwal,
-        'status' => $status,
-        'waktu_masuk' => $waktu_masuk
-    );
+function getJadwal($conn, $hari_ini)
+{
+	$stmt = $conn->prepare("SELECT id_jadwal, status, waktu_masuk FROM jadwal WHERE nama_hari = ?");
+	$stmt->bindParam(1, $hari_ini);
+	$stmt->execute();
+	$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	$id_jadwal = $result['id_jadwal'];
+	$status = $result['status'];
+	$waktu_masuk = $result['waktu_masuk'];
+	$stmt->closeCursor();
+
+	return array(
+		'id_jadwal' => $id_jadwal,
+		'status' => $status,
+		'waktu_masuk' => $waktu_masuk
+	);
 }
 
-function hitungSelisihMenit($waktu_masuk, $jam_masuk) {
-    $waktu_masuk = strtotime($waktu_masuk);
-    $jam_masuk = strtotime($jam_masuk);
-    $selisih_menit = round(($jam_masuk - $waktu_masuk) / 60);
-    
-    return $selisih_menit;
+function hitungSelisihMenit($waktu_masuk, $jam_masuk)
+{
+	$waktu_masuk = strtotime($waktu_masuk);
+	$jam_masuk = strtotime($jam_masuk);
+	$selisih_menit = round(($jam_masuk - $waktu_masuk) / 60);
+
+	return $selisih_menit;
 }
 
 // Pengambilan FUNGSI
@@ -59,7 +62,7 @@ $batas_telat = getBatasTelat($conn);
 $tanggal_absen = date('Y-m-d');
 $jam_masuk = date('H:i:s');
 
-$jadwal = getJadwal($conn,$hari_ini);
+$jadwal = getJadwal($conn, $hari_ini);
 $id_jadwal = $jadwal['id_jadwal'];
 $status = $jadwal['status'];
 $waktu_masuk = $jadwal['waktu_masuk'];
@@ -103,19 +106,17 @@ if ($status == 'Aktif') {
 
 					$sqlW = "SELECT waktu_masuk FROM jadwal WHERE id_jadwal = ?";
 					$stmtW = $conn->prepare($sqlW);
-					$stmtW->bind_param("i", $id_jadwal);
+					$stmtW->bindParam(1, $id_jadwal);
 					$stmtW->execute();
-					$resultW = $stmtW->get_result();
+					$resultW = $stmtW->fetch(PDO::FETCH_ASSOC);
 
-					if ($resultW->num_rows > 0) {
-						while ($row = $resultW->fetch_assoc()) {
-							$waktu_masuk = $row["waktu_masuk"];
-						}
+					if ($resultW) {
+						$waktu_masuk = $resultW['waktu_masuk'];
 					} else {
 						$waktu_masuk = date('H:i:s');
 					}
 
-					$stmtW->close();
+					$stmtW->closeCursor();
 
 					$jam_masuk = date('H:i:s');
 
@@ -242,5 +243,4 @@ if ($status == 'Aktif') {
 		</script>
 	';
 }
-
 ?>

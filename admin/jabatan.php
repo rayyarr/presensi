@@ -13,31 +13,38 @@ if (isset($_GET['op'])) {
 } else {
     $op = "";
 }
+
 if ($op == 'hapus') {
     $jabatan_id = $_GET['id'];
-    $sql1 = "DELETE FROM jabatan WHERE jabatan_id = '$jabatan_id'";
-    $q1 = mysqli_query($conn, $sql1);
-    if ($q1) {
+    $sql1 = "DELETE FROM jabatan WHERE jabatan_id = :jabatan_id";
+    $stmt = $conn->prepare($sql1);
+    $stmt->bindParam(':jabatan_id', $jabatan_id);
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
         $sukses = "Berhasil hapus data";
     } else {
         $error = "Gagal melakukan delete data";
     }
 }
+
 if ($op == 'tambah') {
     $jabatan_nama = $_POST['tambahNama'];
 
-    $sql_cek_nama = "SELECT * FROM jabatan WHERE jabatan_nama='$jabatan_nama'";
-    $q_cek_nama = mysqli_query($conn, $sql_cek_nama);
-    $jml_cek_nama = mysqli_num_rows($q_cek_nama);
+    $sql_cek_nama = "SELECT * FROM jabatan WHERE jabatan_nama = :jabatan_nama";
+    $stmt_cek_nama = $conn->prepare($sql_cek_nama);
+    $stmt_cek_nama->bindParam(':jabatan_nama', $jabatan_nama);
+    $stmt_cek_nama->execute();
+    $jml_cek_nama = $stmt_cek_nama->rowCount();
 
     if ($jml_cek_nama > 0) {
         $error = "Nama jabatan sudah ada!";
     } else {
         if ($jabatan_nama) {
-            $sql1 = "INSERT INTO jabatan (jabatan_nama) VALUES ('$jabatan_nama')";
-
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
+            $sql1 = "INSERT INTO jabatan (jabatan_nama) VALUES (:jabatan_nama)";
+            $stmt1 = $conn->prepare($sql1);
+            $stmt1->bindParam(':jabatan_nama', $jabatan_nama);
+            $stmt1->execute();
+            if ($stmt1->rowCount() > 0) {
                 $sukses = "Berhasil menambah data jabatan: $jabatan_nama";
             } else {
                 $error = "Gagal menambah data jabatan";
@@ -47,14 +54,18 @@ if ($op == 'tambah') {
         }
     }
 }
+
 if ($op == 'simpan') {
     $jabatan_id = $_POST['editId'];
     $jabatan_nama = $_POST['editNama'];
 
     if ($jabatan_id && $jabatan_nama) {
-        $sql1 = "UPDATE jabatan SET jabatan_nama='$jabatan_nama' WHERE jabatan_id = '$jabatan_id'";
-        $q1 = mysqli_query($conn, $sql1);
-        if ($q1) {
+        $sql1 = "UPDATE jabatan SET jabatan_nama = :jabatan_nama WHERE jabatan_id = :jabatan_id";
+        $stmt1 = $conn->prepare($sql1);
+        $stmt1->bindParam(':jabatan_nama', $jabatan_nama);
+        $stmt1->bindParam(':jabatan_id', $jabatan_id);
+        $stmt1->execute();
+        if ($stmt1->rowCount() > 0) {
             $sukses = "Data berhasil diupdate";
         } else {
             $error = "Data gagal diupdate";
@@ -173,12 +184,15 @@ if ($sukses) {
                     </thead>
                     <tbody>
                         <?php
-                        $sql2 = "SELECT * FROM jabatan";
-                        $q2 = mysqli_query($conn, $sql2);
+                        $sql = "SELECT * FROM jabatan";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->execute();
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         $urut = 1;
-                        while ($r2 = mysqli_fetch_array($q2)) {
-                            $jabatan_id = $r2['jabatan_id'];
-                            $jabatan_nama = $r2['jabatan_nama'];
+
+                        foreach ($result as $row) {
+                            $jabatan_id = $row['jabatan_id'];
+                            $jabatan_nama = $row['jabatan_nama'];
                             ?>
                             <tr>
                                 <td scope="row">

@@ -17,11 +17,12 @@ if (isset($_POST['simpan'])) {
     $tmp_file = $_FILES['lampiran']['tmp_name'];
 
     $stmt = $conn->prepare("SELECT * FROM absen WHERE nip=? AND tanggal_absen=?");
-    $stmt->bind_param("ss", $userid, $tanggal_absen);
+    $stmt->bindParam(1, $userid);
+    $stmt->bindParam(2, $tanggal_absen);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($result->num_rows > 0) {
+    if (count($result) > 0) {
         // Jika sudah absen
         echo '<script>
     popupJudul = "Gagal!";
@@ -53,7 +54,13 @@ if (isset($_POST['simpan'])) {
         }
 
         $stmt = $conn->prepare("INSERT INTO absen (nip, tanggal_absen, jam_masuk, id_status, tgl_keluar, keterangan, foto_absen) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssss", $userid, $tanggal_absen, $jam_masuk, $id_status, $tanggal_absen, $keterangan, $nama_file);
+        $stmt->bindParam(1, $userid);
+        $stmt->bindParam(2, $tanggal_absen);
+        $stmt->bindParam(3, $jam_masuk);
+        $stmt->bindParam(4, $id_status);
+        $stmt->bindParam(5, $tanggal_absen);
+        $stmt->bindParam(6, $keterangan);
+        $stmt->bindParam(7, $nama_file);
         $stmt->execute();
 
         echo '<script>
@@ -62,7 +69,7 @@ if (isset($_POST['simpan'])) {
         popupIcon = "success";
         </script>';
 
-        $stmt->close();
+        $stmt->closeCursor();
 
     }
 
@@ -91,20 +98,18 @@ if ($sqlatlong->num_rows > 0) {
     $longSekolah = 0;
 } */
 
-// Eksekusi mengambil data latlong sekolah
 $stmt = $conn->prepare("SELECT jarak, latitude, longitude FROM pengaturan");
 $stmt->execute();
-$stmt->store_result();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if ($stmt->num_rows > 0) {
-    $stmt->bind_result($jarakIdeal, $latSekolah, $longSekolah);
-    $stmt->fetch();
+if (count($result) > 0) {
+    $jarakIdeal = $result[0]['jarak'];
+    $latSekolah = $result[0]['latitude'];
+    $longSekolah = $result[0]['longitude'];
 } else {
     $latSekolah = 0;
     $longSekolah = 0;
 }
-
-$stmt->close();
 
 /* Eksekusi mengambil isi jadwal masuk
 $sqlW = "SELECT * FROM jadwal WHERE nama_hari = '$hari_ini'";
@@ -122,25 +127,22 @@ if (mysqli_num_rows($hasilW) > 0) {
     $jam_pulang = date('H:i:s');
 } */
 
-// Eksekusi mengambil isi jadwal masuk
 $stmt = $conn->prepare("SELECT id_jadwal, nama_hari, waktu_masuk, waktu_pulang FROM jadwal WHERE nama_hari = ?");
-$stmt->bind_param("s", $hari_ini);
+$stmt->bindParam(1, $hari_ini);
 $stmt->execute();
-$result = $stmt->get_result();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $id_jadwal = $row["id_jadwal"];
-        $hari_ini = $row["nama_hari"];
-        $jam_masuk = $row["waktu_masuk"];
-        $jam_pulang = $row["waktu_pulang"];
-    }
+if (count($result) > 0) {
+    $id_jadwal = $result[0]["id_jadwal"];
+    $hari_ini = $result[0]["nama_hari"];
+    $jam_masuk = $result[0]["waktu_masuk"];
+    $jam_pulang = $result[0]["waktu_pulang"];
 } else {
     $jam_masuk = date('H:i:s');
     $jam_pulang = date('H:i:s');
 }
 
-$stmt->close();
+$stmt->closeCursor();
 
 $jam_masuk = date('H:i', strtotime($jam_masuk)); // mengubah format waktu
 $jam_masuk = $jam_masuk . " WIB"; // menambahkan "WIB" pada akhir string
@@ -210,7 +212,7 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                                     NIP
                                     <?php echo $nip ?> -
                                     <?php echo $jabatan ?> -
-                                    <?php echo $guru ?>
+                                    <?php echo $penempatan ?>
                                 </p>
                             </span>
                         </label>
@@ -381,22 +383,23 @@ $jam_pulang = $jam_pulang . " WIB"; // menambahkan "WIB" pada akhir string
                                 <?php
                                 $stmt = $conn->prepare("SELECT id_status, nama_status FROM status_absen WHERE id_status <> ?");
                                 $excludedId = 1;
-                                $stmt->bind_param("i", $excludedId);
+                                $stmt->bindParam(1, $excludedId);
                                 $stmt->execute();
-                                $result = $stmt->get_result();
+                                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                if ($result->num_rows > 0) {
+                                if (count($result) > 0) {
                                     echo '<select class="form-control" id="absenSelect" name="id_status">';
-                                    while ($row = $result->fetch_assoc()) {
+                                    foreach ($result as $row) {
+                                        $id_status = $row["id_status"];
                                         $nama_status = $row["nama_status"];
-                                        echo '<option value="' . $row["id_status"] . '">' . $nama_status . '</option>';
+                                        echo '<option value="' . $id_status . '">' . $nama_status . '</option>';
                                     }
                                     echo '</select>';
                                 } else {
                                     echo "Tidak ada data yang ditemukan.";
                                 }
 
-                                $stmt->close();
+                                $stmt->closeCursor();
                                 ?>
                             </div>
                             <div class="form-group">

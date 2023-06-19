@@ -16,16 +16,17 @@ if (isset($_POST['login'])) {
   $password = $_POST['password'];
   $password_hash = md5($password);
 
-  $sql = "SELECT nip FROM pengguna WHERE nip = '$nip' AND password = '$password_hash'";
-  $result = $conn->query($sql);
+  $sql = "SELECT nip FROM pengguna WHERE nip = ? AND password = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->execute([$nip, $password_hash]);
+  $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-  if ($result->num_rows == 1) {
-    $row = $result->fetch_assoc();
-    $_SESSION['nip'] = $row['nip'];
-    header("Location: beranda");
-    exit();
+  if (count($result) == 1) {
+      $_SESSION['nip'] = $result[0]['nip'];
+      header("Location: beranda");
+      exit();
   } else {
-    $error_message = 'NIP atau password salah!';
+      $error_message = 'NIP atau password salah!';
   }
 }
 ?>

@@ -12,23 +12,24 @@ if (isset($_SESSION['username'])) {
 
 $error_message = '';
 
-// Jika tombol login ditekan
 if (isset($_POST['login'])) {
   $username = $_POST['username'];
   $password = $_POST['password'];
   $password_hash = md5($password);
 
-  // Validasi login
-  $sql = "SELECT username FROM admin WHERE username = '$username' AND password = '$password_hash'";
-  $result = $conn->query($sql);
+  $sql = "SELECT username FROM admin WHERE username = :username AND password = :password";
+  $stmt = $conn->prepare($sql);
+  $stmt->bindValue(':username', $username);
+  $stmt->bindValue(':password', $password_hash);
+  $stmt->execute();
 
-  if ($result->num_rows == 1) {
-    $row = $result->fetch_assoc();
+  if ($stmt->rowCount() == 1) {
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $_SESSION['username'] = $row['username'];
-    header("Location: beranda"); // Alihkan ke halaman dashboard setelah login berhasil
+    header("Location: beranda");
     exit();
   } else {
-    $error_message = 'username atau password salah!';
+    $error_message = 'Username atau password salah!';
   }
 }
 ?>

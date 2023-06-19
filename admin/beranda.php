@@ -9,41 +9,46 @@ if(isset($_POST['logout'])){
 
 // Query untuk menghitung jumlah pengguna
 $sql = "SELECT COUNT(*) AS total_pengguna FROM pengguna";
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-  $row = $result->fetch_assoc();
-  $jumlah_pengguna = $row["total_pengguna"];
+if ($result) {
+  $jumlah_pengguna = $result["total_pengguna"];
 } else {
   $jumlah_pengguna = 0;
 }
 
-$sql1 = "SELECT COUNT(*) AS total_absen FROM absen WHERE DATE(tanggal_absen) = '$today'";
-$result = $conn->query($sql1);
+$sql1 = "SELECT COUNT(*) AS total_absen FROM absen WHERE DATE(tanggal_absen) = :today";
+$stmt1 = $conn->prepare($sql1);
+$stmt1->bindParam(':today', $today);
+$stmt1->execute();
+$result1 = $stmt1->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-  $row = $result->fetch_assoc();
-  $total_absen = $row["total_absen"];
+if ($result1) {
+  $total_absen = $result1["total_absen"];
 } else {
   $total_absen = 0;
 }
 
-$sql = "SELECT COUNT(*) AS total_jabatan FROM jabatan";
-$result = $conn->query($sql);
+$sql2 = "SELECT COUNT(*) AS total_jabatan FROM jabatan";
+$stmt2 = $conn->prepare($sql2);
+$stmt2->execute();
+$result2 = $stmt2->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-  $row = $result->fetch_assoc();
-  $jumlah_jabatan = $row["total_jabatan"];
+if ($result2) {
+  $jumlah_jabatan = $result2["total_jabatan"];
 } else {
   $jumlah_jabatan = 0;
 }
 
-$sql = "SELECT COUNT(*) AS total_status FROM status_absen";
-$result = $conn->query($sql);
+$sql3 = "SELECT COUNT(*) AS total_status FROM status_absen";
+$stmt3 = $conn->prepare($sql3);
+$stmt3->execute();
+$result3 = $stmt3->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-  $row = $result->fetch_assoc();
-  $jumlah_status = $row["total_status"];
+if ($result3) {
+  $jumlah_status = $result3["total_status"];
 } else {
   $jumlah_status = 0;
 }
@@ -83,12 +88,15 @@ $nama_bulan = $nama_bulan_arr[intval(date('m', strtotime($tanggal))) - 1];
 /////////////
 
 $query = "SELECT absen.id_absen, absen.nip, pengguna.nama, pengguna.foto_profil, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen, absen.latlong 
-      FROM absen 
-      JOIN status_absen ON absen.id_status = status_absen.id_status
-      JOIN pengguna ON absen.nip = pengguna.nip
-      WHERE tanggal_absen = '$tanggal'
-      ORDER BY absen.id_absen DESC";
-$result = mysqli_query($conn, $query);
+          FROM absen 
+          JOIN status_absen ON absen.id_status = status_absen.id_status
+          JOIN pengguna ON absen.nip = pengguna.nip
+          WHERE tanggal_absen = :tanggal
+          ORDER BY absen.id_absen DESC";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':tanggal', $tanggal);
+$stmt->execute();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="id-ID" xml:lang="id-ID">

@@ -16,9 +16,12 @@ if (isset($_GET['op'])) {
 }
 if ($op == 'hapus') {
     $id = $_GET['id'];
-    $sqlfotoabsen = $conn->query("SELECT foto_absen FROM absen WHERE id_absen = '$id'");
-    if ($sqlfotoabsen->num_rows > 0) {
-        $row = $sqlfotoabsen->fetch_assoc();
+    $stmt = $conn->prepare("SELECT foto_absen FROM absen WHERE id_absen = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
         $fotoAbsen = $row["foto_absen"];
         if (!empty($fotoAbsen)) {
             $fotoPath = '../hasil_absen/' . $fotoAbsen;
@@ -28,20 +31,21 @@ if ($op == 'hapus') {
         }
     }
 
-    $sql1 = "DELETE FROM absen WHERE id_absen = '$id'";
-    $q1 = mysqli_query($conn, $sql1);
-    if ($q1) {
+    $stmt = $conn->prepare("DELETE FROM absen WHERE id_absen = :id");
+    $stmt->bindParam(':id', $id);
+    if ($stmt->execute()) {
         $sukses = "Berhasil hapus data";
     } else {
         $error = "Gagal melakukan delete data";
     }
 }
 
-$sql = "SELECT pengguna.nama, jabatan.jabatan_nama FROM pengguna INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id WHERE nip=$userid";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT pengguna.nama, jabatan.jabatan_nama FROM pengguna INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id WHERE nip = :userid");
+$stmt->bindParam(':userid', $userid);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+if ($row) {
     $nama_pengguna = $row["nama"];
     $nama_jabatan = $row["jabatan_nama"];
 } else {
@@ -122,10 +126,14 @@ if ($result->num_rows > 0) {
                 // buat array kosong untuk absen
                 $absen = array();
 
-                $sql = "SELECT tanggal_absen, nip, keterangan FROM absen WHERE YEAR(tanggal_absen) = '$tahun' AND MONTH(tanggal_absen) = '$bulan'";
-                $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
+                $stmt = $conn->prepare("SELECT tanggal_absen, nip, keterangan FROM absen WHERE YEAR(tanggal_absen) = :tahun AND MONTH(tanggal_absen) = :bulan");
+                $stmt->bindParam(':tahun', $tahun);
+                $stmt->bindParam(':bulan', $bulan);
+                $stmt->execute();
+
+                $absen = array();
+                if ($stmt->rowCount() > 0) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $tanggal = date('j', strtotime($row['tanggal_absen']));
                         $absen[$row['nip']][$tanggal] = $row['keterangan'];
                     }
@@ -210,15 +218,19 @@ if ($result->num_rows > 0) {
                                 echo '<td>' . $nama_hari . ', ' . str_pad($i, 2, '0', STR_PAD_LEFT) . ' ' . $nama_bulan . ' ' . $tahun . '</td>';
 
                                 $query = "SELECT absen.id_absen, absen.nip, absen.id_status, status_absen.nama_status, absen.tanggal_absen, absen.jam_masuk, absen.jam_keluar, absen.keterangan, absen.foto_absen, absen.latlong 
-                        FROM absen 
-                        JOIN status_absen ON absen.id_status = status_absen.id_status 
-                        WHERE nip = $userid AND tanggal_absen = '$tahun-$bulan-" . str_pad($i, 2, '0', STR_PAD_LEFT) . "'
-                        ORDER BY absen.id_absen DESC";
-                                $result = mysqli_query($conn, $query);
+          FROM absen 
+          JOIN status_absen ON absen.id_status = status_absen.id_status 
+          WHERE nip = :userid AND tanggal_absen = :tanggal
+          ORDER BY absen.id_absen DESC";
+                                $tanggal_absen = $tahun . '-' . $bulan . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+                                $stmt = $conn->prepare($query);
+                                $stmt->bindParam(':userid', $userid);
+                                $stmt->bindParam(':tanggal', $tanggal_absen);
+                                $stmt->execute();
 
-                                if (mysqli_num_rows($result) > 0) {
+                                if ($stmt->rowCount() > 0) {
                                     // jika data absen ditemukan
-                                    $data_absen = mysqli_fetch_assoc($result);
+                                    $data_absen = $stmt->fetch(PDO::FETCH_ASSOC);
                                     $id = $data_absen['id_absen'];
                                     $nip = $data_absen['nip'];
                                     $jam_masuk = $data_absen['jam_masuk'];
@@ -274,7 +286,7 @@ if ($result->num_rows > 0) {
                                     imageWidth: 300,
                                 });
                             }
-                            function confirmDelete(nip,id) {
+                            function confirmDelete(nip, id) {
                                 Swal.fire({
                                     title: "Konfirmasi",
                                     text: "Apakah Anda yakin ingin menghapus absensi ini?",
@@ -326,7 +338,7 @@ if ($result->num_rows > 0) {
                                         fillOpacity: 0.5
                                     }).addTo(mymap).bindPopup("<?php echo $nama_pengguna; ?>").openPopup();
                                     var popup = L.popup();
-                                        function onMapClick(e) {
+                                    function onMapClick(e) {
                                         popup
                                             .setLatLng(e.latlng)
                                             .setContent("" + e.latlng.toString())

@@ -2,12 +2,6 @@
 // Rayya
 session_start();
 include_once 'cfgall.php';
-
-if (isset($_POST['logout'])) {
-	session_destroy();
-	header("Location: login");
-	exit();
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,7 +44,7 @@ if (isset($_POST['logout'])) {
 									NIP
 									<?php echo $nip ?> -
 									<?php echo $jabatan ?> -
-									<?php echo $guru ?>
+									<?php echo $penempatan ?>
 								</p>
 							</span>
 						</label>
@@ -113,11 +107,10 @@ if (isset($_POST['logout'])) {
           ORDER BY absen.tanggal_absen DESC";
 
 			$stmt = $conn->prepare($query);
-			$stmt->bind_param("ss", $userid, $tanggal_kurang);
-			$stmt->execute();
-			$result = $stmt->get_result();
+			$stmt->execute([$userid, $tanggal_kurang]);
+			$result = $stmt->fetchAll();
 
-			if ($result->num_rows > 0) { ?>
+			if (count($result) > 0) { ?>
 				<div class="card p-4 mb-5">
 					<div class="card-body" style="padding-left:0;padding-bottom:0">
 						<h5 class="card-title">Absensi 7 Hari Terakhir</h5>
@@ -135,14 +128,14 @@ if (isset($_POST['logout'])) {
 							</thead>
 							<tbody style="font-size:14px">
 								<?php
-								while ($row = $result->fetch_assoc()) {
+								foreach ($result as $row) {
 									$hari = array("Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu");
 									$bulan = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
-							
+
 									$tanggal = date_create($row['tanggal_absen']);
 									$hari_tanggal = $hari[date_format($tanggal, "w")];
 									$tanggal_indo = $hari_tanggal . ", " . date_format($tanggal, "d") . " " . $bulan[date_format($tanggal, "m") - 1] . " " . date_format($tanggal, "Y");
-							
+
 									echo "<tr>";
 									echo "<td>" . $tanggal_indo . "</td>";
 									echo "<td>" . $row['jam_masuk'] . "</td>";

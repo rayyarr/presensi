@@ -13,77 +13,58 @@ $nip = "";
 $password = "";
 $nama = "";
 $jabatan = "";
-$guru = "";
+$penempatan = "";
 $sukses = "";
 $error = "";
 $error_message = '';
 
-$ambil = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru
+$ambil = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, penempatan.penempatan_nama
           FROM pengguna
           INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
+          INNER JOIN penempatan ON pengguna.penempatan_id = penempatan.penempatan_id
           ORDER BY pengguna.id DESC";
-$q2 = mysqli_query($conn, $ambil);
-$urut = 1;
-while ($r2 = mysqli_fetch_array($q2)) {
-  $id = $r2['id'];
-  $nip = $r2['nip'];
-  $nama = $r2['nama'];
-  $jabatan = $r2['jabatan_nama'];
-  $guru = $r2['guru'];
+$stmt = $conn->prepare($ambil);
+$stmt->execute();
+$hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($hasil as $r2) {
+    $id = $r2['id'];
+    $nip = $r2['nip'];
+    $nama = $r2['nama'];
+    $jabatan = $r2['jabatan_nama'];
+    $penempatan = $r2['penempatan_nama'];
 }
 
-/*
 if (isset($_POST['daftar'])) {
-$nip = $_POST['nip'];
-$password = md5($_POST['password']);
-$nama = $_POST['nama'];
-$jabatan = $_POST['jabatan_id'];
-$guru = $_POST['guru'];
-if ($nip && $password && $nama && $jabatan && $guru) {
-$sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-$q1 = mysqli_query($conn, $sql1);
-if ($q1) {
-$sukses = "Berhasil memasukkan data baru";
-} else {
-$error = "Gagal memasukkan data";
-}
-} else {
-$error = "Silakan masukkan semua data";
-}
-}*/
-if (isset($_POST['daftar'])) {
-  $nip = $_POST['nip'];
-  $password = md5($_POST['password']);
-  $nama = $_POST['nama'];
-  $jabatan = $_POST['jabatan_id'];
-  $guru = $_POST['guru'];
+    $nip = $_POST['nip'];
+    $password = md5($_POST['password']);
+    $nama = $_POST['nama'];
+    $jabatan = $_POST['jabatan_id'];
+    $penempatan = $_POST['penempatan_id'];
 
-  // Cek apakah NIP sudah terdaftar dalam database
-  $sql_cek_nip = "SELECT * FROM pengguna WHERE nip='$nip'";
-  $q_cek_nip = mysqli_query($conn, $sql_cek_nip);
-  $jml_cek_nip = mysqli_num_rows($q_cek_nip);
+    // Cek apakah NIP sudah terdaftar dalam database
+    $sql_cek_nip = "SELECT * FROM pengguna WHERE nip=?";
+    $stmt_cek_nip = $conn->prepare($sql_cek_nip);
+    $stmt_cek_nip->execute([$nip]);
+    $jml_cek_nip = $stmt_cek_nip->rowCount();
 
-  if ($jml_cek_nip > 0) {
-    $error = "Mohon maaf, NIP sudah terdaftar!";
-  } else {
-    if ($nip && $password && $nama && $jabatan && $guru) {
-      $sql1 = "insert into pengguna(nip,nama,password,jabatan_id,guru) values ('$nip','$nama','$password','$jabatan','$guru')";
-      $q1 = mysqli_query($conn, $sql1);
-      if ($q1) {
-        $sukses = "Berhasil daftar akun!";
-      } else {
-        $error = "Terjadi kesalahan koneksi!";
-      }
+    if ($jml_cek_nip > 0) {
+        $error = "Mohon maaf, NIP sudah terdaftar!";
     } else {
-      $error = "Silakan masukkan semua data!";
+        if ($nip && $password && $nama && $jabatan && $penempatan) {
+            $sql1 = "INSERT INTO pengguna (nip, nama, password, jabatan_id, penempatan_id) VALUES (?, ?, ?, ?, ?)";
+            $stmt1 = $conn->prepare($sql1);
+            $stmt1->execute([$nip, $nama, $password, $jabatan, $penempatan]);
+            $sukses = "Berhasil daftar akun!";
+        } else {
+            $error = "Silakan masukkan semua data!";
+        }
     }
-  }
 }
 ?>
 
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
@@ -239,10 +220,12 @@ if (isset($_POST['daftar'])) {
       color: #fff;
       background-color: rgb(255 255 255 / 8%);
       border: 0px solid #fff;
-      font-size:14px;
+      font-size: 14px;
     }
 
-    .form-select option{color:#000;}
+    .form-select option {
+      color: #000;
+    }
 
     .social div,
     input {
@@ -379,7 +362,8 @@ if (isset($_POST['daftar'])) {
     <?php
     if ($sukses) {
       ?>
-      <div class="alert alert-success text-center" style="padding:1rem 0.5rem;font-size:14px;line-height:1.8em" role="alert">
+      <div class="alert alert-success text-center" style="padding:1rem 0.5rem;font-size:14px;line-height:1.8em"
+        role="alert">
         <?php echo $sukses ?>
         <br>
         <span>Silakan <a href="login">Login</a></span>
@@ -401,33 +385,45 @@ if (isset($_POST['daftar'])) {
     <?php
     // Mendapatkan data dari tabel jabatan
     $sqljabatan = "SELECT * FROM jabatan";
-    $result = mysqli_query($conn, $sqljabatan);
+    $stmt = $conn->prepare($sqljabatan);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
 
-    $options = '';
-    while ($row = mysqli_fetch_assoc($result)) {
-        $options .= '<option value="' . $row['jabatan_id'] . '">' . $row['jabatan_nama'] . '</option>';
+    $option_jabatan = '';
+    foreach ($result as $row) {
+      $option_jabatan .= '<option value="' . $row['jabatan_id'] . '">' . $row['jabatan_nama'] . '</option>';
+    }
+
+    // Mendapatkan data dari tabel penempatan
+    $sqlpenempatan = "SELECT * FROM penempatan";
+    $stmt = $conn->prepare($sqlpenempatan);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+
+    $option_penempatan = '';
+    foreach ($result as $row) {
+      $option_penempatan .= '<option value="' . $row['penempatan_id'] . '">' . $row['penempatan_nama'] . '</option>';
     }
     ?>
     <label for="jabatan" class="col-sm-2 col-form-label">Jabatan</label></label>
     <div>
       <select class="form-select" name="jabatan_id" id="jabatan">
         <option value="">- Pilih Jabatan -</option>
-        <?php echo $options ?>
+        <?php echo $option_jabatan ?>
       </select>
     </div>
-    <label for="guru" class="col-sm-2 col-form-label">Penempatan</label>
+    <label for="penempatan" class="col-sm-2 col-form-label">Penempatan</label>
     <div>
-      <select class="form-select" name="guru" id="guru">
+      <select class="form-select" name="penempatan_id" id="penempatan">
         <option value="">- Pilih Penempatan -</option>
-        <option value="SMP">SMP</option>
-        <option value="SMA">SMA</option>
-        <option value="SMP SMA">SMP SMA</option>
+        <?php echo $option_penempatan ?>
       </select>
     </div>
     <button type="submit" name="daftar">Daftar</button>
 
     <span style="margin-top:15px;color:#fff;font-size:14px">Sudah punya akun? <a href="login">Login</a></span>
-    
+
   </form>
 </body>
+
 </html>

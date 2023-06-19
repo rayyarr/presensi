@@ -3,7 +3,6 @@
 
 //include_once 'cfgdb.php';
 
-// Mengambil Data Absensi
 require_once('database.php');
 $database = new Database();
 // Mengakses koneksi database
@@ -43,30 +42,30 @@ if (mysqli_num_rows($result) > 0) {
 }*/
 
 // Eksekusi query dan mengambil isi umum
-$sqlUtama = "SELECT id, nip, nama, jabatan_id, guru FROM pengguna WHERE nip = ?";
+$sqlUtama = "SELECT id, nip, nama, jabatan_id, penempatan_id, guru FROM pengguna WHERE nip = ?";
 $stmt = $conn->prepare($sqlUtama);
 $stmt->bindParam(1, $userid);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Khusus join tabel jabatan
-$sql3 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, pengguna.guru, pengguna.foto_profil
+$sql3 = "SELECT pengguna.id, pengguna.nip, pengguna.nama, jabatan.jabatan_nama, penempatan.penempatan_nama, pengguna.guru, pengguna.foto_profil
          FROM pengguna
          INNER JOIN jabatan ON pengguna.jabatan_id = jabatan.jabatan_id
+         INNER JOIN penempatan ON pengguna.penempatan_id = penempatan.penempatan_id
          WHERE nip = ?";
 $stmt2 = $conn->prepare($sql3);
 $stmt2->bindParam(1, $userid);
 $stmt2->execute();
 $joinges = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 $hasiljoin = $joinges[0];
-$jabatan = $hasiljoin['jabatan_nama'];
 
 if (count($result) > 0) {
     foreach ($result as $row) {
         $nama = $row['nama'];
         $nip = $row['nip'];
         $jabatan = $hasiljoin['jabatan_nama'];
-        $guru = $row['guru'];
+        $penempatan = $hasiljoin['penempatan_nama'];
     }
 }
 
